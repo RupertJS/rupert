@@ -22,7 +22,7 @@
     "q": "^1.0.1",
     "socket.io": "^1.0.6",
     "st": "^0.5.1",
-    "stassets": "^0.3.0",
+    "stassets": "~0.2.8",
     "winston": "^0.7.3"
   },
   "devDependencies": {
