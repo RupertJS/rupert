@@ -25,7 +25,10 @@
     "stassets": "^0.3.0",
     "winston": "^0.7.3"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "grunt": "^0.4.5",
+    "grunt-release": "^0.7.0"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
