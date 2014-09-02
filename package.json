@@ -7,7 +7,7 @@
     "lib": "./src"
   },
   "dependencies": {
-    "angular-builds": "^1.2.14",
+    "angular-builds": "https://github.com/DanTup/angular-builds/tarball/1.2.14",
     "body-parser": "^1.6.7",
     "bootstrap": "^3.2.0",
     "coffee-script": "^1.8.0",
