@@ -33,7 +33,6 @@ module.exports = (config)->
     return {
         app: app
         start: (callback)->
-            debugger
             if config.tls
                 server = https.listen config.tls.port, ->
                     winston.info "#{config.name} tls listening"
