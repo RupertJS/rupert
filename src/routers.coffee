@@ -21,7 +21,7 @@ module.exports = (config, app)->
         for file in files
             try
                 winston.verbose "Routers found '#{file}'..."
-                require(file)(config, app)
+                require(file)(app, config)
             catch e
                 winston.error "Routers failed to load router '#{file}'!"
                 winston.debug e.stack

@@ -1,7 +1,7 @@
 st = require 'st'
 Path = require 'path'
 
-route = (config, app)->
+route = (app, config)->
     app.use(require("./handler")(config.stassets or {}))
 
     ionic = Path.resolve __dirname, '../../../node_modules/ionic/release'
