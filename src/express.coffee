@@ -16,13 +16,17 @@ module.exports = (config)->
 
     # Decide on TLS
     config.port or= process.env.HTTP_PORT or 8080
+    process.env.HTTP_URL = "http://127.0.0.1:#{config.port}/"
     if config.tls
+        config.tls = {} if config.tls is true
         config.tls.port or= process.env.HTTPS_PORT or 8443
         [http, https] = require('./secure')(config, app)
         app.io = require('socket.io').listen(https)
+        process.env.URL = process.env.HTTPS_URL
     else
         http = require('./servers')(config, app)
         app.io = require('socket.io').listen(http)
+        process.env.URL = process.env.HTTP_URL
 
     # Configure routing
     require('./routers')(config, app)
@@ -41,7 +45,7 @@ module.exports = (config)->
 
             unsecureServer = http.listen config.port, ->
                 winston.info "#{config.name} listening"
-                winston.info process.env.URL
+                winston.info process.env.HTTP_URL
                 # callback?()
 
         stop: ->

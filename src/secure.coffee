@@ -1,4 +1,6 @@
 Path = require 'path'
+fs = require 'fs'
+express = require 'express'
 
 # An https server, with an http server that redirects.
 module.exports = (config, app)->
@@ -14,12 +16,13 @@ module.exports = (config, app)->
             key: fs.readFileSync(config.tls.key, 'utf-8')
             cert: fs.readFileSync(config.tls.cert, 'utf-8')
     catch e
-        throw new Exception 'Trying to start tls server, but no cert found!'
+        err = new Error 'Trying to start tls server, but no cert found!'
+        err.original = e
+        throw e
 
     https = require('https').createServer(tlsOptions, app)
 
     process.env.HTTPS_URL = "https://127.0.0.1:#{config.tls.port}/"
-    process.env.URL = process.env.HTTPS_URL
 
     httpApp = express().use (q, s, n)->
         s.redirect process.env.HTTPS_URL
