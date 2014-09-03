@@ -1,6 +1,6 @@
 {
   "name": "ng-stassets",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "Preconfigured Express stassets server.",
   "main": "src/express.js",
   "directories": {
