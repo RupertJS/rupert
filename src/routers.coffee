@@ -14,7 +14,7 @@ module.exports = (config, app)->
                 './' + Path.relative __dirname, file
         catch e
             winston.error "Routers failed to find routes for '#{routePattern}'!"
-            winston.debug JSON.stringify e
+            winston.debug e.stack
             files = []
 
         winston.silly "Routers globbing found ", files
@@ -24,4 +24,4 @@ module.exports = (config, app)->
                 require(file)(config, app)
             catch e
                 winston.error "Routers failed to load router '#{file}'!"
-                winston.debug e
+                winston.debug e.stack

@@ -1,7 +1,9 @@
 Path = require 'path'
 
 module.exports = (config)->
-    prefix: Path.resolve __dirname, '../../../node_modules'
+    prefix: [
+        Path.resolve __dirname, '../../../node_modules'
+    ].concat(config.prefix or [])
     js: [
         'ionic/release/js/ionic.bundle.js'
         'angular-builds/angular-cookies.min.js'
