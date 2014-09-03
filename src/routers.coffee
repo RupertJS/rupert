@@ -3,10 +3,11 @@ winston = require('./logger').log
 Path = require 'path'
 
 module.exports = (config, app)->
-    config.routing = [
-        __dirname + '/rewrite/route.coffee'
-        __dirname + '/stassets/route.coffee'
-    ] .concat(config.routing or [])
+    config.routing or= []
+    unless config.stassets is false
+        config.routing.unshift __dirname + '/stassets/route.coffee'
+        config.routing.unshift __dirname + '/rewrite/route.coffee'
+    config.routing = config.routing.concat(config.routing or [])
     config.routing.map (routePattern)->
         winston.verbose "Routers loading for '#{routePattern}'..."
         try
