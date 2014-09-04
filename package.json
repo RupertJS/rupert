@@ -8,6 +8,8 @@
   },
   "dependencies": {
     "angular-builds": "https://github.com/DanTup/angular-builds/tarball/1.2.14",
+    "angular-ui-router": "https://github.com/angular-ui/ui-router/tarball/0.2.11",
+    "ionic": "https://github.com/driftyco/ionic/tarball/v1.0.0-beta.11",
     "body-parser": "^1.6.7",
     "bootstrap": "^3.2.0",
     "coffee-script": "^1.8.0",
@@ -17,7 +19,6 @@
     "glob": "^4.0.5",
     "good": "^2.2.3",
     "hapi": "^6.7.1",
-    "ionic": "https://github.com/driftyco/ionic/tarball/v1.0.0-beta.11",
     "morgan": "^1.2.3",
     "q": "^1.0.1",
     "socket.io": "^1.0.6",
@@ -28,9 +29,6 @@
   "devDependencies": {
     "grunt": "^0.4.5",
     "grunt-release": "^0.7.0"
-  },
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "David Souther <davidsouther@gmail.com>",
   "license": "ISC"
