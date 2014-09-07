@@ -21,11 +21,10 @@ module.exports = (config)->
         config.tls = {} if config.tls is true
         config.tls.port or= process.env.HTTPS_PORT or 8443
         [http, https] = require('./secure')(config, app)
-        app.io = require('socket.io').listen(https)
+        app.serer = https
         process.env.URL = process.env.HTTPS_URL
     else
-        http = require('./servers')(config, app)
-        app.io = require('socket.io').listen(http)
+        app.server = http = require('./servers')(config, app)
         process.env.URL = process.env.HTTP_URL
 
     # Configure routing

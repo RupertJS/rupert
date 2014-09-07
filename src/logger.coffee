@@ -28,5 +28,5 @@ stream =
         winston.http message
 
 # logger = express.logger({stream})
-logger = morgan('combined')
+logger = morgan('tiny')
 module.exports = {log: winston, middleware: logger}
