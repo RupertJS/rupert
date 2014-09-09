@@ -15,17 +15,14 @@ module.exports = (config)->
     app = require('./base')
 
     # Decide on TLS
-    config.port or= process.env.HTTP_PORT or 8080
-    process.env.HTTP_URL = "http://127.0.0.1:#{config.port}/"
     if config.tls
         config.tls = {} if config.tls is true
-        config.tls.port or= process.env.HTTPS_PORT or 8443
         [http, https] = require('./secure')(config, app)
-        app.serer = https
-        process.env.URL = process.env.HTTPS_URL
+        app.server = https
+        process.env.URL = config.HTTPS_URL
     else
         app.server = http = require('./servers')(config, app)
-        process.env.URL = process.env.HTTP_URL
+        process.env.URL = config.HTTP_URL
 
     # Configure routing
     require('./routers')(config, app)
@@ -39,12 +36,12 @@ module.exports = (config)->
             if config.tls
                 server = https.listen config.tls.port, ->
                     winston.info "#{config.name} tls listening"
-                    winston.info process.env.HTTPS_URL
+                    winston.info config.HTTPS_URL
                     # callback?()
 
             unsecureServer = http.listen config.port, ->
                 winston.info "#{config.name} listening"
-                winston.info process.env.HTTP_URL
+                winston.info config.HTTP_URL
                 # callback?()
 
         stop: ->

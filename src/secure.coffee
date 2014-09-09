@@ -4,6 +4,7 @@ express = require 'express'
 
 # An https server, with an http server that redirects.
 module.exports = (config, app)->
+    config.tls.port or= process.env.HTTPS_PORT or 8443
     config.tls.key or=
         process.env.SSL_KEY or
         Path.join global.root, 'env', 'server.key'
@@ -22,10 +23,10 @@ module.exports = (config, app)->
 
     https = require('https').createServer(tlsOptions, app)
 
-    process.env.HTTPS_URL = "https://127.0.0.1:#{config.tls.port}/"
+    config.HTTPS_URL = "https://127.0.0.1:#{config.tls.port}/"
 
     httpApp = express().use (q, s, n)->
-        s.redirect process.env.HTTPS_URL
-    http = require('http').createServer(httpApp)
+        s.redirect config.HTTPS_URL
+    http = require('./servers')(config, httpApp)
 
     [http, https]
