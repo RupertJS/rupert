@@ -23,7 +23,7 @@ module.exports = (config, app)->
 
     https = require('https').createServer(tlsOptions, app)
 
-    config.HTTPS_URL = "https://127.0.0.1:#{config.tls.port}/"
+    config.HTTPS_URL = "https://#{config.hostname}:#{config.tls.port}/"
 
     httpApp = express().use (q, s, n)->
         s.redirect config.HTTPS_URL

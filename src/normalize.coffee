@@ -3,6 +3,8 @@ Path = require 'path'
 module.exports = (config)->
     config.root or= global.root or process.cwd()
 
+    config.hostname or= process.env.HOST or require('os').hostname()
+
     if config.stassets?.root?
         config.stassets.root =
             Path.normalize Path.join config.root, config.stassets.root
