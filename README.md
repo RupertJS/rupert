@@ -78,6 +78,11 @@ for servers is to place them in `package.json`.
 
 Required. The name for the app.
 
+### `hostname`
+
+Optional. The hostname to server on. Will use `HOST` from the environment, or
+`os.hostname()` as a default.
+
 ### `port`
 
 Optional. Integer port to listen on. Defaults to 8080.
@@ -132,6 +137,7 @@ Optional. Path to server public certificate. Defaults to
 
 ## Changelog
 
+* **0.0.13** *2014-09-17* Loads hostname from platform or config.
 * **0.0.0 - 0.0.11** *2014-09-11* Initial work; lots of iterative tweaks.
 
 ## Roadmap

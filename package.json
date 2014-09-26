@@ -4,7 +4,8 @@
   "description": "Preconfigured Express stassets server.",
   "main": "src/express.js",
   "directories": {
-    "lib": "./src"
+    "lib": "./src",
+    "bin": "./src/bin"
   },
   "dependencies": {
     "angular-builds": "https://github.com/DanTup/angular-builds/tarball/1.2.14",
@@ -21,6 +22,7 @@
     "hapi": "^6.7.1",
     "ionic": "https://github.com/driftyco/ionic/tarball/v1.0.0-beta.11",
     "morgan": "^1.2.3",
+    "pem": "^1.4.1",
     "q": "^1.0.1",
     "socket.io": "^1.0.6",
     "st": "^0.5.1",
