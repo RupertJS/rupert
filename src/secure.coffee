@@ -4,12 +4,17 @@ express = require 'express'
 
 # An https server, with an http server that redirects.
 module.exports = (config, app)->
-    config.tls.port or= process.env.HTTPS_PORT or 8443
-    config.tls.key or=
+    config.tls.port =
+        process.env.HTTPS_PORT or
+        config.tls.port or
+        8443
+    config.tls.key =
         process.env.SSL_KEY or
+        config.tls.key or
         Path.join global.root, 'env', 'server.key'
-    config.tls.cert or=
+    config.tls.cert =
         process.env.SSL_CERT or
+        config.tls.cert or
         Path.join global.root, 'env', 'server.crt'
 
     try

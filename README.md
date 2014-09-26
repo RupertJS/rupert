@@ -137,6 +137,7 @@ Optional. Path to server public certificate. Defaults to
 
 ## Changelog
 
+* **0.0.14** *20214-09-26* Bin script to generate cert. Env overrides config.
 * **0.0.13** *2014-09-17* Loads hostname from platform or config.
 * **0.0.0 - 0.0.11** *2014-09-11* Initial work; lots of iterative tweaks.
 

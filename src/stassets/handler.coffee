@@ -7,14 +7,15 @@ module.exports = (config)->
     if config.themes
         for theme in config.themes
             root.push Path.resolve Path.join config.source, 'themes', theme
+    delete config.root
+    config.root = root
 
     framework = "./vendors/#{config.framework or 'ionic'}"
     vendors = require(framework)(config.vendors or {})
+    delete config.vendors
+    config.vendors = vendors
 
-    st = require('stassets')({
-        root
-        vendors
-        verbose: config.verbose or no
-    })
+    config.verbose = config.verbose? and config.verbose isnt no
 
+    st = require('stassets')(config)
     st

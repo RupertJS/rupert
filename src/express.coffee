@@ -6,7 +6,7 @@ module.exports = (config)->
         throw new Exception "Cannot start ng-stassets without a configuration."
 
     # New Relic, as early as possible
-    config.newRelicKey or= process.env.NEW_RELIC_KEY
+    config.newRelicKey = process.env.NEW_RELIC_KEY or config.newRelicKey
     require('new-relic')(config.newRelicKey) if config.newRelicKey
 
     config = require('./normalize')(config)

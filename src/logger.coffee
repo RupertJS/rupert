@@ -6,7 +6,7 @@ winston.config.npm.colors.http = 'magenta'
 winston.config.npm.colors.data = 'grey'
 winston.addColors winston.config.npm.colors
 
-level = process.env.LOG_LEVEL || 'info'
+level = process.env.LOG_LEVEL or 'info'
 opts = {level, colorize: yes, timestamp: yes}
 
 winston = winston
