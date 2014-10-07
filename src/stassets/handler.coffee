@@ -11,6 +11,7 @@ module.exports = (config)->
     config.root = root
 
     framework = "./vendors/#{config.framework or 'ionic'}"
+    delete config.framework
     vendors = require(framework)(config.vendors or {})
     delete config.vendors
     config.vendors = vendors

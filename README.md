@@ -1,6 +1,10 @@
 # Angular Stassets Servers
 
-A collection of base servers for [angular][ng] and [stassets][stas] projects.
+You are wasting time on build steps. This server is always up to date, and
+flexible enough to meet any javascript project's needs.
+
+[ng-stassets](#) is a collection of base servers for [angular][ng] and
+[stassets][stas] projects.
 
 Use this package to create and configure an Express server that manages static
 files and configures API endpoints.
@@ -16,6 +20,9 @@ Add some configuration options to `package.json`.
   "version": "0.0.0",
   "description": "",
   "main": "app.js",
+  "scripts": {
+    "start": "node app.js"
+  },
   "dependencies": {
     "ng-stassets": "^0.0.0",
     "debug": "^2.0.0"
@@ -135,6 +142,39 @@ Optional. Path to server private key. Defaults to
 Optional. Path to server public certificate. Defaults to
 `"#{global.root}/env/server.crt"`.
 
+## Cookbook
+
+### Q: How do I add libraries to the compiled `vendors.(js|css)` files?
+
+Additional libraries can be added to a project using any dependency mechanism,
+then added to the `vendors` key in the `stassets` configuration. For instance,
+let's add [Moment.js][moment] for date handling.
+
+1. Install the dependency: `$ npm install --save moment`
+1. Add a `vendors` section to the `stassets` config
+
+        "stassets": {
+            "vendors": {
+                "prefix": ["./node_modules"],
+                "js": ["moment/min/moment.min.js"]
+            }
+        }
+
+1. Use moment through the global `moment` variable. (In an angular project, the
+    recommended best practice is to wrap that variable in a service.)
+
+
+* The `prefix` key is an array of directories to look in. For instance, when
+    mixing both `node_modules` and `bower` dependencies, the `prefix` key could
+    be `[ "./node_modules", "./components" ]`
+* The `js` and `css` keys are arrays of files to concatenate in their respective
+    `vendors.js` and `vendors.css` files. The `prefix` directories will be
+    searched in order for these paths, and the first match will be returned.
+
+### How do I run tests?
+
+
+
 ## Changelog
 
 * **0.0.14** *20214-09-26* Bin script to generate cert. Env overrides config.
@@ -147,3 +187,4 @@ Optional. Path to server public certificate. Defaults to
 
 [ng]: https://angularjs.org/
 [stas]: https://github.com/DavidSouther/stassets
+[moment]: http://momentjs.com/
