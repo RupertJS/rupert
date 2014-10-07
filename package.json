@@ -3,6 +3,7 @@
   "version": "0.0.14",
   "description": "Preconfigured Express stassets server.",
   "main": "src/express.js",
+  "repository": "git@github.com:DavidSouther/ng-stassets.git",
   "directories": {
     "lib": "./src",
     "bin": "./src/bin"
