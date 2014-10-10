@@ -1,6 +1,12 @@
-Path = require 'path'
+Q = require 'q'
 fs = require 'fs'
+Path = require 'path'
 express = require 'express'
+readFile = Q.denodeify fs.readFile
+writeFile = Q.denodeify fs.writeFile
+log = require('./logger').log
+pem = require 'pem'
+pemCreateCertificate = Q.denodeify pem.createCertificate
 
 # An https server, with an http server that redirects.
 module.exports = (config, app)->
@@ -17,21 +23,38 @@ module.exports = (config, app)->
         config.tls.cert or
         Path.join global.root, 'env', 'server.crt'
 
-    try
-        tlsOptions =
-            key: fs.readFileSync(config.tls.key, 'utf-8')
-            cert: fs.readFileSync(config.tls.cert, 'utf-8')
-    catch e
-        err = new Error 'Trying to start tls server, but no cert found!'
-        err.original = e
-        throw e
+    Q.all(readFile(config.tls.key), readFile(config.tls.cert))
+    .catch (e)->
+        msg = 'Trying to start tls server, but no cert found!'
+        log.info msg
+        log.info 'Creating 1-day temporary cert.'
 
-    https = require('https').createServer(tlsOptions, app)
+        config.tls.days =
+            process.env.CERT_DAYS or
+            config.tls.days or
+            1
 
-    config.HTTPS_URL = "https://#{config.hostname}:#{config.tls.port}/"
+        pemCreateCertificate({days: config.tls.days, selfSigned: true})
+        .then (keys)->
+            (if config.tls.writeCert is true
+                log.info 'Cert generated, writing to #{keyFile}, #{crtFile}.'
 
-    httpApp = express().use (q, s, n)->
-        s.redirect config.HTTPS_URL
-    http = require('./servers')(config, httpApp)
+                enc = {endoding: 'utf-8'}
+                Q.all(
+                    writeFile(config.tls.key, keys.serviceKey, enc),
+                    writeFile(config.tls.cert, keys.certificate, enc)
+                )
+            else
+                Q(true)
+            ).then ->
+                Q({key: keys.serviceKey, cert: keys.certificate})
+    .then (tlsOptions)->
+        debugger
 
-    [http, https]
+        https = require('https').createServer(tlsOptions, app)
+
+        config.HTTPS_URL = "https://#{config.hostname}:#{config.tls.port}/"
+
+        httpApp = express().use (q, s, n)->
+            s.redirect config.HTTPS_URL
+        require('./servers')(config, httpApp).then ({http})-> Q({http, https})

@@ -22,16 +22,16 @@ module.exports = (config)->
         if config.tls
             config.tls = {} if config.tls is true
             require('./secure')(config, app)
-            .then (http, https)->
-                servers = {http, https}
-                app.server = https
+            .then (_)->
+                servers = _
+                app.server = servers.https
                 process.env.URL = config.HTTPS_URL
                 app
         else
             require('./servers')(config, app)
-            .then (http)->
-                servers = {http}
-                app.server = http
+            .then (_)->
+                servers = _
+                app.server = servers.http
                 process.env.URL = config.HTTP_URL
                 app
     ).then (app)->
@@ -59,6 +59,9 @@ module.exports = (config)->
                 server?.close()
                 unsecureServer?.close()
         }
+    .catch (err)->
+        winston.error 'Failed to start Rupert.'
+        winston.error err.stack
 
     load.app = app
     load.start = (callback)->
