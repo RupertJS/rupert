@@ -1,3 +1,4 @@
+Q = require 'q'
 Path = require 'path'
 winston = require('./logger').log
 
@@ -13,38 +14,55 @@ module.exports = (config)->
 
     # Load the basic app
     app = require('./base')
+    servers = {}
 
+    # Async secion...
     # Decide on TLS
-    if config.tls
-        config.tls = {} if config.tls is true
-        [http, https] = require('./secure')(config, app)
-        app.server = https
-        process.env.URL = config.HTTPS_URL
-    else
-        app.server = http = require('./servers')(config, app)
-        process.env.URL = config.HTTP_URL
+    load = (do ->
+        if config.tls
+            config.tls = {} if config.tls is true
+            require('./secure')(config, app)
+            .then (http, https)->
+                servers = {http, https}
+                app.server = https
+                process.env.URL = config.HTTPS_URL
+                app
+        else
+            require('./servers')(config, app)
+            .then (http)->
+                servers = {http}
+                app.server = http
+                process.env.URL = config.HTTP_URL
+                app
+    ).then (app)->
+        # Configure routing
+        require('./routers')(config, app)
+    .then (app)->
+        # Exports
+        server = null
+        unsecureServer = null
+        Q {
+            app: app
+            start: (callback)->
+                if config.tls
+                    server = servers.https.listen config.tls.port, ->
+                        winston.info "#{config.name} tls listening"
+                        winston.info config.HTTPS_URL
+                        # callback?()
 
-    # Configure routing
-    require('./routers')(config, app)
-
-    # Exports
-    server = null
-    unsecureServer = null
-    return {
-        app: app
-        start: (callback)->
-            if config.tls
-                server = https.listen config.tls.port, ->
-                    winston.info "#{config.name} tls listening"
-                    winston.info config.HTTPS_URL
+                unsecureServer = servers.http.listen config.port, ->
+                    winston.info "#{config.name} listening"
+                    winston.info config.HTTP_URL
                     # callback?()
 
-            unsecureServer = http.listen config.port, ->
-                winston.info "#{config.name} listening"
-                winston.info config.HTTP_URL
-                # callback?()
+            stop: ->
+                server?.close()
+                unsecureServer?.close()
+        }
 
-        stop: ->
-            server?.close()
-            unsecureServer?.close()
-    }
+    load.app = app
+    load.start = (callback)->
+        load.then((_)->_.start(callback))
+    load.stop = ->
+        load.then((_)->_.stop(callback))
+    load

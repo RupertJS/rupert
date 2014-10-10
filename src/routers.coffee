@@ -2,6 +2,7 @@ glob = require 'glob'
 winston = require('./logger').log
 Path = require 'path'
 debug = require('debug')('ng-stassets:routers')
+Q = require 'q'
 
 module.exports = (config, app)->
     config.routing or= []
@@ -10,7 +11,8 @@ module.exports = (config, app)->
         config.routing.unshift __dirname + '/rewrite/route.coffee'
     unless config.websockets is false
         config.routing.unshift __dirname + '/sockets/route.coffee'
-    config.routing.map (routePattern)->
+
+    Q.all config.routing.map (routePattern)->
         debug "Loading for '#{routePattern}'..."
         try
             files = glob.sync(routePattern).map (file)->
@@ -21,10 +23,13 @@ module.exports = (config, app)->
             files = []
 
         winston.silly "Routers globbing found ", files
-        for file in files
+        Q.all files.map (file)->
             try
                 debug "Found '#{file}'..."
                 require(file)(app, config)
             catch e
                 debug "Failed to load router '#{file}'!"
                 winston.debug e.stack
+                Q.reject e
+    .then ->
+        Q(app)
