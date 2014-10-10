@@ -3,7 +3,7 @@
 You are wasting time on build steps. This server is always up to date, and
 flexible enough to meet any javascript project's needs.
 
-[ng-stassets](#) is a collection of base servers for [angular][ng] and
+[rupert](#) is a collection of base servers for [angular][ng] and
 [stassets][stas] projects.
 
 Use this package to create and configure an Express server that manages static
@@ -16,7 +16,7 @@ Add some configuration options to `package.json`.
 **`package.json`**
 ```json
 {
-  "name": "ng-stassets-test",
+  "name": "rupert-test",
   "version": "0.0.0",
   "description": "",
   "main": "app.js",
@@ -45,7 +45,7 @@ you get back.
 **`app.js`**
 ```javascript
 global.root = __dirname;
-require('ng-stassets/express')(require('./package')).start()
+require('rupert')(require('./package')).start()
 ```
 
 By default, `stassets` looks for a component-based project architecture,
@@ -69,7 +69,7 @@ the `config` passed to the root `ng-stassets` load, in this case the entire
 
 **`src/server/hello/route.coffee`**
 ```coffeescript
-debug = require('debug')('ng-stassets-test:help')
+debug = require('debug')('rupert-test:help')
 module.exports = (app, config)->
     app.get '/hello', (q, s, n)->
         s.send "Hello from #{config.name}"
@@ -177,6 +177,7 @@ let's add [Moment.js][moment] for date handling.
 
 ## Changelog
 
+* **0.1.0** *2014-10-09* Renamed to Rupert.
 * **0.0.14** *20214-09-26* Bin script to generate cert. Env overrides config.
 * **0.0.13** *2014-09-17* Loads hostname from platform or config.
 * **0.0.0 - 0.0.11** *2014-09-11* Initial work; lots of iterative tweaks.

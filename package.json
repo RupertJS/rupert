@@ -1,15 +1,15 @@
 {
-  "name": "ng-stassets",
+  "name": "rupert",
   "version": "0.0.14",
   "description": "Preconfigured Express stassets server.",
   "main": "src/express.js",
-  "repository": "git@github.com:DavidSouther/ng-stassets.git",
+  "repository": "git@github.com:DavidSouther/rupert.git",
   "directories": {
     "lib": "./src",
     "bin": "./src/bin"
   },
   "dependencies": {
-    "angular-builds": "https://github.com/DanTup/angular-builds/tarball/1.2.14",
+    "angular-builds": "^1.2.26",
     "angular-ui-router": "https://github.com/angular-ui/ui-router/tarball/0.2.11",
     "body-parser": "^1.6.7",
     "bootstrap": "^3.2.0",
@@ -21,7 +21,7 @@
     "glob": "^4.0.5",
     "good": "^2.2.3",
     "hapi": "^6.7.1",
-    "ionic": "https://github.com/driftyco/ionic/tarball/v1.0.0-beta.11",
+    "ionic": "https://github.com/driftyco/ionic/tarball/v1.0.0-beta.13",
     "morgan": "^1.2.3",
     "pem": "^1.4.1",
     "q": "^1.0.1",
