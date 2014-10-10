@@ -7,6 +7,7 @@ writeFile = Q.denodeify fs.writeFile
 log = require('./logger').log
 pem = require 'pem'
 pemCreateCertificate = Q.denodeify pem.createCertificate
+enc = {encoding: 'utf-8'}
 
 # An https server, with an http server that redirects.
 module.exports = (config, app)->
@@ -23,7 +24,8 @@ module.exports = (config, app)->
         config.tls.cert or
         Path.join global.root, 'env', 'server.crt'
 
-    Q.all(readFile(config.tls.key), readFile(config.tls.cert))
+    Q.all([readFile(config.tls.key, enc), readFile(config.tls.cert, enc)])
+    .then ([key, cert])-> Q({key, cert})
     .catch (e)->
         msg = 'Trying to start tls server, but no cert found!'
         log.info msg
@@ -39,7 +41,6 @@ module.exports = (config, app)->
             (if config.tls.writeCert is true
                 log.info 'Cert generated, writing to #{keyFile}, #{crtFile}.'
 
-                enc = {endoding: 'utf-8'}
                 Q.all(
                     writeFile(config.tls.key, keys.serviceKey, enc),
                     writeFile(config.tls.cert, keys.certificate, enc)
