@@ -50,8 +50,6 @@ module.exports = (config, app)->
             ).then ->
                 Q({key: keys.serviceKey, cert: keys.certificate})
     .then (tlsOptions)->
-        debugger
-
         https = require('https').createServer(tlsOptions, app)
 
         config.HTTPS_URL = "https://#{config.hostname}:#{config.tls.port}/"
