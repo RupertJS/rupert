@@ -176,6 +176,8 @@ let's add [Moment.js][moment] for date handling.
 
 
 ## Changelog
+
+* **0.2.0** *2014-10-16* Moving to rupert-config-* for alternative configs.
 * **0.1.2** *2014-10-10* Server starts asyncly, generates certs dynamically.
 * **0.1.0** *2014-10-09* Renamed to Rupert.
 * **0.0.14** *20214-09-26* Bin script to generate cert. Env overrides config.
