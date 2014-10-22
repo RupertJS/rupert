@@ -1,84 +1,27 @@
-# Angular Stassets Servers
+# Rupert
 
-You are wasting time on build steps. This server is always up to date, and
-flexible enough to meet any javascript project's needs.
+Your friendly neighborhood node application watcher.
 
-[rupert](#) is a collection of base servers for [angular][ng] and
+[rupert](#) is a server and default configuration for [angular][ng] and
 [stassets][stas] projects.
 
-Use this package to create and configure an Express server that manages static
-files and configures API endpoints.
+## Getting Started
 
-## Example Usage
+1. Create a new project.
+  1. On Github, set the name and description. Generate a Readme and license.
+1. Clone the project from GitHub.
+1. Run `npm init ; npm i --save rupert ; npm i --save-dev grunt rupert-grunt`.
+  * While npm is smart in initialization, you can set a name, etc in your [npmrc][npmrc]
+1. Run `cp node_modules/rupert-grunt/plain/*  ./` (See [the source directory here][plain_folder]).
+  1. Edit the `name` field in `./server.json`.
+1. (Optional) Add npm scripts to your `package.json`:
+  1. `"start": "node ./app.js"`
+  1. `"test": "./node_modules/.bin/grunt"`
 
-Add some configuration options to `package.json`.
-
-**`package.json`**
-```json
-{
-  "name": "rupert-test",
-  "version": "0.0.0",
-  "description": "",
-  "main": "app.js",
-  "scripts": {
-    "start": "node app.js"
-  },
-  "dependencies": {
-    "ng-stassets": "^0.0.0",
-    "debug": "^2.0.0"
-  },
-  "author": "David Souther <davidsouther@gmail.com>",
-  "license": "ISC",
-  "stassets": {
-    "root": "./src/client"
-  },
-  "routing": [
-    "./src/server/**/route.coffee"
-  ]
-}
-```
-
-Set the `global.root` to understand file paths, pass `package.json` to the
-`ng-stassets` server of your choice, and call `start` on the server reference
-you get back.
-
-**`app.js`**
-```javascript
-global.root = __dirname;
-require('rupert')(require('./package')).start()
-```
-
-By default, `stassets` looks for a component-based project architecture,
-compiling Jade, Coffee, Javascript, Stylus, and CSS. See `[stassets][stas]` for
-more details.
-
-**`src/client/index.jade`**
-```jade
-doctype
-html
-    head
-        title Hello, ng-stassets-test!
-    body
-        h1 Hi there!
-```
-
-Define API routes. Any files matching the pattern in the `routing` URL will be
-`require`d, expecting a function that takes a reference to an Express `app` and
-the `config` passed to the root `ng-stassets` load, in this case the entire
-`package.json`.
-
-**`src/server/hello/route.coffee`**
-```coffeescript
-debug = require('debug')('rupert-test:help')
-module.exports = (app, config)->
-    app.get '/hello', (q, s, n)->
-        s.send "Hello from #{config.name}"
-    debug 'Attaching /hello'
-```
 
 ## Recognized Options
 
-These options can be passed as an object to `ng-stassets`, though best practice
+These options can be passed as an object to `rupert`, though best practice
 for servers is to place them in `package.json`.
 
 ### `name`
