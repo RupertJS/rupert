@@ -10,10 +10,14 @@ Your friendly neighborhood node application watcher.
 1. Create a new project.
   1. On Github, set the name and description. Generate a Readme and license.
 1. Clone the project from GitHub.
-1. Run `npm init ; npm i --save rupert ; npm i --save-dev grunt rupert-grunt`.
+1. Run `npm init ; npm i --save rupert ; npm i --save-dev grunt grunt-cli rupert-grunt`.
   * While npm is smart in initialization, you can set a name, etc in your [npmrc][npmrc]
-1. Run `cp node_modules/rupert-grunt/plain/*  ./` (See [the source directory here][plain_folder]).
+1. Choose your frontend toolkit, either Angular+Bootstrap or Ionic. Install with `npm install --save rupert-config-angular-bootstrap` or `npm install --save rupert-config-ionic`. 
+1. Run `cp -a node_modules/rupert-grunt/plain/*  ./` (See [the source directory here][plain_folder]).
   1. Edit the `name` field in `./server.json`.
+  2. Edit the `title` in `./src/client/index.jade`
+  3. Edit the `ng-app` module name in `./src/client/index.jade`
+  4. Create a new file, `./src/client/main.js`. In this file, create an angular module with the same name as the ng-app.
 1. (Optional) Add npm scripts to your `package.json`:
   1. `"start": "node ./app.js"`
   1. `"test": "./node_modules/.bin/grunt"`
