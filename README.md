@@ -1,9 +1,10 @@
 # Rupert
 
-Your friendly neighborhood node application watcher.
 
-[rupert](#) is a server and default configuration for [angular][ng] and
-[stassets][stas] projects.
+Your friendly neighborhood node application watcher. [rupert](#) is a server and default configuration for [angular][ng] and [stassets][stas] projects.
+
+<img src="src/assets/logos/Rupert.svg" width="400" \>
+
 
 ## Getting Started
 
