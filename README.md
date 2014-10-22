@@ -3,7 +3,7 @@
 
 Your friendly neighborhood node application watcher. [rupert](#) is a server and default configuration for [angular][ng] and [stassets][stas] projects.
 
-![Rupert](src/assets/logos/Rupert.svg)
+<img src="https://raw.githubusercontent.com/DavidSouther/rupert/master/src/assets/logos/Rupert.svg" type="image/svg+xml" width="400px" />
 
 
 ## Getting Started
