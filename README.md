@@ -39,13 +39,13 @@ When a developer today first comes across front-edge programming, it's daunting 
 
 * **`$ grunt watcher`** A watcher for the same.
 
-**`$ grunt features`** Runs any Behavior Features tests; first runs a pass of features tagged `@current`, then runs any *not* tagged `@broken`.
+**`$ grunt features`** Runs any Behavior Features tests; first runs a pass of [features tagged][tagging] `@current`, then runs any *not* tagged `@broken`.
+
+[tagging]: https://github.com/cucumber/cucumber/wiki/Tags
 
 ## Layout
 
-With no additional configuration, Rupert expects a modular layout.
-
-https://github.com/DavidSouther/rupert/wiki/Project-Layout
+With no additional configuration, Rupert expects a [modular layout](https://github.com/DavidSouther/rupert/wiki/Project-Layout).
 
 ## Whirlwind Tutorial
 
