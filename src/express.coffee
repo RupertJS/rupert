@@ -4,7 +4,7 @@ winston = require('./logger').log
 
 module.exports = (config)->
     unless config
-        throw new Exception "Cannot start ng-stassets without a configuration."
+        throw new Error "Cannot start rupert without a configuration."
 
     # New Relic, as early as possible
     config.newRelicKey = process.env.NEW_RELIC_KEY or config.newRelicKey
@@ -43,17 +43,16 @@ module.exports = (config)->
         unsecureServer = null
         Q {
             app: app
-            start: (callback)->
+            start: (callback = ->)->
                 if config.tls
                     server = servers.https.listen config.tls.port, ->
                         winston.info "#{config.name} tls listening"
                         winston.info config.HTTPS_URL
-                        # callback?()
 
                 unsecureServer = servers.http.listen config.port, ->
                     winston.info "#{config.name} listening"
                     winston.info config.HTTP_URL
-                    # callback?()
+                callback()
 
             stop: ->
                 server?.close()
