@@ -1,127 +1,65 @@
 # Rupert
 
 
-Your friendly neighborhood node application watcher. [rupert](#) is a server and default configuration for [angular][ng] and [stassets][stas] projects.
+Your friendly neighborhood node application watcher. [rupert](#) handles every piece of programming at the front edge, letting teams and developers quickly and efficiently write business code for browser clients and their backing HTTP APIs.
 
 <img src="https://cdn.rawgit.com/DavidSouther/rupert/master/src/assets/logos/Rupert.svg" type="image/svg+xml" width="400px" />
 
+When a developer today first comes across front-edge programming, it's daunting the number of technologies you need to know to build an application. From the bottom up, you have `docker`, `node`, `npm`, `grunt`, `mocha`, `karma`, `chai`, `express`, `mongo`, `mongoose`, `passport`, `oauth`, `cucumber`, `angular`, `protractor`, `bootstrap`, `firebase` and probably a couple I'm forgetting.  Rupert's ideal is consolidating, well, all of these, into a single library. That library knows all the configurations, and all the little tips and tricks. It is configurable & extensible, with a well-documented API; it has a cookbook, which guides a new developer through the process while serving as a handy reference and reminder for a veteran developer. I haven't seen a product or solution that brings those together into one unified whole for the Node stack, like Rails did and does.
 
 ## Getting Started
 
 1. Create a new project.
   1. On Github, set the name and description. Generate a Readme and license.
 1. Clone the project from GitHub.
-1. Run `npm init ; npm i --save rupert ; npm i --save-dev grunt grunt-cli rupert-grunt`.
-  * While npm is smart in initialization, you can set a name, etc in your [npmrc][npmrc]
-1. Choose your frontend toolkit, either Angular+Bootstrap or Ionic. Install with `npm install --save rupert-config-angular-bootstrap` or `npm install --save rupert-config-ionic`. 
+1. Initialize the project and install dependencies:
+  * `npm init`
+  * `npm install  --save rupert`
+  * `npm install --save-dev grunt grunt-cli rupert-grunt`
+    * While npm is smart in initialization, you can set a name, etc in your [npmrc][npmrc]
+1. Choose your frontend toolkit.
+  * **Angular & Bootstrap** `npm install --save rupert-config-angular rupert-config-bootstrap`
+  * **Ionic** (includes angular) `npm install --save rupert-config-ionic`
 1. Run `cp -a node_modules/rupert-grunt/plain/*  ./` (See [the source directory here][plain_folder]).
-  1. Edit the `name` field in `./server.json`.
-  2. Edit the `title` in `./src/client/index.jade`
-  3. Edit the `ng-app` module name in `./src/client/index.jade`
-  4. Create a new file, `./src/client/main.js`. In this file, create an angular module with the same name as the ng-app.
+  1. Edit the `title` in `./src/client/index.jade`
+  1. Edit the `ng-app` module name in `./src/client/index.jade`
+  1. Change the module name in `./src/client/main.js` to match.
 1. (Optional) Add npm scripts to your `package.json`:
   1. `"start": "node ./app.js"`
   1. `"test": "./node_modules/.bin/grunt"`
 
+[plain_folder]: https://github.com/DavidSouther/rupert-grunt/tree/master/plain
+[npmrc]: https://www.npmjs.org/doc/misc/npm-config.html#config-settings
 
-## Recognized Options
+## Commands
 
-These options can be passed as an object to `rupert`, though best practice
-for servers is to place them in `package.json`.
+**`$ node app.js`** Starts the application. Will print the root url path to the command line. Serves the API routes, as well as compiled client source folders. A livereload server is available, that triggers on css/js/template changes.
 
-### `name`
+**`$ grunt`** Lints the code, and runs unit tests on the client and server.
 
-Required. The name for the app.
+* **`$ grunt watcher`** A watcher for the same.
 
-### `hostname`
+**`$ grunt features`** Runs any Behavior Features tests; first runs a pass of features tagged `@current`, then runs any *not* tagged `@broken`.
 
-Optional. The hostname to server on. Will use `HOST` from the environment, or
-`os.hostname()` as a default.
+## Layout
 
-### `port`
+With no additional configuration, Rupert expects a modular layout.
 
-Optional. Integer port to listen on. Defaults to 8080.
+https://github.com/DavidSouther/rupert/wiki/Project-Layout
 
-### `stassets`
+## Whirlwind Tutorial
 
-Optional. A configuration for the underlying `stassets` compiler. If `false`,
-completely disables `stassets`. For more information, see the [`stassets`
-docs][stas].
-
-#### `stassets.root`
-
-Required. The root directory for `stassets` client files, relative to
-`global.root` specified in the root js file. If an array, specifies the root
-directories for a cascading file system.
-
-#### `stassets.framework`
-
-Optional. One of `"none"`, `"ionic"`, or `"bootstrap"`. `"none"` loads vanilla
-Angular. `"ionic"` loads Angular with Ionic styles, components, and themes.
-`"bootstrap"` does the same. *In fact, this preconfigures the `vendors` key.*
-Defaults to `"ionic"`.
-
-#### `stassets.vendors`
-
-Optional. Additional vendor root directories and files.
-
-### `routing`
-
-Optional. Array of glob paths. Any file matching that glob will be loaded and
-called as a function taking `app`, a reference to the application server, and
-`config`, a reference to this configuration object.
-
-### `tls`
-
-Optional. If present, will configure the server to use SSL encryption for all
-connections. If `true`, will load TLS using default values.
-
-#### `tls.port`
-
-Optional. Port for HTTPS to listen on. Defaults to 8443.
-
-#### `tls.key`
-
-Optional. Path to server private key. Defaults to
-`"#{global.root}/env/server.key"`.
-
-#### `tls.cert`
-
-Optional. Path to server public certificate. Defaults to
-`"#{global.root}/env/server.crt"`.
+You should probably skip the Project Layout documentation, and skip [straight to an example](https://github.com/DavidSouther/rupert/wiki/Whirlwind-Tutorial).
 
 ## Cookbook
 
-### Q: How do I add libraries to the compiled `vendors.(js|css)` files?
+Some recipes are available:
 
-Additional libraries can be added to a project using any dependency mechanism,
-then added to the `vendors` key in the `stassets` configuration. For instance,
-let's add [Moment.js][moment] for date handling.
+* [Q: How do I add libraries to the compiled vendors.(js|css) files?](https://github.com/DavidSouther/rupert/wiki/Cookbook:-Add-Vendor-Libraries)
 
-1. Install the dependency: `$ npm install --save moment`
-1. Add a `vendors` section to the `stassets` config
+## Docs
 
-        "stassets": {
-            "vendors": {
-                "prefix": ["./node_modules"],
-                "js": ["moment/min/moment.min.js"]
-            }
-        }
-
-1. Use moment through the global `moment` variable. (In an angular project, the
-    recommended best practice is to wrap that variable in a service.)
-
-
-* The `prefix` key is an array of directories to look in. For instance, when
-    mixing both `node_modules` and `bower` dependencies, the `prefix` key could
-    be `[ "./node_modules", "./components" ]`
-* The `js` and `css` keys are arrays of files to concatenate in their respective
-    `vendors.js` and `vendors.css` files. The `prefix` directories will be
-    searched in order for these paths, and the first match will be returned.
-
-### How do I run tests?
-
-
+The full documentation on settings in `server.json` is [in the wiki](https://github.com/DavidSouther/rupert/wiki/Config-API).
 
 ## Changelog
 
