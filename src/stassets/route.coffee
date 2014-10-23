@@ -3,7 +3,8 @@ Path = require 'path'
 debug = require('debug')('ng-stassets:stassets')
 
 route = (app, config)->
-    app.use(require("./handler")(config.stassets or {}))
+    app.stassets = require("./handler")(config.stassets or {})
+    app.use(app.stassets)
     ionic = Path.resolve __dirname, '../../node_modules/ionic/release'
     fonts = Path.join(ionic, 'fonts')
 

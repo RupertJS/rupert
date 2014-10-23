@@ -1,5 +1,6 @@
 Path = require 'path'
 findup = require 'findup-sync'
+logger = require('../logger').log
 
 module.exports = (config)->
     root = []
@@ -25,7 +26,21 @@ module.exports = (config)->
             cfg = require Path.resolve cfg
         deps = cfg.dependencies
         for key of deps when key.indexOf('rupert-config-') is 0
-            require(key)(config)
+            dep =
+                try
+                    require(key)
+                catch e
+                    # We might be in an awkward position. Given a common known
+                    # path we can assume the module that loaded rupert is at:
+                    base = module.parent.parent.parent.parent.parent.filename
+                    try
+                        require(Path.join(
+                          Path.dirname(base), 'node_modules', key
+                        ))
+                    catch
+                        logger.info "Could not find config #{key}"
+                        (->)
+            dep(config)
 
     config.verbose = config.verbose? and config.verbose isnt no
 
