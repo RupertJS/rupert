@@ -63,6 +63,7 @@ The full documentation on settings in `server.json` is [in the wiki](https://git
 
 ## Changelog
 
+* **0.2.3** *2014-10-24* Handle configuring and serving static assets.
 * **0.2.0** *2014-10-16* Moving to rupert-config-* for alternative configs.
 * **0.1.2** *2014-10-10* Server starts asyncly, generates certs dynamically.
 * **0.1.0** *2014-10-09* Renamed to Rupert.
