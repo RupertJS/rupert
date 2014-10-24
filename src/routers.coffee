@@ -8,9 +8,11 @@ module.exports = (config, app)->
     config.routing or= []
     unless config.stassets is false
         config.routing.unshift __dirname + '/stassets/route.coffee'
-        config.routing.unshift __dirname + '/rewrite/route.coffee'
+        # config.routing.unshift __dirname + '/rewrite/route.coffee'
     unless config.websockets is false
         config.routing.unshift __dirname + '/sockets/route.coffee'
+    unless config.static is false
+        config.routing.push __dirname + '/static/route.coffee'
 
     Q.all config.routing.map (routePattern)->
         debug "Loading for '#{routePattern}'..."

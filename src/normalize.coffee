@@ -15,4 +15,9 @@ module.exports = (config)->
     if config.routing?
         config.routing = config.routing.map (route)->
             "#{config.root}/#{route}"
+
+    unless config.static is false
+        config.static or= {}
+        config.stassets.static = config.static
+
     config

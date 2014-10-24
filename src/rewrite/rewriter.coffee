@@ -18,11 +18,10 @@ rewriter = (req, res, next) ->
 
 rewriter.rewrite = (target) ->
     handler = (req, res, next) ->
-
         # This route should never ever be handler because it will be
         # intercepted by the rewriter middleware before it gets here. If this
         # ever gets called, it means you forgot to use the rewriter middleware.
-        res.send 500
+        res.status(500).end()
         return
 
     handler.rewriteTarget = target
