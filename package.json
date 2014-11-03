@@ -8,6 +8,9 @@
     "lib": "./src",
     "bin": "./src/bin"
   },
+  "scripts": {
+    "test": "./node_modules/.bin/mocha --compilers coffee:coffee-script/register"
+  },
   "dependencies": {
     "body-parser": "^1.6.7",
     "coffee-script": "^1.8.0",
@@ -22,12 +25,14 @@
     "q": "^1.0.1",
     "socket.io": "^1.1.0",
     "st": "^0.5.2",
-    "stassets": "~0.2.8",
+    "stassets": "~0.3.1",
     "winston": "^0.8.1"
   },
   "devDependencies": {
+    "chai": "^1.9.2",
     "grunt": "^0.4.5",
-    "grunt-release": "^0.7.0"
+    "grunt-release": "^0.7.0",
+    "mocha": "^2.0.1"
   },
   "author": "David Souther <davidsouther@gmail.com>",
   "license": "ISC"
