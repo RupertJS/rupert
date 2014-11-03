@@ -2,6 +2,7 @@ Path = require 'path'
 
 module.exports = (config)->
     config.root or= global.root or process.cwd()
+    config.root = process.cwd() unless typeof config.root is 'string'
 
     config.hostname or= process.env.HOST or require('os').hostname()
 
