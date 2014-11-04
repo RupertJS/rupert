@@ -17,6 +17,10 @@ module.exports = (config)->
         js: config.vendors?.js or []
         css: config.vendors?.css or []
 
+    # quick and dirty check if a dependency is requireable
+    canRequire = (key)->
+        key.indexOf('rupert-config-') is 0 or key.indexOf('/') > -1
+
     if config.framework
         require("rupert-config-#{config.framework}")(config)
         delete config.framework
@@ -25,7 +29,7 @@ module.exports = (config)->
         if typeof cfg is 'string'
             cfg = require Path.resolve cfg
         deps = cfg.dependencies
-        for key of deps when key.indexOf('rupert-config-') is 0
+        for key of deps when canRequire key
             dep =
                 try
                     require(key)
