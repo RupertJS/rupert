@@ -45,21 +45,21 @@ When a developer today first comes across front-edge programming, it's daunting 
 
 ## Layout
 
-With no additional configuration, Rupert expects a [modular layout](https://github.com/DavidSouther/rupert/wiki/Project-Layout).
+With no additional configuration, Rupert expects a [modular layout](https://github.com/RupertJS/rupert/wiki/Project-Layout).
 
 ## Whirlwind Tutorial
 
-You should probably skip the Project Layout documentation, and skip [straight to an example](https://github.com/DavidSouther/rupert/wiki/Whirlwind-Tutorial).
+You should probably skip the Project Layout documentation, and skip [straight to an example](https://github.com/RupertJS/rupert/wiki/Whirlwind-Tutorial).
 
 ## Cookbook
 
 Some recipes are available:
 
-* [Q: How do I add libraries to the compiled vendors.(js|css) files?](https://github.com/DavidSouther/rupert/wiki/Cookbook:-Add-Vendor-Libraries)
+* [Q: How do I add libraries to the compiled vendors.(js|css) files?](https://github.com/RupertJS/rupert/wiki/Cookbook:-Add-Vendor-Libraries)
 
 ## Docs
 
-The full documentation on settings in `server.json` is [in the wiki](https://github.com/DavidSouther/rupert/wiki/Config-API).
+The full documentation on settings in `server.json` is [in the wiki](https://github.com/RupertJS/rupert/wiki/Config-API).
 
 ## Changelog
 
