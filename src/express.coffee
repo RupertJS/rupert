@@ -38,47 +38,47 @@ module.exports = (config)->
         # Configure routing
         require('./routers')(config, app)
     .then (app)->
-        # Exports
-        server = null
-        unsecureServer = null
+        listeners = []
+        startServer = (server, port, name, URL)->
+
+            try
+                listeners.push listener = server.listen port
+            catch err
+                return Q.reject(err)
+
+            ready = Q.defer()
+            listener.on 'listening', ->
+                winston.info "#{name} listening"
+                winston.info URL
+                ready.resolve()
+            listener.on 'error', (err)->
+                ready.reject err
+            ready.promise
+
         Q {
             app: app
             start: (callback = ->)->
                 readies = []
-                if config.tls
-                    readies.push(tlsReady = Q.defer())
-                    try
-                        secureServer = servers.https.listen config.tls.port
-                    catch err
-                        ready.reject(err)
 
-                    secureServer.on 'listening', ->
-                        winston.info "#{config.name} tls listening"
-                        winston.info config.HTTPS_URL
-                        tlsReady.resolve()
-                    secureServer.on 'error', (err)->
-                        tlsReady.reject(err)
-                        false
+                readies.push(startServer(
+                    servers.https,
+                    config.tls.port,
+                    "#{config.name} tls",
+                    confif.HTTPS_URL
+                )) if config.tls
 
-                readies.push(ready = Q.defer())
-                try
-                    unsecureServer = servers.http.listen config.port
-                catch err
-                    ready.reject(err)
-                unsecureServer.on 'listening', ->
-                    winston.info "#{config.name} listening"
-                    winston.info config.HTTP_URL
-                    ready.resolve()
-                unsecureServer.on 'error', (err)->
-                    ready.reject(err)
-                    false
+                readies.push startServer(
+                    servers.http,
+                    config.port,
+                    config.name,
+                    config.HTTP_URL
+                )
 
                 Q.all(readies.map((_)->_.promise))
-                .then((->callback()), callback);
+                .then((->callback())).catch(callback);
 
             stop: ->
-                server?.close()
-                unsecureServer?.close()
+                listeners.map (_)->_.close()
         }
     .catch (err)->
         winston.error 'Failed to start Rupert.'
