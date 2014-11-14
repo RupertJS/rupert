@@ -31,3 +31,15 @@ describe 'Rupert Express', ->
     describe 'Stassets', ->
         it 'loads configurations', ->
             config.stassets.scripts.types.length.should.equal(2)
+
+describe 'Rupert Express Error Handling', ->
+    it 'does callback with exceptions', (done)->
+        config =
+            root: __dirname
+            name: 'rupert.tests'
+            port: 80
+            stassets: false
+        rupert = Rupert config
+        rupert.start (err)->
+            should.exist err
+            done()

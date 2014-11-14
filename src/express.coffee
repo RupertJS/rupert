@@ -1,6 +1,5 @@
 Q = require 'q'
 Path = require 'path'
-winston = require('./logger').log
 
 module.exports = (config)->
     unless config
@@ -13,7 +12,8 @@ module.exports = (config)->
     config = require('./normalize')(config)
 
     # Load the basic app
-    app = require('./base')
+    app = require('./base')(config)
+    winston = require('./logger').log
     servers = {}
 
     # Async secion...
@@ -38,25 +38,47 @@ module.exports = (config)->
         # Configure routing
         require('./routers')(config, app)
     .then (app)->
-        # Exports
-        server = null
-        unsecureServer = null
+        listeners = []
+        startServer = (server, port, name, URL)->
+
+            try
+                listeners.push listener = server.listen port
+            catch err
+                return Q.reject(err)
+
+            ready = Q.defer()
+            listener.on 'listening', ->
+                winston.info "#{name} listening"
+                winston.info URL
+                ready.resolve()
+            listener.on 'error', (err)->
+                ready.reject err
+            ready.promise
+
         Q {
             app: app
             start: (callback = ->)->
-                if config.tls
-                    server = servers.https.listen config.tls.port, ->
-                        winston.info "#{config.name} tls listening"
-                        winston.info config.HTTPS_URL
+                readies = []
 
-                unsecureServer = servers.http.listen config.port, ->
-                    winston.info "#{config.name} listening"
-                    winston.info config.HTTP_URL
-                callback()
+                readies.push(startServer(
+                    servers.https,
+                    config.tls.port,
+                    "#{config.name} tls",
+                    confif.HTTPS_URL
+                )) if config.tls
 
-            stop: ->
-                server?.close()
-                unsecureServer?.close()
+                readies.push startServer(
+                    servers.http,
+                    config.port,
+                    config.name,
+                    config.HTTP_URL
+                )
+
+                Q.all(readies.map((_)->_.promise))
+                .then((->callback())).catch(callback);
+
+            stop: ()->
+                listeners.map (_)->_.close()
         }
     .catch (err)->
         winston.error 'Failed to start Rupert.'
@@ -65,6 +87,6 @@ module.exports = (config)->
     load.app = app
     load.start = (callback)->
         load.then((_)->_.start(callback))
-    load.stop = ->
+    load.stop = (callback)->
         load.then((_)->_.stop(callback))
     load
