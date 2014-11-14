@@ -5,41 +5,39 @@ Your friendly neighborhood node application watcher. [rupert](#) handles every p
 
 <img src="https://cdn.rawgit.com/DavidSouther/rupert/master/src/assets/logos/Rupert.svg" type="image/svg+xml" width="400px" />
 
-When a developer today first comes across front-edge programming, it's daunting the number of technologies you need to know to build an application. From the bottom up, you have `docker`, `node`, `npm`, `grunt`, `mocha`, `karma`, `chai`, `express`, `mongo`, `mongoose`, `passport`, `oauth`, `cucumber`, `angular`, `protractor`, `bootstrap`, `firebase` and probably a couple I'm forgetting.  Rupert's ideal is consolidating, well, all of these, into a single library. That library knows all the configurations, and all the little tips and tricks. It is configurable & extensible, with a well-documented API; it has a cookbook, which guides a new developer through the process while serving as a handy reference and reminder for a veteran developer. I haven't seen a product or solution that brings those together into one unified whole for the Node stack, like Rails did and does.
+When a developer today first comes across front-edge programming, it's daunting the number of technologies you need to know to build an application. From the bottom up, you have `docker`, `node`, `npm`, `grunt`, `mocha`, `karma`, `chai`, `express`, `mongo`, `mongoose`, `passport`, `oauth`, `cucumber`, `angular`, `protractor`, `bootstrap`, `firebase` and probably a couple I'm forgetting.  Rupert consolidates all of these into a single library. That library knows all the configurations, and all the little tips and tricks. It is configurable & extensible, with a well-documented API. It has a cookbook, which guides a new developer through the process while serving as a handy reference and reminder for a veteran developer. Rupert aims to be the go-to microservices stack, like Rails formalized the three-tier architecture.
 
 ## Getting Started
 
 1. Create a new project.
   1. On Github, set the name and description. Generate a Readme and license.
 1. Clone the project from GitHub.
-1. Initialize the project and install dependencies:
+1. Unpack the seed app:
+  * `curl https://github.com/RupertJS/rupert-grunt/dist/plain.zip > plain.zip ; unzip plain.zip ; rm plain.zip`
+    * or download and unzip manually (files are in the root of the zip, be warned).
+    * See [the source directory here][plain_folder].
   * `npm init`
-  * `npm install  --save rupert`
-  * `npm install --save-dev grunt grunt-cli rupert-grunt`
-    * While npm is smart in initialization, you can set a name, etc in your [npmrc][npmrc]
+    * You will be prompted for a project name, license, etc.
+    * While npm is smart in initialization, you can set a name, etc in your [npmrc][npmrc] if you create packages often.
+  * `npm install`
 1. Choose your frontend toolkit.
   * **Angular & Bootstrap** `npm install --save rupert-config-angular rupert-config-bootstrap`
   * **Ionic** (includes angular) `npm install --save rupert-config-ionic`
-1. Run `cp -a node_modules/rupert-grunt/plain/*  ./` (See [the source directory here][plain_folder]).
-  1. Edit the `title` in `./src/client/index.jade`
-  1. Edit the `ng-app` module name in `./src/client/index.jade`
-  1. Change the module name in `./src/client/main.js` to match.
-1. (Optional) Add npm scripts to your `package.json`:
-  1. `"start": "node ./app.js"`
-  1. `"test": "./node_modules/.bin/grunt"`
+  1. The default package name is `rupert-app`, in `./src/client/index.jade`, `./src/client/main.js`, and other places. Edit this as needed.
+  1. *(Coming Soon)* `npm run rename <NEW NAME>` to change all instances of the root module name.
 
 [plain_folder]: https://github.com/DavidSouther/rupert-grunt/tree/master/plain
 [npmrc]: https://www.npmjs.org/doc/misc/npm-config.html#config-settings
 
 ## Commands
 
-**`$ node app.js`** Starts the application. Will print the root url path to the command line. Serves the API routes, as well as compiled client source folders. A livereload server is available, that triggers on css/js/template changes.
+**`$ node app.js`, `$ npm start`** Starts the application. Will print the root url path to the command line. Serves the API routes, as well as compiled client source folders. A livereload server is available, that triggers on css/js/template changes.
 
-**`$ grunt`** Lints the code, and runs unit tests on the client and server.
+**`$ grunt`, `$ npm test`** Lints the code, and runs unit tests on the client and server.
 
 * **`$ grunt watcher`** A watcher for the same.
 
-**`$ grunt features`** Runs any Behavior Features tests; first runs a pass of [features tagged][tagging] `@current`, then runs any *not* tagged `@broken`.
+**`$ grunt features`, `$ npm run features`** Runs any Behavior Features tests; first runs a pass of [features tagged][tagging] `@current`, then runs any *not* tagged `@broken`.
 
 [tagging]: https://github.com/cucumber/cucumber/wiki/Tags
 
@@ -56,6 +54,7 @@ You should probably skip the Project Layout documentation, and skip [straight to
 Some recipes are available:
 
 * [Q: How do I add libraries to the compiled vendors.(js|css) files?](https://github.com/DavidSouther/rupert/wiki/Cookbook:-Add-Vendor-Libraries)
+* [Q: How do I configure Rupert's logging settings?](https://github.com/RupertJS/rupert/wiki/Cookbook:-Configure-Loggins)
 
 ## Docs
 
