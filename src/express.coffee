@@ -1,6 +1,5 @@
 Q = require 'q'
 Path = require 'path'
-winston = require('./logger').log
 
 module.exports = (config)->
     unless config
@@ -13,7 +12,8 @@ module.exports = (config)->
     config = require('./normalize')(config)
 
     # Load the basic app
-    app = require('./base')
+    app = require('./base')(config)
+    winston = require('./logger').log
     servers = {}
 
     # Async secion...
@@ -77,7 +77,7 @@ module.exports = (config)->
                 Q.all(readies.map((_)->_.promise))
                 .then((->callback())).catch(callback);
 
-            stop: ->
+            stop: ()->
                 listeners.map (_)->_.close()
         }
     .catch (err)->
@@ -87,6 +87,6 @@ module.exports = (config)->
     load.app = app
     load.start = (callback)->
         load.then((_)->_.start(callback))
-    load.stop = ->
+    load.stop = (callback)->
         load.then((_)->_.stop(callback))
     load
