@@ -1,10 +1,10 @@
-express = require 'express'
+restify = require 'restify'
 
 module.exports = (config)->
   logging = require('./logger')(config)
   winston = logging.log
 
-  app = express()
+  app = restify()
   .use(require('./rewrite/rewriter'))
   .use(require('cookie-parser')())
   .use(require('body-parser').json())
