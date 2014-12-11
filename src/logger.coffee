@@ -2,7 +2,6 @@ winston = require 'winston'
 express = require 'express'
 morgan = require 'morgan'
 
-winston.remove(winston.transports.Console)
 winston.config.npm.colors.http = 'magenta'
 winston.config.npm.colors.data = 'grey'
 winston.addColors winston.config.npm.colors
@@ -31,11 +30,15 @@ buildLogger = (config)->
         level: config.log.level
         timestamp: yes
 
+    try
+        winston.remove(winston.transports.Console)
     unless config.log.console is false
         opts.colorize = yes
         winston.add(winston.transports.Console, opts)
         delete opts.colorize
 
+    try
+        winston.remove(winston.transports.File)
     if config.log.file
         opts.filename = config.log.file
         console.log opts
