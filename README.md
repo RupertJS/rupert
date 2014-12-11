@@ -62,7 +62,8 @@ The full documentation on settings in `server.json` is [in the wiki](https://git
 
 ## Changelog
 
-* **0.2.5** *2014-11-03* Improved algo for determining loadable stassets configs.'
+* **0.2.6** *2014-12-11* New logging configs, small stability improvements.
+* **0.2.5** *2014-11-03* Improved algo for determining loadable stassets configs.
 * **0.2.4** *2014-11-03* Travis integration and testing.
 * **0.2.3** *2014-10-24* Handle configuring and serving static assets.
 * **0.2.0** *2014-10-16* Moving to rupert-config-* for alternative configs.

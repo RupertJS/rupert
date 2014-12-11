@@ -1,5 +1,6 @@
 Q = require 'q'
 Path = require 'path'
+debug = require('debug')('rupert')
 
 module.exports = (config)->
     unless config
@@ -25,14 +26,14 @@ module.exports = (config)->
             .then (_)->
                 servers = _
                 app.server = servers.https
-                process.env.URL = config.HTTPS_URL
+                app.url = process.env.URL = config.HTTPS_URL
                 app
         else
             require('./servers')(config, app)
             .then (_)->
                 servers = _
                 app.server = servers.http
-                process.env.URL = config.HTTP_URL
+                app.url = process.env.URL = config.HTTP_URL
                 app
     ).then (app)->
         # Configure routing
@@ -40,7 +41,6 @@ module.exports = (config)->
     .then (app)->
         listeners = []
         startServer = (server, port, name, URL)->
-
             try
                 listeners.push listener = server.listen port
             catch err
@@ -64,7 +64,7 @@ module.exports = (config)->
                     servers.https,
                     config.tls.port,
                     "#{config.name} tls",
-                    confif.HTTPS_URL
+                    config.HTTPS_URL
                 )) if config.tls
 
                 readies.push startServer(
@@ -74,8 +74,7 @@ module.exports = (config)->
                     config.HTTP_URL
                 )
 
-                Q.all(readies.map((_)->_.promise))
-                .then((->callback())).catch(callback);
+                Q.all(readies).then((->callback())).catch(callback)
 
             stop: ()->
                 listeners.map (_)->_.close()
