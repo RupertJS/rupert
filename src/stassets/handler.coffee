@@ -41,12 +41,12 @@ module.exports = (config)->
                         require(Path.join(
                           Path.dirname(base), 'node_modules', key
                         ))
-                    catch
-                        logger.info "Could not find config #{key}"
+                    catch err
+                        logger.warn "Could not find config #{key}"
+                        logger.info err, err.stack
                         (->)
             dep(config)
 
     config.verbose = config.verbose? and config.verbose isnt no
-
     st = require('stassets')(config)
     st
