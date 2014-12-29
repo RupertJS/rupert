@@ -54,7 +54,8 @@ You should probably skip the Project Layout documentation, and go [straight to a
 Some recipes are available:
 
 * [Q: How do I add libraries to the compiled vendors.js and vendors.css files?](https://github.com/RupertJS/rupert/wiki/Cookbook:-Add-Vendor-Libraries)
-* [Q: How do I configure Rupert's logging settings?](https://github.com/RupertJS/rupert/wiki/Cookbook:-Configure-Loggins)
+* [Q: How do I configure Rupert's logging settings?](https://github.com/RupertJS/rupert/wiki/Cookbook:-Configure-Logging)
+* [Q: How do I specify a template in Angular UI Router?](https://github.com/RupertJS/rupert/wiki/Cookbook:-Angular-UI-Router-Templates)
 
 ## Docs
 
