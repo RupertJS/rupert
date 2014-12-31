@@ -32,6 +32,9 @@ describe 'Rupert Express', ->
         it 'loads configurations', ->
             config.stassets.scripts.types.length.should.equal(2)
 
+        it 'exposes constructors', ->
+            Object.keys(Rupert.Stassets.constructors).length.should.equal 8
+
 describe 'Rupert Express Error Handling', ->
     it 'does callback with exceptions', (done)->
         config =

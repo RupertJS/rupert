@@ -89,3 +89,6 @@ module.exports = (config)->
     load.stop = (callback)->
         load.then((_)->_.stop(callback))
     load
+
+module.exports.Stassets =
+    constructors: require('./stassets/constructors')
