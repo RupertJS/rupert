@@ -11,43 +11,34 @@ enc = {encoding: 'utf-8'}
 
 # An https server, with an http server that redirects.
 module.exports = (config, app)->
-    config.tls.port =
-        process.env.HTTPS_PORT or
-        config.tls.port or
-        8443
-    config.tls.key =
-        process.env.SSL_KEY or
-        config.tls.key or
-        Path.join global.root, 'env', 'server.key'
-    config.tls.cert =
-        process.env.SSL_CERT or
-        config.tls.cert or
-        Path.join global.root, 'env', 'server.crt'
+    keyFile = Path.join config.root, 'env', 'server.key'
+    certFile = Path.join config.root, 'env', 'server.crt'
 
-    Q.all([readFile(config.tls.key, enc), readFile(config.tls.cert, enc)])
+    port = config.find 'tls.port', 'HTTPS_PORT', 8443
+    keyFile = config.find 'tls.key', 'SSL_KEY', keyFile
+    certFile = config.find 'tls.cert', 'SSL_CERT', certFile
+
+    Q.all([readFile(keyFile, enc), readFile(certFile, enc)])
     .then ([key, cert])-> Q({key, cert})
     .catch (e)->
         msg = 'Trying to start tls server, but no cert found!'
         log.info msg
         log.info 'Creating 1-day temporary cert.'
 
-        config.tls.days =
-            process.env.CERT_DAYS or
-            config.tls.days or
-            1
-
-        pemCreateCertificate({days: config.tls.days, selfSigned: true})
+        days = config.find 'tls.days', 'CERT_DAYS', 1
+        pemCreateCertificate({days, selfSigned: true})
         .then (keys)->
-            (if config.tls.writeCert is true
-                log.info 'Cert generated, writing to #{keyFile}, #{crtFile}.'
+            write =
+                if config.find 'tls.writeCert', 'WRITE_CERT', false
+                  log.info 'Cert generated, writing to #{keyFile}, #{certFile}.'
 
-                Q.all(
-                    writeFile(config.tls.key, keys.serviceKey, enc),
-                    writeFile(config.tls.cert, keys.certificate, enc)
-                )
-            else
-                Q(true)
-            ).then ->
+                  Q.all(
+                      writeFile(keyFile, keys.serviceKey, enc),
+                      writeFile(certFile, keys.certificate, enc)
+                  )
+                else
+                  Q(true)
+            write.then ->
                 Q({key: keys.serviceKey, cert: keys.certificate})
     .then (tlsOptions)->
         https = require('https').createServer(tlsOptions, app)

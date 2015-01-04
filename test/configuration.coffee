@@ -94,3 +94,11 @@ describe 'Rupert Configuration Manager', ->
     config.find('deep.path').should.deep.equal([
       'bing', 'bang', 'baz', 'foo', 'bar'
     ])
+
+  it 'appends to a new empty array', ->
+    config.append('deep.path', ['foo', 'bar'])
+    config.find('deep.path').should.deep.equal(['foo', 'bar'])
+
+  it 'prepends to a new empty array', ->
+    config.prepend('deep.path', ['foo', 'bar'])
+    config.find('deep.path').should.deep.equal(['foo', 'bar'])

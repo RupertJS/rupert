@@ -3,7 +3,7 @@ should = require('chai').should()
 Rupert = require('../src/express.js')
 
 describe 'Rupert Express', ->
-    config =
+    server =
         root: __dirname
         name: 'rupert.tests'
         stassets:
@@ -16,22 +16,25 @@ describe 'Rupert Express', ->
         ]
 
     lib = __dirname + "/rupert-config"
-    config.stassets.vendors.config.dependencies[lib] = yes
+    server.stassets.vendors.config.dependencies[lib] = yes
 
-    rupert = Rupert(config)
+    rupert = Rupert(server)
     config = rupert.config
-    beforeEach (done)-> rupert.start done
+    beforeEach (done)-> rupert.then -> done()
 
     it 'exposes a config function', ->
         Rupert.should.be.instanceof Function
 
     it 'should normalize config paths', ->
         config.should.have.property('wasRouted').that.equals yes
-        config.stassets.root[0].should.equal "#{__dirname}/client"
+        stassetsRoot = config.find 'stassets.root'
+        stassetsRoot.should.be.instanceof Array
+        stassetsRoot[0].should.equal "#{__dirname}/client"
 
     describe 'Stassets', ->
         it 'loads configurations', ->
-            config.stassets.scripts.types.length.should.equal(2)
+            types = config.find 'stassets.scripts.types'
+            types.length.should.equal(2)
 
         it 'exposes constructors', ->
             Object.keys(Rupert.Stassets.constructors).length.should.equal 8

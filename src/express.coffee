@@ -22,8 +22,8 @@ module.exports = (config)->
     # Async secion...
     # Decide on TLS
     load = (do ->
-        if config.tls
-            config.tls = {} if config.tls is true
+        if tls = config.find 'tls', 'TLS', false
+            config.set('tls', {}) if tls is true
             require('./secure')(config, app)
             .then (_)->
                 servers = _
@@ -78,8 +78,10 @@ module.exports = (config)->
 
                 Q.all(readies).then((->callback())).catch(callback)
 
-            stop: ()->
-                listeners.map (_)->_.close()
+            stop: (callback = ->)->
+                console.log "Stopping #{config.name}..."
+                Q.all(listeners.map((_)->(Q.denodeify(_.close)())))
+                .then((->callback())).catch(callback)
         }
     .catch (err)->
         winston.error 'Failed to start Rupert.'
@@ -88,9 +90,9 @@ module.exports = (config)->
     load.app = app
     load.config = config
     load.start = (callback)->
-        load.then((_)->_.start(callback))
+        load.then (_)->_.start(callback)
     load.stop = (callback)->
-        load.then((_)->_.stop(callback))
+        load.then (_)-> _.stop().then(callback)
     load
 
 module.exports.Stassets =

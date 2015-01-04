@@ -20,16 +20,11 @@ stream =
         winston.http message
 
 buildLogger = (config)->
-    config.log or= {}
+    level = config.find 'log.level', 'LOG_LEVEL', 'http'
+    file = config.find 'log.file', 'LOG_FILE', false
+    format = config.find 'log.format', 'LOG_FORMAT', 'tiny'
 
-    config.log.level = process.env.LOG_LEVEL or config.log.level or 'http'
-    config.log.file = process.env.LOG_FILE or config.log.file or false
-    config.log.format = process.env.LOG_FORMAT or config.log.format or 'tiny'
-
-    opts =
-        level: config.log.level
-        timestamp: yes
-
+    opts = {level, timestamp: yes}
     try
         winston.remove(winston.transports.Console)
     unless config.log.console is false
@@ -39,13 +34,12 @@ buildLogger = (config)->
 
     try
         winston.remove(winston.transports.File)
-    if config.log.file
-        opts.filename = config.log.file
-        console.log opts
+    if file
+        opts.filename = file
         winston.add(winston.transports.File, opts)
         delete opts.filename
 
-    logger = morgan(config.log.format, {stream})
+    logger = morgan(format, {stream})
 
     buildLogger.log = winston
     buildLogger.middleware = logger
