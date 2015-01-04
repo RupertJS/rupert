@@ -16,6 +16,8 @@ module.exports = (config)->
     config = require('./normalize')(config)
     # Load the basic app
     app = require('./base')(config)
+    # Load plugins
+    require('./plugins')(config)
     winston = require('./logger').log
     servers = {}
 
@@ -37,7 +39,8 @@ module.exports = (config)->
                 app.server = servers.http
                 app.url = process.env.URL = config.HTTP_URL
                 app
-    ).then (app)->
+    )
+    .then (app)->
         # Configure routing
         require('./routers')(config, app)
     .then (app)->

@@ -10,9 +10,9 @@ module.exports = (config, app)->
         # TODO Come up with a clever way for rewriting to behave.
         # config.routing.unshift __dirname + '/rewrite/route.coffee'
     if config.find 'websockets', false
-        config.prepend 'websockets', "#{__dirname}/sockets/route.coffee"
+        config.prepend 'routing', "#{__dirname}/sockets/route.coffee"
     if config.find 'static', false
-        config.append 'static', "#{__dirname}/static/route.coffee"
+        config.append 'routing', "#{__dirname}/static/route.coffee"
 
     Q.all config.routing.map (routePattern)->
         debug "Loading for '#{routePattern}'..."

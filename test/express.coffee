@@ -6,17 +6,16 @@ describe 'Rupert Express', ->
     server =
         root: __dirname
         name: 'rupert.tests'
+        plugins:
+            dependencies: {}
         stassets:
             root: './client'
-            vendors:
-                config:
-                    dependencies: {}
         routing: [
             'server/route.coffee'
         ]
 
     lib = __dirname + "/rupert-config"
-    server.stassets.vendors.config.dependencies[lib] = yes
+    server.plugins.dependencies[lib] = yes
 
     rupert = Rupert(server)
     config = rupert.config
