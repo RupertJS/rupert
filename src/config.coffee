@@ -7,10 +7,8 @@ FIND = (obj, path, val, force = no)->
       throw new Error 'Key Not Found'
     key = path.shift()
     if path.length is 0
-      if force
-        obj[key] = val
-      else
-        obj[key] or= val
+      obj[key] = val if force or not obj[key]?
+      obj[key]
     else
       FIND obj[key] or= {}, path, val, force
 
@@ -30,16 +28,22 @@ class Configuration
       FIND @, key, deflt
   map: (key, fn)->
     list = FIND @, key, []
-    list = list.map fn
+    if list instanceof Array
+      list = list.map fn
+    else
+      list = fn list
     SET @, key, list
   append: (key, arr)->
     arr = [arr] unless arr instanceof Array
     list = FIND @, key, []
+    # Coerce list to array
+    list = [list] unless list instanceof Array
     list = list.concat arr
     SET @, key, list
   prepend: (key, arr)->
     arr = [arr] unless arr instanceof Array
     list = FIND @, key, []
+    list = [list] unless list instanceof Array
     list = arr.concat list
     SET @, key, list
 

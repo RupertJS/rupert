@@ -11,7 +11,7 @@ module.exports = (config)->
 
     # New Relic, as early as possible
     # newRelicKey = config.find 'newRelicKey', 'NEW_RELIC_KEY', null
-    # require('new-relic')(newRelicKey) if newRelicKey
+    # require('new-relic')(newRelicKey) if newRelicKey?
 
     config = require('./normalize')(config)
     # Load the basic app

@@ -1,24 +1,18 @@
 Path = require 'path'
 
 module.exports = (config)->
-    config.root or= global.root or process.cwd()
-    config.root = process.cwd() unless typeof config.root is 'string'
+    root = config.find('root', global.root or process.cwd())
+    unless typeof root is 'string'
+        root = config.set 'root', process.cwd()
 
-    config.hostname or= process.env.HOST or require('os').hostname()
+    config.find 'hostname', 'HOST', require('os').hostname()
 
-    if config.stassets?.root?
-        config.stassets.root =
-            Path.normalize Path.join config.root, config.stassets.root
-    if config.stassets?.vendors?.prefix?
-        config.stassets.vendors.prefix =
-        config.stassets.vendors.prefix.map (_)->
-            Path.normalize Path.join config.root, _
-    if config.routing?
-        config.routing = config.routing.map (route)->
-            "#{config.root}/#{route}"
+    normRoot = (_)-> Path.normalize Path.join root, _
+    config.find 'stassets.root', 'STASSETS_ROOT', config.stassets.root or '.'
+    config.map 'stassets.root', normRoot
+    config.map 'stassets.vendors.prefix', normRoot
+    config.map 'routing', (_)-> "#{root}/#{_}"
 
-    unless config.static is false
-        config.static or= {}
-        config.stassets.static = config.static
+    config.set 'stassets.static', config.find 'static', false
 
     config

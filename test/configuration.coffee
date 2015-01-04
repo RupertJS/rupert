@@ -54,6 +54,14 @@ describe 'Rupert Configuration Manager', ->
     config.deep.path.should.equal 'value'
     config.find('deep.path', 'other value').should.equal 'value'
 
+  it 'finds key with existing value', ->
+    config.deep = {path: 'value'}
+    config.find('deep.path', 'other value').should.equal 'value'
+
+  it 'find key that was set to `false`', ->
+    config.shallow = false
+    config.find('shallow', 'value').should.equal false
+
   it 'finds key with environment override', ->
     process.env.DEEP_PATH = 'environment'
     config.find('deep.path', 'DEEP_PATH', 'value').should.equal 'environment'
