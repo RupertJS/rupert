@@ -59,6 +59,12 @@ describe 'Rupert Configuration Manager', ->
     config.find('deep.path', 'DEEP_PATH', 'value').should.equal 'environment'
     config.find('deep.path', 'other value').should.equal 'environment'
 
+  it 'overrides current value with environment', ->
+    process.env.DEEP_PATH = 'environment'
+    config.set('deep.path', 'value')
+    config.find('deep.path', 'DEEP_PATH', 'value').should.equal 'environment'
+    config.find('deep.path', 'value').should.equal 'environment'
+
   it 'maps function over array key', ->
     Path = require('path')
     config.set('deep.path', ['./src', './lib'])
