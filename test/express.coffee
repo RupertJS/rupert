@@ -19,6 +19,7 @@ describe 'Rupert Express', ->
     config.stassets.vendors.config.dependencies[lib] = yes
 
     rupert = Rupert(config)
+    config = rupert.config
     beforeEach (done)-> rupert.start done
 
     it 'exposes a config function', ->

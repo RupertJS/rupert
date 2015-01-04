@@ -1,17 +1,19 @@
 Q = require 'q'
 Path = require 'path'
 debug = require('debug')('rupert')
+Config = require('./config')
 
 module.exports = (config)->
     unless config
         throw new Error "Cannot start rupert without a configuration."
 
+    config = new Config config
+
     # New Relic, as early as possible
-    config.newRelicKey = process.env.NEW_RELIC_KEY or config.newRelicKey
-    require('new-relic')(config.newRelicKey) if config.newRelicKey
+    # newRelicKey = config.find 'newRelicKey', 'NEW_RELIC_KEY', null
+    # require('new-relic')(newRelicKey) if newRelicKey
 
     config = require('./normalize')(config)
-
     # Load the basic app
     app = require('./base')(config)
     winston = require('./logger').log
@@ -84,6 +86,7 @@ module.exports = (config)->
         winston.error err.stack
 
     load.app = app
+    load.config = config
     load.start = (callback)->
         load.then((_)->_.start(callback))
     load.stop = (callback)->
