@@ -9,8 +9,6 @@ module.exports = (config)->
   cfg = config.find 'plugins', findup('package.json')
   if typeof cfg is 'string'
       cfg = require Path.resolve cfg
-  console.log "Config is"
-  console.log cfg
   deps = cfg.dependencies
   for key of deps when canRequire key
     dependency =
