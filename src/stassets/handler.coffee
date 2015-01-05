@@ -1,7 +1,9 @@
 Path = require 'path'
 
 module.exports = (config)->
-    config.append 'stassets.root', config.find 'root'
+    stroot = config.find 'stassets.root', []
+    if stroot.length is 0
+        config.append 'stassets.root', config.find 'root'
 
     if themes = config.find 'stassets.themes'
         for theme in themes
