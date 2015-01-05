@@ -22,7 +22,6 @@ stream =
 buildLogger = (config)->
     level = config.find 'log.level', 'LOG_LEVEL', 'http'
     format = config.find 'log.format', 'LOG_FORMAT', 'tiny'
-
     file = config.find 'log.file', 'LOG_FILE', false
     # HACK
     if file is 'false'

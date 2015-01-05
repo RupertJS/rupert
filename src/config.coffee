@@ -24,10 +24,25 @@ FIND = (obj, path, val, force = no)->
     key = path.shift()
     if path.length is 0
       # We're at the end of the path
-      # Update the property if either forced, or undefined.
-      obj[key] = val if force or not obj[key]?
-      # Return what's there.
-      obj[key]
+      if force or not Object::hasOwnProperty.call obj, key
+        # Update the property if either forced or unset.
+        obj[key] = val
+      if obj is process.env
+        # process.env behaves oddly.
+        if obj[key].toLowerCase() is 'false' then false
+        else if obj[key].toLowerCase() is 'true' then true
+        else if obj[key].toLowerCase() is '' then null
+        else if val instanceof Number
+          if obj[key].indexOf('.') is -1
+            parseInt obj[key]
+          else
+            parseFloat obj[key]
+        else
+          obj[key]
+      else
+        # Return what's there.
+        obj[key]
+
     else
       # If undefined, fill in this position with a new object.
       # Return `FIND` on the next path part.
