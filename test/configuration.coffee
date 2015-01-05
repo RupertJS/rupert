@@ -60,7 +60,9 @@ describe 'Rupert Configuration Manager', ->
 
   it 'find key that was set to `false`', ->
     config.shallow = false
-    config.find('shallow', 'value').should.equal false
+    falsy = config.find('shallow', 'value')
+    falsy.should.equal false # Passes
+    # falsy.should.be.instanceof Boolean # fails
 
   it 'finds key with environment override', ->
     process.env.DEEP_PATH = 'environment'

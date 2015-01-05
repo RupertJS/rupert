@@ -21,8 +21,13 @@ stream =
 
 buildLogger = (config)->
     level = config.find 'log.level', 'LOG_LEVEL', 'http'
-    file = config.find 'log.file', 'LOG_FILE', false
     format = config.find 'log.format', 'LOG_FORMAT', 'tiny'
+
+    file = config.find 'log.file', 'LOG_FILE', false
+    # HACK
+    if file is 'false'
+        config.set 'log.file', false
+        file = false
 
     opts = {level, timestamp: yes}
     try
@@ -34,7 +39,7 @@ buildLogger = (config)->
 
     try
         winston.remove(winston.transports.File)
-    if file
+    if file isnt false
         opts.filename = file
         winston.add(winston.transports.File, opts)
         delete opts.filename

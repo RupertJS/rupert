@@ -1,9 +1,11 @@
 Path = require 'path'
 
 module.exports = (config)->
-    root = config.find('root', global.root or process.cwd())
-    unless typeof root is 'string'
-        root = config.set 'root', process.cwd()
+    root = config.find 'root',
+        unless typeof global.root is 'string'
+            process.cwd()
+        else
+            global.root
 
     config.find 'hostname', 'HOST', require('os').hostname()
 

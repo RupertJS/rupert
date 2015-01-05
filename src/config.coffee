@@ -20,9 +20,6 @@ FIND = (obj, path, val, force = no)->
     # Redo the FIND, after expanding the path to an array.
     FIND obj, path.split('.'), val, force
   else
-    # Somehow got to an error state.
-    if path.length is 0
-      throw new Error 'Key Not Found'
     # Let's follow the next key
     key = path.shift()
     if path.length is 0
@@ -35,7 +32,6 @@ FIND = (obj, path, val, force = no)->
       # If undefined, fill in this position with a new object.
       # Return `FIND` on the next path part.
       FIND obj[key] or= {}, path, val, force
-
 
 ###
 Class to manage a configuration object. Configurations are filled in with a bare
@@ -80,10 +76,10 @@ class Configuration
       deflt = env
       env = null
     if env
-      value = FIND process.env, env, deflt
-      SET @options, key, value or deflt
+      SET @options, key, FIND process.env, env, deflt
     else
       FIND @options, key, deflt
+
   ###
   Apply `fn` to every entry at `key`, if `key` finds an array, or apply `fn` to
   the value if `value` is not an array. Useful for EG normalizing an array of
