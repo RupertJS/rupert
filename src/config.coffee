@@ -31,7 +31,11 @@ FIND = (obj, path, val, force = no)->
         # process.env behaves oddly.
         if obj[key].toLowerCase() is 'false' then false
         else if obj[key].toLowerCase() is 'true' then true
-        else if obj[key].toLowerCase() is '' then null
+        else if obj[key].toLowerCase() is ''
+          if val
+            null
+          else
+            val
         else if val instanceof Number
           if obj[key].indexOf('.') is -1
             parseInt obj[key]
