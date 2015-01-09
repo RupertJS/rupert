@@ -55,7 +55,7 @@ Some recipes are available:
 
 * [Q: How do I add libraries to the compiled vendors.js and vendors.css files?](https://github.com/RupertJS/rupert/wiki/Cookbook:-Add-Vendor-Libraries)
 * [Q: How do I configure Rupert's logging settings?](https://github.com/RupertJS/rupert/wiki/Cookbook:-Configure-Logging)
-* [Q: How do I specify a template in Angular UI Router?](https://github.com/RupertJS/rupert/wiki/Cookbook:-Angular-UI-Router-Templates)
+* [Q: How do I make use of templates in Rupert?](https://github.com/RupertJS/rupert/wiki/Cookbook:-Using-Templates)
 
 ## Docs
 
@@ -64,7 +64,7 @@ The full documentation on settings in `server.json` is [in the wiki](https://git
 ## Changelog
 
 * **0.3.1** *2015-01-09* Major refactor of config mechanism. Userland unaffected, but `rupert-plugin` projects need migration.
-* **0.2.7** *2014-12-31* Expose Stassets watcher constructors.
+* **0.2.7** *2014-12-30* Expose Stassets watcher constructors.
 * **0.2.6** *2014-12-11* New logging configs, small stability improvements.
 * **0.2.5** *2014-11-03* Improved algo for determining loadable stassets configs.
 * **0.2.4** *2014-11-03* Travis integration and testing.
