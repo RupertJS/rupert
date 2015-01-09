@@ -63,7 +63,8 @@ The full documentation on settings in `server.json` is [in the wiki](https://git
 
 ## Changelog
 
-* **0.2.7** ** Expose Stassets watcher constructors.
+* **0.3.1** *2015-01-09* Major refactor of config mechanism. Userland unaffected, but `rupert-plugin` projects need migration.
+* **0.2.7** *2014-12-31* Expose Stassets watcher constructors.
 * **0.2.6** *2014-12-11* New logging configs, small stability improvements.
 * **0.2.5** *2014-11-03* Improved algo for determining loadable stassets configs.
 * **0.2.4** *2014-11-03* Travis integration and testing.
