@@ -1,5 +1,3 @@
 module.exports = function(config){
-    config.scripts = {
-        types: [ 'main', 'script' ]
-    };
+    config.append('stassets.scripts.types', [ 'main', 'script' ]);
 };

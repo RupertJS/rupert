@@ -1,27 +1,31 @@
 Q = require 'q'
 Path = require 'path'
 debug = require('debug')('rupert')
+Config = require('./config')
 
 module.exports = (config)->
     unless config
         throw new Error "Cannot start rupert without a configuration."
 
+    config = new Config config
+
     # New Relic, as early as possible
-    config.newRelicKey = process.env.NEW_RELIC_KEY or config.newRelicKey
-    require('new-relic')(config.newRelicKey) if config.newRelicKey
+    # newRelicKey = config.find 'newRelicKey', 'NEW_RELIC_KEY', null
+    # require('new-relic')(newRelicKey) if newRelicKey?
 
     config = require('./normalize')(config)
-
     # Load the basic app
     app = require('./base')(config)
+    # Load plugins
+    require('./plugins')(config)
     winston = require('./logger').log
     servers = {}
 
     # Async secion...
     # Decide on TLS
     load = (do ->
-        if config.tls
-            config.tls = {} if config.tls is true
+        if tls = config.find 'tls', 'TLS', false
+            config.set('tls', {}) if tls is true
             require('./secure')(config, app)
             .then (_)->
                 servers = _
@@ -35,7 +39,8 @@ module.exports = (config)->
                 app.server = servers.http
                 app.url = process.env.URL = config.HTTP_URL
                 app
-    ).then (app)->
+    )
+    .then (app)->
         # Configure routing
         require('./routers')(config, app)
     .then (app)->
@@ -59,36 +64,39 @@ module.exports = (config)->
             app: app
             start: (callback = ->)->
                 readies = []
-
+                name = config.find 'name', 'APP_NAME', 'rupert-app'
                 readies.push(startServer(
                     servers.https,
                     config.tls.port,
-                    "#{config.name} tls",
+                    "#{name} tls",
                     config.HTTPS_URL
                 )) if config.tls
 
                 readies.push startServer(
                     servers.http,
                     config.port,
-                    config.name,
+                    name,
                     config.HTTP_URL
                 )
 
                 Q.all(readies).then((->callback())).catch(callback)
 
-            stop: ()->
-                listeners.map (_)->_.close()
+            stop: (callback = ->)->
+                console.log "Stopping #{config.name}..."
+                Q.all(listeners.map((_)->(Q.denodeify(_.close)())))
+                .then((->callback())).catch(callback)
         }
     .catch (err)->
         winston.error 'Failed to start Rupert.'
         winston.error err.stack
 
     load.app = app
+    load.config = config
     load.start = (callback)->
-        load.then((_)->_.start(callback))
+        load.then (_)->_.start(callback)
     load.stop = (callback)->
-        load.then((_)->_.stop(callback))
+        load.then (_)-> _.stop().then(callback)
     load
 
-module.exports.Stassets =
-    constructors: require('./stassets/constructors')
+module.exports.Stassets = constructors: require('./stassets/constructors')
+module.exports.Config = Config

@@ -5,14 +5,14 @@ debug = require('debug')('ng-stassets:routers')
 Q = require 'q'
 
 module.exports = (config, app)->
-    config.routing or= []
-    unless config.stassets is false
-        config.routing.unshift __dirname + '/stassets/route.coffee'
+    if config.find 'stassets', false
+        config.prepend 'routing', "#{__dirname}/stassets/route.coffee"
+        # TODO Come up with a clever way for rewriting to behave.
         # config.routing.unshift __dirname + '/rewrite/route.coffee'
-    unless config.websockets is false
-        config.routing.unshift __dirname + '/sockets/route.coffee'
-    unless config.static is false
-        config.routing.push __dirname + '/static/route.coffee'
+    if config.find 'websockets', false
+        config.prepend 'routing', "#{__dirname}/sockets/route.coffee"
+    if config.find 'static', false
+        config.append 'routing', "#{__dirname}/static/route.coffee"
 
     Q.all config.routing.map (routePattern)->
         debug "Loading for '#{routePattern}'..."
