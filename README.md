@@ -21,8 +21,8 @@ When a developer today first comes across front-edge programming, it's daunting 
     * While npm is smart in initialization, you can set a name, etc in your [npmrc][npmrc] if you create packages often.
   * `npm install`
 1. Choose your frontend toolkit.
-  * **Angular & Bootstrap** `npm install --save rupert-config-angular rupert-config-bootstrap`
-  * **Ionic** (includes angular) `npm install --save rupert-config-ionic`
+  * **Angular & Bootstrap** `npm install --save rupert-plugin-angular rupert-plugin-bootstrap`
+  * **Ionic** (includes angular) `npm install --save rupert-plugin-ionic`
   1. The default package name is `rupert-app`, in `./src/client/index.jade`, `./src/client/main.js`, and other places. Edit this as needed.
   1. *(Coming Soon)* `npm run rename <NEW NAME>` to change all instances of the root module name.
 
