@@ -56,6 +56,7 @@ Some recipes are available:
 * [Q: How do I add libraries to the compiled vendors.js and vendors.css files?](https://github.com/RupertJS/rupert/wiki/Cookbook:-Add-Vendor-Libraries)
 * [Q: How do I configure Rupert's logging settings?](https://github.com/RupertJS/rupert/wiki/Cookbook:-Configure-Logging)
 * [Q: How do I make use of templates in Rupert?](https://github.com/RupertJS/rupert/wiki/Cookbook:-Using-Templates)
+* [Q: How do I create a Rupert plugin?](https://github.com/RupertJS/rupert/wiki/Cookbook:-Creating-a-Rupert-Plugin)
 
 ## Docs
 
