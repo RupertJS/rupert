@@ -13,8 +13,8 @@ When a developer today first comes across front-edge programming, it's daunting 
   1. On Github, set the name and description. Generate a Readme and license.
   1. Clone the project from GitHub.
 1. Unpack the seed app:
-  * `curl https://raw.githubusercontent.com/RupertJS/rupert-grunt/master/dist/plain.tgz | tar x`
-    * or download and extract manually (files are in the root of the package, be warned) ([tar](https://raw.githubusercontent.com/RupertJS/rupert-grunt/master/dist/plain.tgz)) ([zip](https://raw.githubusercontent.com/RupertJS/rupert-grunt/master/dist/plain.zip)).
+  * `curl https://raw.githubusercontent.com/RupertJS/rupert-grunt/master/dist/bare.tgz | tar x`
+    * or download and extract manually (files are in the root of the package, be warned) ([tar](https://raw.githubusercontent.com/RupertJS/rupert-grunt/master/dist/bare.tgz)) ([zip](https://raw.githubusercontent.com/RupertJS/rupert-grunt/master/dist/bare.zip)).
     * See [the source directory here][plain_folder].
   * `npm init`
     * You will be prompted for a project name, license, etc.
