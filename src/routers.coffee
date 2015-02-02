@@ -1,7 +1,7 @@
 glob = require 'glob'
 winston = require('./logger').log
 Path = require 'path'
-debug = require('debug')('ng-stassets:routers')
+debug = require('debug')('rupert:routers')
 Q = require 'q'
 
 module.exports = (config, app)->

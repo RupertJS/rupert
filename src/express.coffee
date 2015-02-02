@@ -25,6 +25,7 @@ module.exports = (config)->
     # Decide on TLS
     load = (do ->
         if tls = config.find 'tls', 'TLS', false
+            debug("Configuring TLS")
             config.set('tls', {}) if tls is true
             require('./secure')(config, app)
             .then (_)->
@@ -33,6 +34,7 @@ module.exports = (config)->
                 app.url = process.env.URL = config.HTTPS_URL
                 app
         else
+            debug("No TLS")
             require('./servers')(config, app)
             .then (_)->
                 servers = _

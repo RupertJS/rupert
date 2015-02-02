@@ -95,6 +95,7 @@ class Configuration
       deflt = env
       env = null
     if env
+      deflt = FIND @options, key, deflt
       SET @options, key, FIND process.env, env, deflt
     else
       FIND @options, key, deflt
@@ -112,6 +113,9 @@ class Configuration
     list = FIND @options, key, []
     if list instanceof Array
       list = list.map fn
+    else if typeof list is 'object'
+      for own k, v of list
+        list[k] = fn k, v
     else
       list = fn list
     SET @, key, list

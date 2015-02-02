@@ -1,7 +1,9 @@
-PLUGIN_PREFIX = 'rupert-plugin-'
+PLUGIN_PREFIX = 'rupert-'
 
 Path = require 'path'
 findup = require 'findup-sync'
+logger = require('./logger').log
+debug = require('debug')('rupert:plugins')
 
 module.exports = (config)->
   # quick and dirty check if a dependency is requireable
@@ -15,10 +17,11 @@ module.exports = (config)->
   for key of deps when canRequire key
     dependency =
       try
+        debug('Loading plugin at ' + key)
         require(key)
       catch e
         logger.warn "Could not load plugin #{key}"
-        logger.info err, err.stack
+        logger.info e, e.stack
         (->)
     dependency(config)
 
