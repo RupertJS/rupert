@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "body-parser": "^1.10.1",
-    "coffee-script": "^1.8.0",
+    "coffee-script": "^1.9.0",
     "cookie-parser": "^1.3.2",
     "debug": "^2.1.1",
     "errorhandler": "^1.3.2",
@@ -25,7 +25,7 @@
     "q": "^1.1.2",
     "socket.io": "^1.2.1",
     "st": "^0.5.2",
-    "stassets": "^0.3.10",
+    "stassets": "^0.3.13",
     "winston": "^0.8.3"
   },
   "devDependencies": {
