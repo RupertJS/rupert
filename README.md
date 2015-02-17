@@ -26,7 +26,7 @@ When a developer today first comes across front-edge programming, it's daunting 
   1. The default package name is `rupert-app`, in `./src/client/index.jade`, `./src/client/main.js`, and other places. Edit this as needed.
   1. *(Coming Soon)* `npm run rename <NEW NAME>` to change all instances of the root module name.
 
-[plain_folder]: https://github.com/DavidSouther/rupert-grunt/tree/master/plain
+[plain_folder]: https://github.com/RupertJS/rupert/wiki/Project-Layout
 [npmrc]: https://www.npmjs.org/doc/misc/npm-config.html#config-settings
 
 ## Commands
