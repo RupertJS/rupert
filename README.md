@@ -3,7 +3,7 @@
 
 Your friendly neighborhood node application watcher. [rupert](#) handles every piece of programming at the front edge, letting teams and developers quickly and efficiently write business code for browser clients and their backing HTTP APIs.
 
-<img src="https://cdn.rawgit.com/DavidSouther/rupert/master/src/assets/logos/Rupert.svg" type="image/svg+xml" width="400px" />
+<img src="https://cdn.rawgit.com/RupertJS/rupert/master/src/assets/logos/Rupert.svg" type="image/svg+xml" width="400px" />
 
 When a developer today first comes across front-edge programming, it's daunting the number of technologies you need to know to build an application. From the bottom up, you have `docker`, `node`, `npm`, `grunt`, `mocha`, `karma`, `chai`, `express`, `mongo`, `mongoose`, `passport`, `oauth`, `cucumber`, `angular`, `protractor`, `bootstrap`, `firebase` and probably a couple I'm forgetting.  Rupert consolidates all of these into a single library. That library knows all the configurations, and all the little tips and tricks. It is configurable & extensible, with a well-documented API. It has a cookbook, which guides a new developer through the process while serving as a handy reference and reminder for a veteran developer. Rupert aims to be the go-to microservices stack, like Rails formalized the three-tier architecture.
 
@@ -27,7 +27,7 @@ When a developer today first comes across front-edge programming, it's daunting 
   1. The default package name is `rupert-app`, in `./src/client/index.jade`, `./src/client/main.js`, and other places. Edit this as needed.
   1. *(Coming Soon)* `npm run rename <NEW NAME>` to change all instances of the root module name.
 
-[plain_folder]: https://github.com/DavidSouther/rupert-grunt/tree/master/examples/bare
+[plain_folder]: https://github.com/RupertJS/rupert-grunt/tree/master/examples/bare
 [examples_folder]: https://github.com/RupertJS/rupert-grunt/tree/master/examples
 [dist_packages]: https://github.com/RupertJS/rupert-grunt/tree/master/dist
 [npmrc]: https://www.npmjs.org/doc/misc/npm-config.html#config-settings
@@ -81,5 +81,5 @@ The full documentation on settings in `server.json` is [in the wiki](https://git
 * **0.0.0 - 0.0.11** *2014-09-11* Initial work; lots of iterative tweaks.
 
 [ng]: https://angularjs.org/
-[stas]: https://github.com/DavidSouther/stassets
+[stas]: https://github.com/RupertJS/stassets
 [moment]: http://momentjs.com/
