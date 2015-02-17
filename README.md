@@ -12,10 +12,11 @@ When a developer today first comes across front-edge programming, it's daunting 
 1. (Recommended) Create a new project.
   1. On Github, set the name and description. Generate a Readme and license.
   1. Clone the project from GitHub.
-1. Unpack the seed app:
+1. Unpack a seed app:
   * `curl https://raw.githubusercontent.com/RupertJS/rupert-grunt/master/dist/bare.tgz | tar x`
     * or download and extract manually (files are in the root of the package, be warned) ([tar](https://raw.githubusercontent.com/RupertJS/rupert-grunt/master/dist/bare.tgz)) ([zip](https://raw.githubusercontent.com/RupertJS/rupert-grunt/master/dist/bare.zip)).
     * See [the source directory here][plain_folder].
+    * See [all the examples][examples_folder] ([packages][dist_packages])
   * `npm init`
     * You will be prompted for a project name, license, etc.
     * While npm is smart in initialization, you can set a name, etc in your [npmrc][npmrc] if you create packages often.
@@ -26,7 +27,9 @@ When a developer today first comes across front-edge programming, it's daunting 
   1. The default package name is `rupert-app`, in `./src/client/index.jade`, `./src/client/main.js`, and other places. Edit this as needed.
   1. *(Coming Soon)* `npm run rename <NEW NAME>` to change all instances of the root module name.
 
-[plain_folder]: https://github.com/DavidSouther/rupert-grunt/tree/master/plain
+[plain_folder]: https://github.com/DavidSouther/rupert-grunt/tree/master/examples/bare
+[examples_folder]: https://github.com/RupertJS/rupert-grunt/tree/master/examples
+[dist_packages]: https://github.com/RupertJS/rupert-grunt/tree/master/dist
 [npmrc]: https://www.npmjs.org/doc/misc/npm-config.html#config-settings
 
 ## Commands
