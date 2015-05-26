@@ -3,17 +3,10 @@ Path = require 'path'
 debug = require('debug')('rupert')
 Config = require('./config')
 
-module.exports = (config)->
-    unless config
-        throw new Error "Cannot start rupert without a configuration."
-
+module.exports = (config = {})->
     config = new Config config
 
-    # New Relic, as early as possible
-    # newRelicKey = config.find 'newRelicKey', 'NEW_RELIC_KEY', null
-    # require('new-relic')(newRelicKey) if newRelicKey?
-
-    config = require('./normalize')(config)
+    require('./normalize')(config)
     # Load the basic app
     app = require('./base')(config)
     # Load plugins
