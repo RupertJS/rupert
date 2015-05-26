@@ -17,13 +17,13 @@ module.exports = (config = {})->
     # See 70_routers for that.
     require('./20_plugins')(config)
 
-
-    servers =
-
-    # Async secion...
-    # Decide on TLS
+    # Async section
     load =
     require('./50_servers')(config, app)
+    .then (app)->
+        # Attach the logger for clients to access
+        app.logger = winston
+        app
     .then (app)->
         # Configure routing
         require('./70_routers')(config, app)

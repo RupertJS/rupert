@@ -8,11 +8,14 @@ module.exports = (config, app)->
     root = config.find 'root'
     config.map 'routing', (_)-> "#{root}/#{_}"
 
+    # TODO Come up with a clever way for rewriting to behave.
+    # config.routing.unshift __dirname + '/rewrite/route.coffee'
     if config.find 'stassets', false
         config.prepend 'routing', "#{__dirname}/stassets/route.coffee"
-        # TODO Come up with a clever way for rewriting to behave.
-        # config.routing.unshift __dirname + '/rewrite/route.coffee'
 
+    # Configure the server block. This is the recommended way to declare a server.
+    # Using the `routing` config directly will not get a correct initialization
+    # in nodemon/supervisor.
     server =
       root: config.find('server.root', 'src/server')
       extensions: config.find('server.extensions', ['js'])
