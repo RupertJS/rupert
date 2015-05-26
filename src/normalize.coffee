@@ -13,7 +13,6 @@ module.exports = (config)->
     config.find 'stassets.root', 'STASSETS_ROOT', config.stassets.root or '.'
     config.map 'stassets.root', normRoot
     config.map 'stassets.vendors.prefix', normRoot
-    config.map 'routing', (_)-> "#{root}/#{_}"
 
     config.set 'stassets.static', config.find 'static', false
 

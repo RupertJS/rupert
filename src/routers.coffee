@@ -5,14 +5,29 @@ debug = require('debug')('rupert:routers')
 Q = require 'q'
 
 module.exports = (config, app)->
+    root = config.find 'root'
+    config.map 'routing', (_)-> "#{root}/#{_}"
+
     if config.find 'stassets', false
         config.prepend 'routing', "#{__dirname}/stassets/route.coffee"
         # TODO Come up with a clever way for rewriting to behave.
         # config.routing.unshift __dirname + '/rewrite/route.coffee'
+
+    server =
+      root: config.find('server.root', 'src/server')
+      extensions: config.find('server.extensions', ['js'])
+      routing: config.find('server.routing', ['**/*route'])
+
+    extensions = "{#{server.extensions.join(',')}}"
+    for route in server.routing
+        config.append 'routing', "#{root}/#{server.root}/#{route}.#{extensions}"
+
     if config.find 'websockets', false
         config.prepend 'routing', "#{__dirname}/sockets/route.coffee"
     if config.find 'static', false
         config.append 'routing', "#{__dirname}/static/route.coffee"
+
+    debug('Full route list: ' + JSON.stringify(config.routing))
 
     Q.all config.routing.map (routePattern)->
         debug "Loading for '#{routePattern}'..."

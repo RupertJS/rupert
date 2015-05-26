@@ -1,13 +1,18 @@
 express = require 'express'
+debug = require('debug')('rupert:base')
 
 module.exports = (config)->
   logging = require('./logger')(config)
   winston = logging.log
 
+  bodyParser = {limit: config.find('uploads.size', 'UPLOAD_SIZE', '100kb')}
+
+  debug('File upload limit: ' + bodyParser.limit)
+
   app = express()
   .use(require('./rewrite/rewriter'))
   .use(require('cookie-parser')())
-  .use(require('body-parser').json())
+  .use(require('body-parser').json(bodyParser))
   .use(logging.middleware)
 
   if process.env.NODE_ENV is 'development'
