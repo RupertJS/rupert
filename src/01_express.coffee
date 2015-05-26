@@ -9,32 +9,21 @@ module.exports = (config = {})->
     require('./10_normalize')(config)
     # Load the basic app
     app = require('./15_base')(config)
-    # Load plugins
-    require('./20_plugins')(config)
+    # There is a hidden dependency:
+    # The logger is configured statically in 15_base.
     winston = require('./logger').log
-    servers = {}
+
+    # Load plugins. These are third-party pieces, not app routes.
+    # See 70_routers for that.
+    require('./20_plugins')(config)
+
+
+    servers =
 
     # Async secion...
     # Decide on TLS
-    load = (do ->
-        if tls = config.find 'tls', 'TLS', false
-            debug("Configuring TLS")
-            config.set('tls', {}) if tls is true
-            require('./51_secure')(config, app)
-            .then (_)->
-                servers = _
-                app.server = servers.https
-                app.url = process.env.URL = config.HTTPS_URL
-                app
-        else
-            debug("No TLS")
-            require('./50_servers')(config, app)
-            .then (_)->
-                servers = _
-                app.server = servers.http
-                app.url = process.env.URL = config.HTTP_URL
-                app
-    )
+    load =
+    require('./50_servers')(config, app)
     .then (app)->
         # Configure routing
         require('./70_routers')(config, app)
@@ -61,14 +50,14 @@ module.exports = (config = {})->
                 readies = []
                 name = config.find 'name', 'APP_NAME', 'rupert-app'
                 readies.push(startServer(
-                    servers.https,
+                    app.servers.https,
                     config.tls.port,
                     "#{name} tls",
                     config.HTTPS_URL
                 )) if config.tls
 
                 readies.push startServer(
-                    servers.http,
+                    app.servers.http,
                     config.port,
                     name,
                     config.HTTP_URL
