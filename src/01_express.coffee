@@ -6,11 +6,11 @@ Config = require('./config')
 module.exports = (config = {})->
     config = new Config config
 
-    require('./normalize')(config)
+    require('./10_normalize')(config)
     # Load the basic app
-    app = require('./base')(config)
+    app = require('./15_base')(config)
     # Load plugins
-    require('./plugins')(config)
+    require('./20_plugins')(config)
     winston = require('./logger').log
     servers = {}
 
@@ -20,7 +20,7 @@ module.exports = (config = {})->
         if tls = config.find 'tls', 'TLS', false
             debug("Configuring TLS")
             config.set('tls', {}) if tls is true
-            require('./secure')(config, app)
+            require('./51_secure')(config, app)
             .then (_)->
                 servers = _
                 app.server = servers.https
@@ -28,7 +28,7 @@ module.exports = (config = {})->
                 app
         else
             debug("No TLS")
-            require('./servers')(config, app)
+            require('./50_servers')(config, app)
             .then (_)->
                 servers = _
                 app.server = servers.http
@@ -37,7 +37,7 @@ module.exports = (config = {})->
     )
     .then (app)->
         # Configure routing
-        require('./routers')(config, app)
+        require('./70_routers')(config, app)
     .then (app)->
         listeners = []
         startServer = (server, port, name, URL)->
