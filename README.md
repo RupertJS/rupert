@@ -1,14 +1,10 @@
 # Rupert
 
-Your friendly full stack Javascript librarian. [Rupert](#) handles every piece of programming at the front edge, letting teams and developers quickly and efficiently write business code for browser clients and their backing HTTP APIs.
+Your friendly full stack Javascript librarian. [Rupert](#) handles every piece of programming at the [front edge](#front-edge), letting teams and developers quickly and efficiently write business code for browser clients and their backing HTTP APIs.
 
 <img src="https://cdn.rawgit.com/DavidSouther/rupert/master/src/assets/logos/Rupert.svg" type="image/svg+xml" width="400px" />
 
 When a programmer today first comes across full-stack javascript development, it's daunting the number of technologies and libraries needed to build an application. From the bottom up, you likely have `docker`, `node`, `npm`, `grunt`, `mocha`, `karma`, `chai`, `express`, `mongo`, `mongoose`, `passport`, `oauth`, `cucumber`, `angular`, `protractor`, `bootstrap`, `firebase` and plugins for all of those.  Rupert consolidates all of these into a single library. Rupert knows all the configurations, and all the little tips and tricks. It is configurable & extensible, with a well-documented API. Rupert is the go-to microservices stack, like Rails formalized the three-tier architecture.
-
-## Front Edge
-
-
 
 ## Getting Started
 
@@ -44,6 +40,10 @@ When a programmer today first comes across full-stack javascript development, it
 **`$ grunt features`, `$ npm run features`** Runs any Behavior Features tests; first runs a pass of [features tagged][tagging] `@current`, then runs any *not* tagged `@broken`.
 
 [tagging]: https://github.com/cucumber/cucumber/wiki/Tags
+
+## Front Edge
+
+Rupert implements a front-edge microservices architecture. In a "traditional" Web MVC architecture, applications are built around three tiers of programming. The first tier, the View, is rendered HTML in a web browser. The middle tier, the Controller, is an HTTP server like Rails or Tomcat, that returns HTML for a particular view and routes actions as URLs from the client. The Model is
 
 ## Layout
 
