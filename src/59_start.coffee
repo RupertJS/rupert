@@ -42,6 +42,7 @@ module.exports = (config, app)->
 
         stop: (callback = ->)->
             console.log "Stopping #{config.name}..."
+            app.emit('stopping');
             Q.all(listeners.map((_)->(Q.denodeify(_.close)())))
             .then((->callback())).catch(callback)
     }
