@@ -10,8 +10,15 @@ server =
     routing: [
         'server/route.coffee'
     ]
+    server: {
+      root: 'backend'
+      extensions: [
+        'js'
+        'coffee'
+      ]
+    }
 
-Rupert = require('../src/express.js')
+Rupert = require('../express.js')
 lib = __dirname + "/rupert-config"
 server.plugins.dependencies[lib] = yes
 
@@ -28,6 +35,7 @@ else
 
         it 'should normalize config paths', ->
             config.should.have.property('wasRouted').that.equals yes
+            config.should.have.property('backendRouted').that.equals yes
             stassetsRoot = config.find 'stassets.root'
             stassetsRoot.should.be.instanceof Array
             stassetsRoot[0].should.equal "#{__dirname}/client"

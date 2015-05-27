@@ -1,1 +1,10 @@
-module.exports = require('./src/express.js');
+function load(){
+  module.exports = require('./src/01_express.coffee');
+}
+
+try {
+  load();
+} catch (e) {
+  require('coffee-script/register');
+  load();
+}
