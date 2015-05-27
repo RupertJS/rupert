@@ -21,10 +21,6 @@ module.exports = (config = {})->
     load =
     require('./50_servers')(config, app)
     .then (app)->
-        # Attach the logger for clients to access
-        app.logger = winston
-        app
-    .then (app)->
         # Configure routing
         require('./70_routers')(config, app)
     .then (app)->

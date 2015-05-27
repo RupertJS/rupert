@@ -15,6 +15,10 @@ module.exports = (config)->
   .use(require('body-parser').json(bodyParser))
   .use(logging.middleware)
 
+  # Attach utilities for clients to access
+  app.config = config
+  app.logger = winston
+
   if process.env.NODE_ENV is 'development'
       winston.info "Starting in development mode"
       app.use require('errorhandler')({dumpExceptions: yes, showStack: yes})
