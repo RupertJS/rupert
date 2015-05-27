@@ -2,7 +2,7 @@
 
 Your friendly full stack Javascript librarian. [Rupert](#) handles every piece of programming at the [front edge](#front-edge), letting teams and developers quickly and efficiently write business code for browser clients and their backing HTTP APIs.
 
-<img src="https://cdn.rawgit.com/DavidSouther/rupert/master/src/assets/logos/Rupert.svg" type="image/svg+xml" width="400px" />
+<img src="https://cdn.rawgit.com/RupertJS/rupert/master/src/assets/logos/Rupert.svg" type="image/svg+xml" width="400px" />
 
 When a programmer today first comes across full-stack javascript development, it's daunting the number of technologies and libraries needed to build an application. From the bottom up, you likely have `docker`, `node`, `npm`, `grunt`, `mocha`, `karma`, `chai`, `express`, `mongo`, `mongoose`, `passport`, `oauth`, `cucumber`, `angular`, `protractor`, `bootstrap`, `firebase` and plugins for all of those.  Rupert consolidates all of these into a single library. Rupert knows all the configurations, and all the little tips and tricks. It is configurable & extensible, with a well-documented API. Rupert is the go-to microservices stack, like Rails formalized the three-tier architecture.
 
@@ -11,22 +11,24 @@ When a programmer today first comes across full-stack javascript development, it
 1. Create a new project.
   1. On Github, set the name and description. Generate a Readme and license.
   1. Clone the project from GitHub.
-1. Unpack the seed app.
-  1. From the command line, `cd` into the project folder and execute these three commands.
-  1. `curl https://raw.githubusercontent.com/RupertJS/rupert-grunt/master/dist/bare.tgz | tar x`
+1. Unpack a seed app:
+  * `curl https://raw.githubusercontent.com/RupertJS/rupert-grunt/master/dist/bare.tgz | tar x`
     * or download and extract manually (files are in the root of the package, be warned) ([tar](https://raw.githubusercontent.com/RupertJS/rupert-grunt/master/dist/bare.tgz)) ([zip](https://raw.githubusercontent.com/RupertJS/rupert-grunt/master/dist/bare.zip)).
     * See [the source directory here][plain_folder].
-  2. `npm init`
-    * You will be prompted for a project name, license, and a few others.
-    * While npm is smart in initialization, you can set most defaults in your [npmrc][npmrc] if you create packages often.
-  3 `npm install`
+    * See [all the examples][examples_folder] ([packages][dist_packages])
+  * `npm init`
+    * You will be prompted for a project name, license, etc.
+    * While npm is smart in initialization, you can set a name, etc in your [npmrc][npmrc] if you create packages often.
+  * `npm install`
 1. Choose your frontend toolkit.
   * **Angular & Bootstrap** `npm install --save rupert-plugin-angular rupert-plugin-bootstrap`
   * **Ionic** (includes angular) `npm install --save rupert-plugin-ionic`
   1. The default Angular package name is `rupert-app`, in `./src/client/index.jade`, `./src/client/main.js`, and other places. Edit this as needed.
   1. *(Coming Soon)* `npm run rename <NEW NAME>` to change all instances of the root module name.
 
-[plain_folder]: https://github.com/DavidSouther/rupert-grunt/tree/master/plain
+[plain_folder]: https://github.com/RupertJS/rupert-grunt/tree/master/examples/bare
+[examples_folder]: https://github.com/RupertJS/rupert-grunt/tree/master/examples
+[dist_packages]: https://github.com/RupertJS/rupert-grunt/tree/master/dist
 [npmrc]: https://www.npmjs.org/doc/misc/npm-config.html#config-settings
 
 ## Commands
@@ -82,5 +84,5 @@ The full documentation on settings in `server.json` is [in the wiki](https://git
 * **0.0.0 - 0.0.11** *2014-09-11* Initial work; lots of iterative tweaks.
 
 [ng]: https://angularjs.org/
-[stas]: https://github.com/DavidSouther/stassets
+[stas]: https://github.com/RupertJS/stassets
 [moment]: http://momentjs.com/
