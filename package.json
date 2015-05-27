@@ -2,7 +2,7 @@
   "name": "rupert",
   "version": "0.3.1",
   "description": "Preconfigured Express stassets server.",
-  "main": "src/express.js",
+  "main": "./express.js",
   "repository": "git@github.com:DavidSouther/rupert.git",
   "directories": {
     "lib": "./src",
