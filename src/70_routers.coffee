@@ -6,7 +6,7 @@ Q = require 'q'
 
 module.exports = (config, app)->
     root = config.find 'root'
-    config.map 'routing', (_)-> "#{root}/#{_}"
+    # config.map 'routing', (_)-> "#{root}/#{_}"
 
     # TODO Come up with a clever way for rewriting to behave.
     # config.routing.unshift __dirname + '/rewrite/route.coffee'

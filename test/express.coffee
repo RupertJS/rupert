@@ -8,15 +8,17 @@ server =
     stassets:
         root: './client'
     routing: [
-        'server/route.coffee'
+        __dirname + '/server/route.coffee'
     ]
-    server: {
+    server:
       root: 'backend'
       extensions: [
         'js'
         'coffee'
+      ],
+      routing: [
+        'route'
       ]
-    }
 
 Rupert = require('../express.js')
 lib = __dirname + "/rupert-config"
