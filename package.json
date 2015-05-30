@@ -1,6 +1,6 @@
 {
   "name": "rupert",
-  "version": "0.3.3",
+  "version": "0.3.4",
   "description": "Preconfigured Express stassets server.",
   "main": "./express.js",
   "repository": "git@github.com:DavidSouther/rupert.git",
