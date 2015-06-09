@@ -18,10 +18,15 @@ module.exports = (config, app)->
     # in nodemon/supervisor.
     server =
       root: config.find('server.root', 'src/server')
-      extensions: config.find('server.extensions', ['js'])
+      extensions: config.find('server.extensions', ['js', 'coffee'])
       routing: config.find('server.routing', ['**/*route'])
 
-    extensions = "{#{server.extensions.join(',')}}"
+    extensions =
+      if server.extensions.length > 1
+        "{#{server.extensions.join(',')}}"
+      else
+        server.extensions[0]
+
     for route in server.routing
         config.append 'routing', "#{root}/#{server.root}/#{route}.#{extensions}"
 
