@@ -42,6 +42,10 @@ module.exports = (config, app)->
         try
             files = glob.sync(routePattern).map (file)->
                 './' + Path.relative __dirname, file
+            if files.length is 0
+              winston.warn("Failed to find routes for '#{routePattern}'!")
+              winston.info("Routes must be specified in an complete glob.")
+              winston.info("Did you specify relative, or forget the extension?")
         catch e
             debug "Failed to find routes for '#{routePattern}'!"
             winston.debug e.stack
