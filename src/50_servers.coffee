@@ -1,14 +1,15 @@
 debug = require('debug')('rupert:servers')
 
 module.exports = (config, app)->
-    if config.tls
+    tls = config.find('tls', 'TLS', false)
+    if tls
         debug("Configuring TLS")
-        config.set('tls', {}) if config.tls is true
+        config.tls = {} if config.tls is true
         require('./51_secure')(config, app)
         .then (_)->
             app.servers = _
             app.server = _.https
-            app.url = process.env.URL = config.HTTPS_URL
+            app.url = process.env.URL = config.find('url', 'URL', config.HTTPS_URL)
             app
     else
         debug("No TLS")
@@ -16,5 +17,5 @@ module.exports = (config, app)->
         .then (_)->
             app.servers = _
             app.server = _.http
-            app.url = process.env.URL = config.HTTP_URL
+            app.url = process.env.URL = config.find('url', 'URL', config.HTTP_URL)
             app
