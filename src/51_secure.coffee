@@ -30,12 +30,12 @@ module.exports = (config, app)->
         .then (keys)->
             write =
                 if config.find 'tls.writeCert', 'WRITE_CERT', false
-                  log.info 'Cert generated, writing to #{keyFile}, #{certFile}.'
+                  log.info "Cert generated, writing to #{keyFile}, #{certFile}."
 
-                  Q.all(
+                  Q.all([
                       writeFile(keyFile, keys.serviceKey, enc),
                       writeFile(certFile, keys.certificate, enc)
-                  )
+                  ])
                 else
                   Q(true)
             write.then ->
@@ -43,7 +43,7 @@ module.exports = (config, app)->
     .then (tlsOptions)->
         https = require('https').createServer(tlsOptions, app)
 
-        config.HTTPS_URL = "https://#{config.hostname}:#{config.tls.port}/"
+        config.HTTPS_URL = "https://#{config.hostname}:#{port}/"
 
         httpApp = express().use (q, s, n)->
             s.redirect config.HTTPS_URL

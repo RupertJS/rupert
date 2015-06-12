@@ -1,9 +1,9 @@
 debug = require('debug')('rupert:servers')
 
 module.exports = (config, app)->
-    if tls = config.find 'tls', 'TLS', false
+    if config.tls
         debug("Configuring TLS")
-        config.set('tls', {}) if tls is true
+        config.set('tls', {}) if config.tls is true
         require('./51_secure')(config, app)
         .then (_)->
             app.servers = _

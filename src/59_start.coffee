@@ -26,14 +26,14 @@ module.exports = (config, app)->
             name = config.find 'name', 'APP_NAME', 'rupert-app'
             readies.push(startServer(
                 app.servers.https,
-                config.tls.port,
+                config.find('tls.port'),
                 "#{name} tls",
                 config.HTTPS_URL
             )) if config.tls
 
             readies.push startServer(
                 app.servers.http,
-                config.port,
+                config.find('port'),
                 name,
                 config.HTTP_URL
             )
