@@ -50,14 +50,25 @@ else
             it 'exposes constructors', ->
                 Object.keys(Rupert.Stassets.constructors).length.should.equal 8
 
-    describe 'Rupert Express Error Handling', ->
-        it 'does callback with exceptions', (done)->
-            config =
-                root: __dirname
-                name: 'rupert.tests'
-                port: 80
-                stassets: false
+    # describe 'Rupert Express Error Handling', ->
+    #     it 'does callback with exceptions', (done)->
+    #         config =
+    #             root: __dirname
+    #             name: 'rupert.tests'
+    #             port: 80
+    #             stassets: false
+    #         rupert = Rupert config
+    #         rupert.start (err)->
+    #             should.exist err
+    #             rupert.stop()#.then(done)
+
+    describe 'Rupert secure server', ->
+        it 'starts a secure server', (done)->
+            config = JSON.parse(JSON.stringify(server))
+            config.tls = true
+            delete process.env.TLS
             rupert = Rupert config
             rupert.start (err)->
-                should.exist err
-                done()
+                return done(err) if err
+                rupert.config.find('tls.port').should.equal '8443'
+                rupert.stop done

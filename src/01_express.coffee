@@ -20,11 +20,8 @@ module.exports = (config = {})->
     # Async section
     load =
     require('./50_servers')(config, app)
-    .then (app)->
-        # Configure routing
-        require('./70_routers')(config, app)
-    .then (app)->
-        require('./59_start')(config, app)
+    .tap (app)-> require('./70_routers')(config, app)
+    .then (app)-> return require('./59_start')(config, app)
     .catch (err)->
         winston.error 'Failed to start Rupert.'
         winston.error err.stack
@@ -32,9 +29,12 @@ module.exports = (config = {})->
     load.app = app
     load.config = config
     load.start = (callback)->
-        load.then (_)->_.start(callback)
+        load.then (_)->
+          load.starter = _
+          _.start(callback)
     load.stop = (callback)->
-        load.then (_)-> _.stop().then(callback)
+        if load.starter and load.starter.stop
+            load.starter.stop().then(callback)
     load
 
 module.exports.Stassets = constructors: require('./stassets/constructors')
