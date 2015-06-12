@@ -47,4 +47,4 @@ module.exports = (config, app)->
 
         httpApp = express().use (q, s, n)->
             s.redirect config.HTTPS_URL
-        require('./servers')(config, httpApp).then ({http})-> Q({http, https})
+        require('./52_unsecure')(config, httpApp).then ({http})-> Q({http, https})
