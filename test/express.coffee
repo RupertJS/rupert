@@ -62,6 +62,17 @@ else
     #             should.exist err
     #             rupert.stop()#.then(done)
 
+    describe 'Rupert startup', ->
+        it 'starts a server and waits for assets', (done)->
+            config = JSON.parse(JSON.stringify(server))
+            rupert = Rupert config
+            rupert.start().then ->
+                rupert.stop().then ->
+                    done()
+            .catch (e)->
+                console.log(e)
+                done(e)
+
     describe 'Rupert secure server', ->
         it 'starts a secure server', (done)->
             config = JSON.parse(JSON.stringify(server))

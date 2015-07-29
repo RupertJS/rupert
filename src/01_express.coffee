@@ -20,8 +20,16 @@ module.exports = (config = {})->
     # Async section
     load =
     require('./50_servers')(config, app)
-    .tap (app)-> require('./70_routers')(config, app)
-    .then (app)-> return require('./59_start')(config, app)
+    .then (app)->
+        # Attach utilities for clients to access
+        app.config = config
+        app.logger = winston
+        app
+    .then (app)->
+        # Configure routing
+        require('./70_routers')(config, app)
+    .then (app)->
+        require('./59_start')(config, app)
     .catch (err)->
         winston.error 'Failed to start Rupert.'
         winston.error err.stack
