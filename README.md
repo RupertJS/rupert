@@ -70,6 +70,7 @@ The full documentation on settings in `server.json` is [in the wiki](https://git
 
 ## Changelog
 
+* **0.3.9** *2015-07-28* Improved handling of start and stop.
 * **0.3.4** *2015-05-39* Minor refactor of server config, that may make some routing definitions break.
 * **0.3.1** *2015-01-09* Major refactor of config mechanism. Userland unaffected, but `rupert-plugin` projects need migration.
 * **0.2.7** *2014-12-30* Expose Stassets watcher constructors.
