@@ -42,7 +42,15 @@ module.exports = (config, app)->
 
         stop: (callback = ->)->
             winston.info "Stopping #{config.name}..."
-            app.emit('stopping');
-            Q.all(listeners.map((_)->(Q.denodeify(_.close)())))
-            .then((->callback())).catch(callback)
+            app.emit('stopping')
+            app.emit('close')
+
+            closers = listeners.map (_)->
+                d = Q.defer()
+                _.on 'close', ->
+                    d.resolve()
+                _.close()
+                d.promise
+
+            Q.all(closers).then((->callback()), callback)
     }
