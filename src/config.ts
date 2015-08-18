@@ -1,5 +1,8 @@
 /// <reference path="../typings/node/node.d.ts" />
 
+type ConfigPrim = boolean|string|number;
+type ConfigVal = ConfigPrim|Array<ConfigPrim>;
+
 export class Config {
   private _data: any = {};
   constructor(options: any = {}) {
@@ -10,29 +13,46 @@ export class Config {
     }
   }
 
-  set(key: string, value: string) {
+  set(key: string, value: ConfigVal) {
     return SET(this._data, key.split('.'), value);
   }
 
-  find(key: string, env?: string, deflt?: string): any {
+  find(
+    key: string,
+    env?: ConfigVal,
+    deflt?: ConfigVal
+  ): ConfigVal {
     if (arguments.length === 2) {
       deflt = env;
       env = null;
     }
     if (env) {
       deflt = FIND(this._data, key.split('.'), deflt);
-      let envDeflt = FIND(process.env, [env], deflt);
+      let envDeflt = FIND(process.env, [<string>env], deflt);
       return SET(this._data, key.split('.'), envDeflt);
     } else {
       return FIND(this._data, key.split('.'), deflt);
     }
+  }
+
+  map(key: string, fn: (_: ConfigPrim) => ConfigPrim): Array<ConfigPrim> {
+    const arr = this.find(key, []);
+    const isArr = arr.constructor === Array;
+    const mapped = isArr ?
+      <Array<ConfigPrim>>(<Array<ConfigPrim>>arr).map(fn) :
+      <ConfigPrim>fn(<ConfigPrim>arr);
+    this.set(key, mapped);
+    return isArr ? <Array<ConfigPrim>>mapped : [<ConfigPrim>mapped];
   }
 }
 
 /**
  * Convenience for `FIND(_, _, _, true)`
  */
-function SET(o: Object, p: string[], v: any) {
+function SET(
+  o: Object, p: string[],
+  v: ConfigVal
+): ConfigVal {
   return FIND(o, p, v, true);
 }
 
@@ -48,8 +68,12 @@ function SET(o: Object, p: string[], v: any) {
  *        if `force` is `true`.
  * @param force {boolean} if `true`, replace the value even if it is set.
  */
-function FIND(obj: any, path: string[], val?: any, force: boolean = false): any
-{
+function FIND(
+  obj: any,
+  path: string[],
+  val?: ConfigVal,
+  force: boolean = false
+): ConfigVal  {
   // Let's follow the next key
   let key = path.shift();
   const hasKey = Object.hasOwnProperty.call(obj, key);

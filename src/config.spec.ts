@@ -1,9 +1,12 @@
 /// <reference path="../typings/mocha/mocha.d.ts" />
 /// <reference path="../typings/chai/chai.d.ts" />
+/// <reference path="../typings/node/node.d.ts" />
 
 import { expect } from 'chai';
 
 import { Config } from './rupert';
+
+import * as Path from 'path';
 
 describe('Rupert Configuration Manager', () => {
   it('should expose a constructor', () => {
@@ -52,6 +55,12 @@ describe('Rupert Configuration Manager', () => {
       expect(config.find('deep.path', 'other value')).to.equal('value');
     });
 
+    it('find key that was set to `false`', () => {
+      config.set('shallow', false);
+      let falsy = config.find('shallow', 'value');
+      expect(falsy).to.equal(false);
+    });
+
     describe('works with the environment', () => {
       it('finds key with environment override', () => {
         process.env.DEEP_PATH = 'environment';
@@ -69,20 +78,18 @@ describe('Rupert Configuration Manager', () => {
       });
     });
 
-    // describe('profives list operations', () => {
-      // it 'find key that was set to `false`', ->
-      //   config.shallow = false
-      //   falsy = config.find('shallow', 'value')
-      //   falsy.should.equal false # Passes
-      //   # falsy.should.be.instanceof Boolean # fails?
+    describe('profives list operations', () => {
 
+      it('maps function over array key', () => {
+        config.set('deep.path', ['./src', './lib']);
+        let list = config.map('deep.path', addVarPrefix);
 
-      // it 'maps function over array key', ->
-      //   Path = require('path')
-      //   config.set('deep.path', ['./src', './lib'])
-      //   list = config.map 'deep.path', (_)->
-      // Path.resolve(Path.join('/var'), _)
-      //   list.should.deep.equal ['/var/src', '/var/lib']
+        expect(list).to.deep.equal(['/var/src', '/var/lib']);
+
+        function addVarPrefix(_: string) {
+          return Path.resolve(Path.join('/var'), _);
+        }
+      });
 
       // it 'appends values to key', ->
       //   config.set('deep.path', ['foo', 'bar'])
@@ -108,7 +115,7 @@ describe('Rupert Configuration Manager', () => {
       //   config.prepend('deep.path', ['foo', 'bar'])
       //   config.find('deep.path').should.deep.equal(['foo', 'bar'])
 
-    // });
+    });
   });
 });
 
