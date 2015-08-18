@@ -1,4 +1,4 @@
-/// <reference path="../typings/node/node.d.ts" />
+/// <reference path="../../typings/node/node.d.ts" />
 
 type ConfigPrim = boolean|string|number;
 type ConfigVal = ConfigPrim|Array<ConfigPrim>;
@@ -95,6 +95,7 @@ function FIND(
       obj[key] = val;
     }
     if (obj === process.env) {
+      // TODO Either use proces.env OR use localStorage.
       // process.env behaves oddly.
       if (obj[key].toLowerCase() === 'false') {
         return false;

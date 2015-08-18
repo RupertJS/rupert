@@ -1,3 +1,3 @@
 export {
   Config
-} from './config';
+} from './config/config';

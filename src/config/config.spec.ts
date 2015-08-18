@@ -1,10 +1,10 @@
-/// <reference path="../typings/mocha/mocha.d.ts" />
-/// <reference path="../typings/chai/chai.d.ts" />
-/// <reference path="../typings/node/node.d.ts" />
+/// <reference path="../../typings/mocha/mocha.d.ts" />
+/// <reference path="../../typings/chai/chai.d.ts" />
+/// <reference path="../../typings/node/node.d.ts" />
 
 import { expect } from 'chai';
 
-import { Config } from './rupert';
+import { Config } from '../rupert';
 
 import * as Path from 'path';
 
@@ -118,7 +118,6 @@ describe('Rupert Configuration Manager', () => {
         config.prepend('deep.path', ['foo', 'bar']);
         expect(config.find('deep.path')).to.deep.equal(['foo', 'bar']);
       });
-
     });
   });
 });
