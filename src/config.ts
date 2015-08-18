@@ -36,14 +36,25 @@ export class Config {
   }
 
   map(key: string, fn: (_: ConfigPrim) => ConfigPrim): Array<ConfigPrim> {
-    const arr = this.find(key, []);
-    const isArr = arr.constructor === Array;
-    const mapped = isArr ?
-      <Array<ConfigPrim>>(<Array<ConfigPrim>>arr).map(fn) :
-      <ConfigPrim>fn(<ConfigPrim>arr);
-    this.set(key, mapped);
-    return isArr ? <Array<ConfigPrim>>mapped : [<ConfigPrim>mapped];
+    const mapped = toConfigArray(this.find(key, [])).map(fn);
+    return toConfigArray(this.set(key, mapped));
   }
+
+  append(key: string, arr: ConfigVal): Array<ConfigPrim> {
+    let configArr = toConfigArray(arr);
+    let list = toConfigArray(this.find(key, [])).concat(configArr);
+    return toConfigArray(this.set(key, list));
+  }
+
+  prepend(key: string, arr: ConfigVal): Array<ConfigPrim> {
+    let configArr = toConfigArray(arr);
+    let list = configArr.concat(toConfigArray(this.find(key, [])));
+    return toConfigArray(this.set(key, list));
+  }
+}
+
+function toConfigArray(arr: ConfigVal): Array<ConfigPrim> {
+  return arr.constructor === Array ? <Array<ConfigPrim>>arr : [<ConfigPrim>arr];
 }
 
 /**

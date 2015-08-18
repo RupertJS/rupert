@@ -91,35 +91,34 @@ describe('Rupert Configuration Manager', () => {
         }
       });
 
-      // it 'appends values to key', ->
-      //   config.set('deep.path', ['foo', 'bar'])
-      //   config.append('deep.path', 'baz')
-      //   config.append('deep.path', ['bing', 'bang'])
-      //   config.find('deep.path').should.deep.equal([
-      //     'foo', 'bar', 'baz', 'bing', 'bang'
-      //   ])
+      it('appends values to key', () => {
+        config.set('deep.path', ['foo', 'bar']);
+        config.append('deep.path', 'baz');
+        config.append('deep.path', ['bing', 'bang']);
+        expect(config.find('deep.path')).to.deep.equal([
+          'foo', 'bar', 'baz', 'bing', 'bang'
+        ]);
+      });
 
-      // it 'prepends values to key', ->
-      //   config.set('deep.path', ['foo', 'bar'])
-      //   config.prepend('deep.path', 'baz')
-      //   config.prepend('deep.path', ['bing', 'bang'])
-      //   config.find('deep.path').should.deep.equal([
-      //     'bing', 'bang', 'baz', 'foo', 'bar'
-      //   ])
+      it('prepends values to key', () => {
+        config.set('deep.path', ['foo', 'bar']);
+        config.prepend('deep.path', 'baz');
+        config.prepend('deep.path', ['bing', 'bang']);
+        expect(config.find('deep.path')).to.deep.equal([
+          'bing', 'bang', 'baz', 'foo', 'bar'
+        ]);
+      });
 
-      // it 'appends to a new empty array', ->
-      //   config.append('deep.path', ['foo', 'bar'])
-      //   config.find('deep.path').should.deep.equal(['foo', 'bar'])
+      it('appends to a new empty array', () => {
+        config.append('deep.path', ['foo', 'bar']);
+        expect(config.find('deep.path')).to.deep.equal(['foo', 'bar']);
+      });
 
-      // it 'prepends to a new empty array', ->
-      //   config.prepend('deep.path', ['foo', 'bar'])
-      //   config.find('deep.path').should.deep.equal(['foo', 'bar'])
+      it('prepends to a new empty array', () => {
+        config.prepend('deep.path', ['foo', 'bar']);
+        expect(config.find('deep.path')).to.deep.equal(['foo', 'bar']);
+      });
 
     });
   });
 });
-
-
-
-
-
