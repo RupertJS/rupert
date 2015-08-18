@@ -10,12 +10,22 @@ export class Config {
     }
   }
 
-  set(key: string, value: any) {
+  set(key: string, value: string) {
     return SET(this._data, key.split('.'), value);
   }
 
-  find(key: string, deflt?: any): any {
-    return FIND(this._data, key.split('.'), deflt);
+  find(key: string, env?: string, deflt?: string): any {
+    if (arguments.length === 2) {
+      deflt = env;
+      env = null;
+    }
+    if (env) {
+      deflt = FIND(this._data, key.split('.'), deflt);
+      let envDeflt = FIND(process.env, [env], deflt);
+      return SET(this._data, key.split('.'), envDeflt);
+    } else {
+      return FIND(this._data, key.split('.'), deflt);
+    }
   }
 }
 

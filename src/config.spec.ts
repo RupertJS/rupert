@@ -52,19 +52,22 @@ describe('Rupert Configuration Manager', () => {
       expect(config.find('deep.path', 'other value')).to.equal('value');
     });
 
-    // describe('works with the environment', () => {
-      // it 'finds key with environment override', ->
-      //   process.env.DEEP_PATH = 'environment'
-      //   config.find('deep.path', 'DEEP_PATH', 'value').should.equal 'environment'
-      //   config.find('deep.path', 'other value').should.equal 'environment'
+    describe('works with the environment', () => {
+      it('finds key with environment override', () => {
+        process.env.DEEP_PATH = 'environment';
+        expect(config.find('deep.path', 'DEEP_PATH', 'value'))
+          .to.equal('environment');
+        expect(config.find('deep.path', 'other value')).to.equal('environment');
+      });
 
-      // it 'overrides current value with environment', ->
-      //   process.env.DEEP_PATH = 'environment'
-      //   config.set('deep.path', 'value')
-      //   config.find('deep.path', 'DEEP_PATH', 'value').should.equal 'environment'
-      //   config.find('deep.path', 'value').should.equal 'environment'
-
-    // })
+      it('overrides current value with environment', () => {
+        process.env.DEEP_PATH = 'environment';
+        config.set('deep.path', 'value');
+        expect(config.find('deep.path', 'DEEP_PATH', 'value'))
+          .to.equal('environment');
+        expect(config.find('deep.path', 'value')).to.equal('environment');
+      });
+    });
 
     // describe('profives list operations', () => {
       // it 'find key that was set to `false`', ->
@@ -77,7 +80,8 @@ describe('Rupert Configuration Manager', () => {
       // it 'maps function over array key', ->
       //   Path = require('path')
       //   config.set('deep.path', ['./src', './lib'])
-      //   list = config.map 'deep.path', (_)->Path.resolve(Path.join('/var'), _)
+      //   list = config.map 'deep.path', (_)->
+      // Path.resolve(Path.join('/var'), _)
       //   list.should.deep.equal ['/var/src', '/var/lib']
 
       // it 'appends values to key', ->
