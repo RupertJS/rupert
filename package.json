@@ -1,0 +1,31 @@
+{
+  "name": "rupert",
+  "version": "0.4.0",
+  "description": "Preconfigured Express stassets server.",
+  "main": "./dist/rupert.js",
+  "repository": "git@github.com:DavidSouther/rupert.git",
+  "directories": {},
+  "scripts": {
+    "watch": "watch 'npm run test' src/ # run this for real-time build and test.",
+    "prepublish": "npm run test",
+    "test": "npm run test:unit # execute all test suites",
+    "test:unit": "mocha dist/*.spec.js",
+    "pretest": "npm run build",
+    "build": "npm run build:tsc # compile everything",
+    "build:tsc": "tsc -p src/",
+    "prebuild": "npm run lint",
+    "lint": "npm run lint:tsc # enforce local style guide",
+    "lint:tsc": "tslint src/*.ts",
+    "clean": "rm -rf dist/"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "chai": "^3.2.0",
+    "mocha": "^2.2.5",
+    "tslint": "^2.4.2",
+    "typescript": "^1.5.3",
+    "watch": "^0.16.0"
+  },
+  "author": "David Souther <davidsouther@gmail.com>",
+  "license": "ISC"
+}
