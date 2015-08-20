@@ -2,13 +2,21 @@
 
 type ConfigPrim = boolean|string|number;
 type ConfigVal = ConfigPrim|Array<ConfigPrim>;
+export type ConfigObj = {[k:string]: ConfigVal|ConfigObj}
 
 export class Config {
   private _data: any = {};
-  constructor(options: any = {}) {
+  constructor(options: ConfigObj = {}, argv: string[] = []) {
     for (let key in options) {
       if (options.hasOwnProperty(key)) {
         this._data[key] = options[key];
+      }
+    }
+    while (argv.length > 0) {
+      let key = argv.shift();
+      if (key.indexOf('--') == 0) {
+        let val = argv.shift();
+        this.set(key.substr(2), val);
       }
     }
   }
@@ -17,6 +25,9 @@ export class Config {
     return SET(this._data, key.split('.'), value);
   }
 
+  /**
+   * Look up a key, possibly using the environment or setting a value.
+   */
   find(
     key: string,
     env?: ConfigVal,
@@ -53,8 +64,13 @@ export class Config {
   }
 }
 
+/**
+ * Convert a ConfigVal to an array of ConfigPrim.
+ * It the value is already an array, return it. Otherwise, return a new
+ * array with one element, the value passed.
+ */
 function toConfigArray(arr: ConfigVal): Array<ConfigPrim> {
-  return arr.constructor === Array ? <Array<ConfigPrim>>arr : [<ConfigPrim>arr];
+  return Array.isArray(arr) ? <Array<ConfigPrim>>arr : [<ConfigPrim>arr];
 }
 
 /**
