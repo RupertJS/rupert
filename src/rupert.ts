@@ -1,3 +1,5 @@
 export {
-  Config
+  Config,
+  ConfigObj
 } from './config/config';
+

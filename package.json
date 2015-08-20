@@ -9,7 +9,7 @@
     "watch": "watch 'npm run test' src/ # run this for real-time build and test.",
     "prepublish": "npm run test",
     "test": "npm run test:unit # execute all test suites",
-    "test:unit": "mocha dist/*.spec.js",
+    "test:unit": "mocha dist/**/*.spec.js dist/express/tests/*.spec.js",
     "pretest": "npm run build",
     "build": "npm run build:tsc # compile everything",
     "build:tsc": "tsc -p src/",
@@ -23,7 +23,7 @@
     "chai": "^3.2.0",
     "mocha": "^2.2.5",
     "tslint": "^2.4.2",
-    "typescript": "^1.5.3",
+    "typescript": "next",
     "watch": "^0.16.0"
   },
   "author": "David Souther <davidsouther@gmail.com>",
