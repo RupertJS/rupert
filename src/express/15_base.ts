@@ -5,23 +5,24 @@ import * as express from 'express';
 import * as _debug from 'debug';
 
 import { Config } from '../config/Config';
-// import * as _logging from '../logging/logger';
+import {
+  ILogger,
+  configureLogging
+} from '../logger/logger';
 
 const debug = _debug('rupert:base');
 
 export interface RupertExpress extends express.Express {
   config: Config;
-  // logger: Logger;
+  logger: ILogger;
 }
 
 export function makeApp(config: Config): express.Express {
-  // const logging = _logging(config);
-  // const winston = logging.log;
-  // const bodyParserOpts = {
-  //   limit: config.find('uploads.size', 'UPLOAD_SIZE', '100kb')
-  // };
+  const bodyParserOpts = {
+    limit: config.find('uploads.size', 'UPLOAD_SIZE', '100kb')
+  };
 
-  // debug('File upload limit: ' + bodyParserOpts.limit)
+  debug('File upload limit: ' + bodyParserOpts.limit)
 
   const app = <RupertExpress>express()
     // .use(cookieParser())
@@ -31,7 +32,7 @@ export function makeApp(config: Config): express.Express {
 
   // Attach utilities for clients to access
   app.config = config;
-  // app.logger = winston;
+  app.logger = configureLogging(config);
 
   // if process.env.NODE_ENV is 'development'
   //     winston.info "Starting in development mode"
