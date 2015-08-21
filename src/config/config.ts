@@ -28,21 +28,21 @@ export class Config {
   /**
    * Look up a key, possibly using the environment or setting a value.
    */
-  find(
+  find<V extends ConfigVal>(
     key: string,
-    env?: ConfigVal,
-    deflt?: ConfigVal
-  ): ConfigVal {
+    env?: string|V,
+    deflt?: V
+  ): V {
     if (arguments.length === 2) {
-      deflt = env;
+      deflt = <V>env;
       env = null;
     }
     if (env) {
-      deflt = FIND(this._data, key.split('.'), deflt);
-      let envDeflt = FIND(process.env, [<string>env], deflt);
-      return SET(this._data, key.split('.'), envDeflt);
+      deflt = FIND<V>(this._data, key.split('.'), deflt);
+      let envDeflt = FIND<V>(process.env, [<string>env], deflt);
+      return SET<V>(this._data, key.split('.'), envDeflt);
     } else {
-      return FIND(this._data, key.split('.'), deflt);
+      return FIND<V>(this._data, key.split('.'), deflt);
     }
   }
 
@@ -76,11 +76,11 @@ function toConfigArray(arr: ConfigVal): Array<ConfigPrim> {
 /**
  * Convenience for `FIND(_, _, _, true)`
  */
-function SET(
+function SET<V extends ConfigVal>(
   o: Object, p: string[],
-  v: ConfigVal
-): ConfigVal {
-  return FIND(o, p, v, true);
+  v: V
+): V {
+  return FIND<V>(o, p, v, true);
 }
 
 /**
@@ -95,12 +95,12 @@ function SET(
  *        if `force` is `true`.
  * @param force {boolean} if `true`, replace the value even if it is set.
  */
-function FIND(
+function FIND<V extends ConfigVal>(
   obj: any,
   path: string[],
-  val?: ConfigVal,
+  val?: V,
   force: boolean = false
-): ConfigVal  {
+): V  {
   // Let's follow the next key
   let key = path.shift();
   const hasKey = Object.hasOwnProperty.call(obj, key);
@@ -111,31 +111,36 @@ function FIND(
       obj[key] = val;
     }
     if (obj === process.env) {
-      // TODO Either use proces.env OR use localStorage.
-      // process.env behaves oddly.
-      if (obj[key].toLowerCase() === 'false') {
-        return false;
-      } else if (obj[key].toLowerCase() === 'true') {
-        return true;
-      } else if (obj[key].toLowerCase() === '') {
-        return val ? val : null;
-      } else if (val instanceof Number) {
-        if (obj[key].indexOf('.') === -1) {
-          return parseInt(obj[key], 10);
-        } else {
-          return parseFloat(obj[key]);
-        }
-      } else {
-        return obj[key];
-      }
+      return <V>GET_ENV<V>(key, val);
     } else {
       // Return what's there.
-      return obj[key];
+      return <V>obj[key];
     }
   } else {
     // If not set, fill in this position with a new object.
     obj[key] = hasKey ? obj[key] : {};
     // Return `FIND` on the next path part.
-    return FIND(obj[key], path, val, force);
+    return FIND<V>(obj[key], path, val, force);
+  }
+}
+
+function GET_ENV<V extends ConfigVal>(key: string, val: V): any {
+  const obj = process.env;
+  // TODO Either use proces.env OR use localStorage.
+  // process.env behaves oddly.
+  if (obj[key].toLowerCase() === 'false') {
+    return false;
+  } else if (obj[key].toLowerCase() === 'true') {
+    return true;
+  } else if (obj[key].toLowerCase() === '') {
+    return val ? val : null;
+  } else if (val instanceof Number) {
+    if (obj[key].indexOf('.') === -1) {
+      return parseInt(obj[key], 10);
+    } else {
+      return parseFloat(obj[key]);
+    }
+  } else {
+    return obj[key];
   }
 }

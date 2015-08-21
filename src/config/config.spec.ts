@@ -84,7 +84,6 @@ describe('Rupert Configuration Manager', () => {
     });
 
     describe('provides list operations', () => {
-
       it('maps function over array key', () => {
         config.set('deep.path', ['./src', './lib']);
         let list = config.map('deep.path', addVarPrefix);

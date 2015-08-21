@@ -3,6 +3,7 @@
 import { Config, ConfigObj } from '../config/config';
 
 import { normalize as NormalizeConfiguration } from './10_normalize';
+import { makeApp, RupertExpress } from './15_base';
 
 export type RupertServer = {
   config: Config;
@@ -12,11 +13,9 @@ export default function(configuration: ConfigObj = {}): RupertServer {
   const config = new Config(configuration);
 
   NormalizeConfiguration(config);
-//     # Load the basic app
-//     app = require('./15_base')(config)
-//     # There is a hidden dependency:
-//     # The logger is configured statically in 15_base.
-//     winston = require('./logger').log
+
+  // Load the basic app
+  const app = makeApp(config);
 
 //     # Load plugins. These are third-party pieces, not app routes.
 //     # See 70_routers for that.
@@ -24,20 +23,15 @@ export default function(configuration: ConfigObj = {}): RupertServer {
 
 //     # Async section
 //     load =
-//     require('./50_servers')(config, app)
-//     .then (app)->
-//         # Attach utilities for clients to access
-//         app.config = config
-//         app.logger = winston
-//         app
+//     require('./50_servers')(app)
 //     .then (app)->
 //         # Configure routing
 //         require('./70_routers')(config, app)
 //     .then (app)->
 //         require('./59_start')(config, app)
 //     .catch (err)->
-//         winston.error 'Failed to start Rupert.'
-//         winston.error err.stack
+//         app.logger.error 'Failed to start Rupert.'
+//         app.logger.error err.stack
 
 //     load.app = app
 //     load.config = config
@@ -48,7 +42,6 @@ export default function(configuration: ConfigObj = {}): RupertServer {
 //     load.stop = (callback)->
 //         if load.starter and load.starter.stop
 //             load.starter.stop().then(callback)
-//     load
 
   return {
     config
