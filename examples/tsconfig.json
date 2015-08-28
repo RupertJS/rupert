@@ -1,0 +1,12 @@
+{
+    "compilerOptions": {
+        "noImplicitAny": true,
+        "removeComments": true,
+        "preserveConstEnums": true,
+        "outDir": "../dist/",
+        "module": "commonjs",
+        "sourceMap": true,
+        "target": "ES5",
+        "experimentalDecorators": true
+    }
+}
