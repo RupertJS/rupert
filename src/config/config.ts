@@ -2,11 +2,11 @@
 
 type ConfigPrim = boolean|string|number;
 type ConfigVal = ConfigPrim|Array<ConfigPrim>;
-export type ConfigObj = {[k:string]: ConfigVal|ConfigObj}
+export type ConfigValue = {[k: string]: ConfigVal|ConfigValue};
 
 export class Config {
   private _data: any = {};
-  constructor(options: ConfigObj = {}, argv: string[] = []) {
+  constructor(options: ConfigValue = {}, argv: string[] = []) {
     for (let key in options) {
       if (options.hasOwnProperty(key)) {
         this._data[key] = options[key];
@@ -14,7 +14,7 @@ export class Config {
     }
     while (argv.length > 0) {
       let key = argv.shift();
-      if (key.indexOf('--') == 0) {
+      if (key.indexOf('--') === 0) {
         let val = argv.shift();
         this.set(key.substr(2), val);
       }

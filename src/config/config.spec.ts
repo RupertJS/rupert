@@ -5,9 +5,12 @@
 import { expect } from 'chai';
 
 import {
-  Config,
-  ConfigObj
+  Config
 } from '../rupert';
+
+import {
+  ConfigValue
+} from './config';
 
 import * as Path from 'path';
 
@@ -18,7 +21,7 @@ describe('Rupert Configuration Manager', () => {
   });
 
   it('accepts a starting config block', () => {
-    const conf: ConfigObj = {
+    const conf: ConfigValue = {
       shallow: 'value',
       deep: {
         path: 'value'
@@ -145,13 +148,16 @@ describe('Rupert Configuration Manager', () => {
         '--deep.path', 'val2',
       ];
       process.env.SHALLOW = 'env1';
-      const config = new Config({
-        shallow: 'b1',
-        deep: {
-          path: 'b2'
+      const config = new Config(
+        {
+          shallow: 'b1',
+          deep: {
+            path: 'b2'
+          },
+          other: 'b3'
         },
-        other: 'b3'
-      }, argv);
+        argv
+      );
       expect(config.find('shallow', 'SHALLOW', 'f1')).to.equal('env1');
       expect(config.find('deep.path', 'DEEP_PATH', 'f2')).to.equal('val2');
       expect(config.find('other', 'OTHER', 'f3')).to.equal('b3');

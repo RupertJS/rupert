@@ -11,8 +11,6 @@ const debug = _debug('rupert:logger');
 
 import { Config } from '../config/config';
 
-export interface ILogger extends winston.LoggerInstance {};
-
 (<any>winston).config.npm.colors.http = 'magenta';
 (<any>winston).config.npm.colors.data = 'grey';
 (<any>winston).addColors((<any>winston).config.npm.colors);
@@ -33,7 +31,7 @@ export interface ILogger extends winston.LoggerInstance {};
 
 const stream = function(message: string): void {
   (<any>winston).http(message);
-}
+};
 
 let _morgan: express.RequestHandler = function(
   req: express.Request,
@@ -41,7 +39,7 @@ let _morgan: express.RequestHandler = function(
   next: Function
 ): void {
   next();
-}
+};
 
 export function getMiddleware(): express.RequestHandler {
   return _morgan;
@@ -49,13 +47,13 @@ export function getMiddleware(): express.RequestHandler {
 
 export function configureLogging(config: Config): ILogger {
   const level = config.find('log.level', 'LOG_LEVEL', 'http');
-  const file:string|boolean = config.find('log.file', 'LOG_FILE', false);
+  const file: string|boolean = config.find('log.file', 'LOG_FILE', false);
   const format = config.find<string>('log.format', 'LOG_FORMAT', 'tiny');
 
   try {
-    winston.remove(winston.transports.Console)
+    winston.remove(winston.transports.Console);
   } catch (E) {
-    debug('Failed to remove default Console transport.')
+    debug('Failed to remove default Console transport.');
   }
 
   const logConsole = config.find('log.console', 'LOG_CONSOLE', false);
@@ -71,7 +69,7 @@ export function configureLogging(config: Config): ILogger {
   }
 
   try {
-    winston.remove(winston.transports.File)
+    winston.remove(winston.transports.File);
   } catch (E) {
     debug('Failed to remove degult File transport.');
   }
@@ -91,4 +89,4 @@ export function configureLogging(config: Config): ILogger {
   return winston.defaultLogger;
 }
 
-export default <ILogger>winston.defaultLogger;
+export const Logger = winston.defaultLogger;
