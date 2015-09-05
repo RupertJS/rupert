@@ -1,4 +1,5 @@
 {
+    "version": "next",
     "compilerOptions": {
         "noImplicitAny": true,
         "removeComments": true,
@@ -7,5 +8,9 @@
         "module": "commonjs",
         "sourceMap": true,
         "target": "ES5"
-    }
+    },
+    "filesGlob": [
+      "./rupert.ts",
+      "./**/*.spec.ts"
+    ]
 }
