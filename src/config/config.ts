@@ -1,7 +1,7 @@
 /// <reference path="../../typings/node/node.d.ts" />
 
 type ConfigPrim = boolean|string|number;
-type ConfigVal = ConfigPrim|Array<ConfigPrim>;
+type ConfigVal = ConfigPrim|Array<string>;
 export type ConfigValue = {[k: string]: ConfigVal|ConfigValue};
 
 export class Config {
@@ -46,18 +46,18 @@ export class Config {
     }
   }
 
-  map(key: string, fn: (_: ConfigPrim) => ConfigPrim): Array<ConfigPrim> {
+  map(key: string, fn: (_: string) => string): string[] {
     const mapped = toConfigArray(this.find(key, [])).map(fn);
     return toConfigArray(this.set(key, mapped));
   }
 
-  append(key: string, arr: ConfigVal): Array<ConfigPrim> {
+  append(key: string, arr: string|string[]): string[] {
     let configArr = toConfigArray(arr);
     let list = toConfigArray(this.find(key, [])).concat(configArr);
     return toConfigArray(this.set(key, list));
   }
 
-  prepend(key: string, arr: ConfigVal): Array<ConfigPrim> {
+  prepend(key: string, arr: string|string[]): string[] {
     let configArr = toConfigArray(arr);
     let list = configArr.concat(toConfigArray(this.find(key, [])));
     return toConfigArray(this.set(key, list));
@@ -69,8 +69,8 @@ export class Config {
  * It the value is already an array, return it. Otherwise, return a new
  * array with one element, the value passed.
  */
-function toConfigArray(arr: ConfigVal): Array<ConfigPrim> {
-  return Array.isArray(arr) ? <Array<ConfigPrim>>arr : [<ConfigPrim>arr];
+function toConfigArray(arr: ConfigVal): string[] {
+  return Array.isArray(arr) ? arr : ['' + <string>arr];
 }
 
 /**
