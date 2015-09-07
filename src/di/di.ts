@@ -10,3 +10,7 @@ export {
 export {
   $injectionKey
 } from './dependency';
+
+export {
+  bind
+} from './builder';
