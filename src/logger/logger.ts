@@ -4,35 +4,138 @@
 /// <reference path="../../typings/debug/debug.d.ts" />
 
 import * as express from 'express';
-import * as winston from 'winston';
-import * as morgan from 'morgan';
-import * as _debug from 'debug';
-const debug = _debug('rupert:logger');
+import * as Winston from 'winston';
+import * as Morgan from 'morgan';
+
+export {
+  QueryOptions
+} from 'winston';
 
 import { Config } from '../config/config';
+import { Inject } from '../di/di';
 
-(<any>winston).config.npm.colors.http = 'magenta';
-(<any>winston).config.npm.colors.data = 'grey';
-(<any>winston).addColors((<any>winston).config.npm.colors);
+// General Winston setup for colors and levels.
+(<any>Winston).config.npm.colors.http = 'magenta';
+(<any>Winston).config.npm.colors.data = 'grey';
+(<any>Winston).addColors((<any>Winston).config.npm.colors);
 
-winston.setLevels({
+Winston.setLevels({
   silly: -Infinity,
   data: 100,
   debug: 500,
   verbose: 1000,
   http: 2000,
-  info: 3000,
+  log: 2000,
   warn: 4000,
   error: 5000,
   silent: Infinity
 });
 
-export interface ILogger extends winston.LoggerInstance {};
+export class ILogger {
+  get middleware(): express.RequestHandler {
+    throw new Error('Unsupported Operation: Abstract class');
+  }
 
-const stream = function(message: string): void {
-  (<any>winston).http(message);
+  /**
+   * Log a ridiculously silly amount of data. This represents logging at the
+   * absolute lowest possible level, and calls to `silly` should probably not
+   * be present in production applications. For instance, could be used by a
+   * decorator to trace in and out of every function invocation.
+   */
+  silly(msg: string, meta?: any): ILogger {
+    throw new Error('Unsupported Operation: Abstract class');
+  }
+
+  /**
+   * Log stack-trace amounts of data. Should be in conjunction after `error` or
+   * `warn` to show stack traces on exceptions, or with `http` to log request
+   * data (headers, body, etc).
+   */
+  data(msg: string, meta?: any): ILogger {
+    throw new Error('Unsupported Operation: Abstract class');
+  }
+
+  /**
+   * Log information that might be useful to tracing the behavior of a running
+   * program that has been crashing often. This could include instantiation of
+   * services,
+   */
+  debug(msg: string, meta?: any): ILogger {
+    throw new Error('Unsupported Operation: Abstract class');
+  }
+
+  /**
+   * Non critical but useful messages to follow program behavior. For instance,
+   * logging which files will be compiled by a plugin.
+   */
+  verbose(msg: string, meta?: any): ILogger {
+    throw new Error('Unsupported Operation: Abstract class');
+  }
+
+  /**
+   * Reserved for logging HTTP-level application requests. Logged and formatted
+   * using morgan.
+   */
+  http(msg: string, meta?: any): ILogger {
+    throw new Error('Unsupported Operation: Abstract class');
+  }
+
+  /**
+   * A reasonable default logging level. Log messages that would be useful to
+   * debugging a crashed program, or gaining insight into the general operation
+   * of a program. For instance, application startup banners, loading and
+   * unloading plugins, compiler warnings in secondary plugins, opening and
+   * closing database connections, or logging incoming application requests.
+   */
+  info(msg: string, meta?: any): ILogger {
+    throw new Error('Unsupported Operation: Abstract class');
+  }
+
+  /**
+   * Log messages indicating impending program failure. For instance, compiler
+   * errors in secondary plugins, compiler warnings in core plugins, nearing
+   * connection saturation, or latencies approaching SLO thresholds.
+   */
+  warn(msg: string, meta?: any): ILogger {
+    throw new Error('Unsupported Operation: Abstract class');
+  }
+
+  /**
+   * The highest typical logging level. Should be used for application errors,
+   * when the application cannot reasonably continue processing. For instance,
+   * compiler compilation errors in core plugins, saturating a connection
+   * pool beyond its constraints, or losing a lock on a shared resource in the
+   * middle of an update.
+   */
+  error(msg: string, meta?: any): ILogger {
+    throw new Error('Unsupported Operation: Abstract class');
+  }
+
+  /**
+   * Log a message at `silent`, the highest priority. Messages logged to
+   * `silent` will (paradoxically) *always* be written.
+   */
+  silent(msg: string, meta?: any): ILogger {
+    throw new Error('Unsupported Operation: Abstract class');
+  }
+
+  query(
+    options?: Winston.QueryOptions,
+    callback?: (err: Error, results: any) => void
+  ): any {
+    throw new Error('Unsupported Operation');
+  }
+
+  profile(id: string, msg?: string, meta?: any): ILogger {
+    throw new Error('Unsupported Operation: Abstract class');
+  }
 };
 
+const stream = function(message: string): void {
+  (<any>Winston).http(message);
+};
+
+// This gets replaced with a real handler in `configureLogging`.
 let _morgan: express.RequestHandler = function(
   req: express.Request,
   res: express.Response,
@@ -45,48 +148,107 @@ export function getMiddleware(): express.RequestHandler {
   return _morgan;
 }
 
-export function configureLogging(config: Config): ILogger {
-  const level = config.find('log.level', 'LOG_LEVEL', 'http');
-  const file: string|boolean = config.find('log.file', 'LOG_FILE', false);
-  const format = config.find<string>('log.format', 'LOG_FORMAT', 'tiny');
+export class Logger extends ILogger {
+  private _logger: Winston.LoggerInstance;
+  private _morgan: express.RequestHandler;
 
-  try {
-    winston.remove(winston.transports.Console);
-  } catch (E) {
-    debug('Failed to remove default Console transport.');
+  constructor(
+    @Inject(Config) config: Config,
+    @Inject(Winston) winston: any = Winston,
+    @Inject(Morgan) morgan: any = Morgan
+  ) {
+    super();
+
+    let transports: Winston.TransportInstance[] = [];
+
+    const level = config.find('log.level', 'LOG_LEVEL', 'http');
+    const logConsole = config.find('log.console', 'LOG_CONSOLE', false);
+    const file: string|boolean = config.find('log.file', 'LOG_FILE', false);
+    const format = config.find<string>('log.format', 'LOG_FORMAT', 'tiny');
+
+    if (logConsole) {
+      transports.push(
+        new winston.transports.Console(<Winston.TransportOptions>{
+          level,
+          timestamp: true,
+          colorize: true
+        })
+      );
+    }
+
+    if (file !== false) {
+      transports.push(
+        new winston.transports.File(<Winston.TransportOptions>{
+          level,
+          timestamp: true,
+          filename: file
+        })
+      );
+    }
+
+    this._logger = new (winston.Logger)({transports});
+
+    this._morgan = morgan(format, {stream});
   }
 
-  const logConsole = config.find('log.console', 'LOG_CONSOLE', false);
-  if (logConsole) {
-    winston.add(
-      winston.transports.Console,
-      <winston.TransportOptions>{
-        level,
-        timestamp: true,
-        colorize: true
-      }
-    );
+  silly(msg: string, meta?: any): ILogger {
+    this._logger.log('silly', msg, meta);
+    return this;
   }
 
-  try {
-    winston.remove(winston.transports.File);
-  } catch (E) {
-    debug('Failed to remove degult File transport.');
-  }
-  if (file !== false) {
-    winston.add(
-      winston.transports.File,
-      <winston.TransportOptions>{
-        level,
-        timestamp: true,
-        filename: file
-      }
-    );
+  data(msg: string, meta?: any): ILogger {
+    this._logger.log('data', msg, meta);
+    return this;
   }
 
-  _morgan = morgan(format, {stream});
+  debug(msg: string, meta?: any): ILogger {
+    this._logger.log('debug', msg, meta);
+    return this;
+  }
 
-  return winston.defaultLogger;
+  verbose(msg: string, meta?: any): ILogger {
+    this._logger.log('verbose', msg, meta);
+    return this;
+  }
+
+  http(msg: string, meta?: any): ILogger {
+    this._logger.log('http', msg, meta);
+    return this;
+  }
+
+  log(msg: string, meta?: any): ILogger {
+    this._logger.log('info', msg, meta);
+    return this;
+  }
+
+  warn(msg: string, meta?: any): ILogger {
+    this._logger.log('warn', msg, meta);
+    return this;
+  }
+
+  error(msg: string, meta?: any): ILogger {
+    this._logger.log('error', msg, meta);
+    return this;
+  }
+
+  silent(msg: string, meta?: any): ILogger {
+    this._logger.log('silent', msg, meta);
+    return this;
+  }
+
+  query(
+    options: Winston.QueryOptions,
+    callback: (err: Error, results: any) => void
+  ): void {
+    this._logger.query(options, callback);
+  }
+
+  profile(id: string, msg?: string, meta?: any): ILogger {
+    this._logger.profile(id, msg, meta);
+    return this;
+  }
+
+  get middleware(): express.RequestHandler {
+    return this._morgan;
+  }
 }
-
-export const Logger = winston.defaultLogger;
