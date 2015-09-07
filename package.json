@@ -9,17 +9,20 @@
     "watch": "watch 'npm run test' src/ # run this for real-time build and test.",
     "prepublish": "npm run test",
     "test": "npm run test:unit # execute all test suites",
-    "test:unit": "mocha dist/**/*.spec.js dist/express/tests/*.spec.js",
+    "test:unit": "mocha dist/**/*.spec.js",
     "pretest": "npm run build",
     "build": "npm run build:tsc # compile everything",
     "build:tsc": "tsc -p src/",
     "prebuild": "npm run lint",
     "lint": "npm run lint:tsc # enforce local style guide",
-    "lint:tsc": "tslint src/*.ts",
+    "lint:tsc": "tslint src/**/*.ts",
     "clean": "rm -rf dist/"
   },
   "dependencies": {
+    "body-parser": "^1.13.3",
+    "cookie-parser": "^1.3.5",
     "debug": "^2.2.0",
+    "errorhandler": "^1.4.2",
     "express": "^4.13.3",
     "morgan": "^1.6.1",
     "winston": "^1.0.1"
@@ -27,8 +30,8 @@
   "devDependencies": {
     "chai": "^3.2.0",
     "mocha": "^2.2.5",
-    "tslint": "^2.4.2",
-    "typescript": "next",
+    "tslint": "^2.5.0-beta",
+    "typescript": "1.6.0-beta",
     "watch": "^0.16.0"
   },
   "author": "David Souther <davidsouther@gmail.com>",

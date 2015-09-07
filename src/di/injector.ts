@@ -1,17 +1,13 @@
 /// <reference path='../../typings/es6-collections/es6-collections.d.ts' />
 
 import {
-  Constructor
-} from './lang';
-
-import {
   Binding,
   ResolvedBinding
 } from './binding';
 
 export class Injector {
   static create(bindings: Array<Binding<any>>) {
-    return new Injector(bindings.map((_)=>_.resolve()));
+    return new Injector(bindings.map((_) => _.resolve()));
   }
 
   private _bindingLookup: Map<any, ResolvedBinding> =
@@ -20,7 +16,7 @@ export class Injector {
   constructor(
     resolvedBindings: ResolvedBinding[]
   ) {
-    resolvedBindings.map((_)=> this._bindingLookup.set(_.key, _));
+    resolvedBindings.map((_) => this._bindingLookup.set(_.key, _));
   }
 
   get(type: any) {
@@ -40,6 +36,7 @@ export class Injector {
   }
 }
 
+/* tslint:disable */
 function _apply(fn: Function, args: any[]): any {
   switch (args.length) {
     case 0:
@@ -68,9 +65,10 @@ function _apply(fn: Function, args: any[]): any {
       return fn.apply(null, args);
   }
 }
+/* tslint:enable */
 
 class DumbMap<V> implements Map<any, V> {
-  private _dumbArray = Array<DumbKey<V>>();
+  private _dumbArray: Array<DumbKey<V>> = new Array<DumbKey<V>>();
 
   clear() {
     this._dumbArray.length = 0;
@@ -78,7 +76,7 @@ class DumbMap<V> implements Map<any, V> {
 
   delete(key: any): boolean {
     const i = this._findIndex(key);
-    if ( i == -1 ) {
+    if ( i === -1 ) {
       return false;
     }
     this._dumbArray.splice(i, 0);
@@ -91,7 +89,7 @@ class DumbMap<V> implements Map<any, V> {
 
   get(key: any): V {
     const i = this._findIndex(key);
-    if ( i == -1 ) {
+    if ( i === -1 ) {
       throw new Error(`Key '${key}' not found.`);
     }
     return this._dumbArray[i].value;

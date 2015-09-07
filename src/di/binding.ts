@@ -40,7 +40,7 @@ export class Binding<T> {
       deps = Dependency.getAllFor(this.toClass);
     } else if (this.toFactory) {
       factory = this.toFactory;
-      deps = this.depenendies.map((_)=> new Dependency(_));
+      deps = this.depenendies.map((_) => new Dependency(_));
     } else {
       factory = () => this.toValue;
       deps = [];
@@ -57,7 +57,7 @@ export class ResolvedBinding {
   ) { }
 }
 
-const UNDEFINED:any = void 0;
+const UNDEFINED: any = void 0;
 function isPresent(a: any): boolean {
   return a !== null && a !== UNDEFINED;
 }
