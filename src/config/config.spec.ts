@@ -14,7 +14,7 @@ import {
 
 import * as Path from 'path';
 
-describe('Rupert Configuration Manager', () => {
+describe('Configuration Manager', () => {
   it('should expose a constructor', () => {
     expect(Config).to.exist;
     expect(Config).to.be.instanceof(Function);

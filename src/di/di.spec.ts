@@ -11,7 +11,7 @@ import {
   $injectionKey
 } from './di';
 
-describe('Rupert DI', function() {
+describe('Dependency Injection', function() {
   describe('Binding', function() {
     describe('toValue', function() {
       it('resolves correctly', function(){
