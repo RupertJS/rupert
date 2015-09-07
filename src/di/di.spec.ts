@@ -5,11 +5,69 @@ import { expect } from 'chai';
 
 import {
   Injector,
+  Inject,
   Binding,
+  bind,
   $injectionKey
 } from './di';
 
 describe('Rupert DI', function() {
+  describe('Binding', function() {
+    describe('toValue', function() {
+      it('resolves correctly', function(){
+        let binding = new Binding(Number, {toValue: 42});
+        expect(binding.resolve().factory()).to.equal(42);
+      });
+    });
+
+    describe('toClass', function() {
+      it('resolves correctly', function(){
+        class Vehicle {}
+        let binding = new Binding(Vehicle, { toClass: Vehicle });
+        expect(binding.resolve().factory()).to.be.instanceof(Vehicle);
+      });
+    });
+
+    describe('toFactory', function() {
+      it('resolves correctly', function() {
+        let binding = new Binding(Number, { toFactory: () => 42 });
+        expect(binding.resolve().factory()).to.equal(42);
+      });
+    });
+
+    describe('toFactory dependencies', function(){
+      it('resolves correctly', function() {
+        let binding = new Binding(String, {
+          toFactory: (value: Number) => { return 'Value: ' + value; },
+          dependencies: [Number]
+        });
+        expect(binding.resolve().factory(3)).to.equal('Value: 3');
+      });
+    });
+  });
+
+  // describe('Dependency', function() {
+  // });
+
+  describe('Binding Builder', function() {
+    it('builds toValue', function() {
+      let binding = bind(Number).toValue(3);
+      expect(binding.resolve().factory()).to.equal(3);
+    });
+    it('builds toClass', function() {
+      class Vehicle {}
+      let binding = bind(Vehicle).toClass(Vehicle);
+      expect(binding.resolve().factory()).to.be.instanceof(Vehicle);
+    });
+    it('builds toFactory', function() {
+      let binding = bind(String).toFactory(
+        (value: Number) => { return 'Value: ' + value; },
+        [Number]
+      );
+      expect(binding.resolve().factory(3)).to.equal('Value: 3');
+    });
+  });
+
   describe('Injector', function() {
     it('statically creates new injectors', function() {
       let injector = Injector.create([]);
@@ -84,6 +142,18 @@ describe('Rupert DI', function() {
       let injector = Injector.create([]);
       expect((() => injector.get(Number)))
         .to.throw(/Injector does not have type /);
+    });
+  });
+
+  describe('Annotations', function() {
+    it('attaches injection information', function() {
+      class Engine {}
+      class Vehicle {
+        constructor(
+          @Inject(Engine) private engine: Engine
+        ) { }
+      }
+      expect(Vehicle[$injectionKey]).to.deep.equal([Engine]);
     });
   });
 });

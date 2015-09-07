@@ -14,3 +14,7 @@ export {
 export {
   bind
 } from './builder';
+
+export {
+  Inject
+} from './annotations';
