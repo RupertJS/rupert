@@ -1,27 +1,53 @@
-/// <reference path="../typings/express/express.d.ts" />
-
 import {
   Inject,
   Rupert,
   IPlugin,
   Config,
-  Logger
+  Logger,
+
+  Route,
+  RoutePrefix,
+  Request, Response, Next
 } from '../src/rupert';
 
-@Inject([Logger, Config])
+@RoutePrefix('/myapp')
 class MyAppHandler implements IPlugin {
-  constructor(private _logger:Logger, private _config: Config) {}
+  constructor(
+    @Inject(Logger) private _logger: Logger,
+    @Inject(Config) private _config: Config,
+    @Inject(App) private _app: Express.App,
+    @Inject(Doorman) doorman: Rupert.Doorman
+  ) {
+    this._logger.info('Created a MyAppHandler');
+    this._config.find<number>('foo.bar', 'FOO_BAR', 37);
+  }
 
-  get handler() {
-    return (q: Express.Request, s: Express.Response, n: (error?:any)=>void)=> {
+  @Rupert.Before(Rupert.Doorman.isLoggedIn)
+  @Rupert.Handler.POST('/route')
+  @Rupert.Handler('/route', {methods: ['POST']})
+  route(q: Request, r: Response, n: Next) {}
+  // // Becomes
+  // get [Rupert.Handlers]() {
+  //   return [
+  //     {
+  //       route: '/myapp/route',
+  //       methods: [Rupert.POST],
+  //       handler: this.route.bind(this)
+  //     }
+  //   ]
+  // }
+}
 
-    }
+let generatorFn = function *(max: number): IterableIterator<number> {
+  let i = 0;
+  while (i < max) {
+    yield i;
   }
 }
 
-const defaults = require('./tsconfig.json');
+const defaults = require('./server.json');
 
-export const app = Rupert.createApp(defaults, MyAppHandler);
+export const app = Rupert.createApp(defaults, [MyAppHandler]);
 
 if (require.main === module) {
   app.start();

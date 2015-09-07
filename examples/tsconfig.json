@@ -6,7 +6,7 @@
         "outDir": "../dist/",
         "module": "commonjs",
         "sourceMap": true,
-        "target": "ES5",
+        "target": "ES6",
         "experimentalDecorators": true
     }
 }
