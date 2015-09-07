@@ -5,7 +5,15 @@ import {
   ResolvedBinding
 } from './binding';
 
+/**
+ * An Injector is a mapping from type to implementation of type, including
+ * factory methods to get an instance of types when needed.
+ */
 export class Injector {
+  /**
+   * Create a new injector, given an array of bindings. The most easy to use
+   * way to get a new Injector.
+   */
   static create(bindings: Array<Binding<any>>) {
     return new Injector(bindings.map((_) => _.resolve()));
   }
@@ -13,17 +21,25 @@ export class Injector {
   private _bindingLookup: Map<any, ResolvedBinding> =
     new DumbMap<ResolvedBinding>();
 
+  /**
+   * Create a new Injector given an array of already resolved bindings.
+   */
   constructor(
     resolvedBindings: ResolvedBinding[]
   ) {
     resolvedBindings.map((_) => this._bindingLookup.set(_.key, _));
   }
 
-  get(type: any) {
+  /**
+   * Retrieve a value from the injector, invoking its factory, as well
+   * as passing in any dependent instances.
+   */
+  get(type: any): any {
     if (!this._bindingLookup.has(type)) {
       throw new Error(`Injector does not have type '${type}'`);
     }
     const binding = this._bindingLookup.get(type);
+    // Use this as a quick way to detect one-level-deep circular dependencies.
     const circular = new DumbMap();
     const dependencies: any[] = binding.dependencies.map((_) => {
       if (circular.has(_.token)) {
@@ -67,6 +83,12 @@ function _apply(fn: Function, args: any[]): any {
 }
 /* tslint:enable */
 
+/**
+ * This is a really dumb O(n) implementation of a map, because I was
+ * having issues with TS and the native ES6 map.
+ *
+ * TODO(cleanup): remove this for just a normal ES6 Map.
+ */
 class DumbMap<V> implements Map<any, V> {
   private _dumbArray: Array<DumbKey<V>> = new Array<DumbKey<V>>();
 

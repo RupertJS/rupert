@@ -1,7 +1,8 @@
 # Rupert DI Design
 
-Rupert Dependency Injection is meant as a system to allow quick and easy DI
-across an entire Node application.
+Rupert Dependency Injection is a system for quick and easy DI across a Node
+application. Inspired heavily by Angular 2, Rupert's DI API allows a variety
+of straightforward injection patterns.
 
 ## Binding
 
@@ -66,4 +67,25 @@ injector.get(BindingKey) // Return an instance
 ## Annotations
 
 ### @Inject
-### @Injectable
+
+The `@Inject` annotations marks a single parameter with an injection
+dependency.
+
+```
+class Engine {}
+class V8 extends Engine {
+  public cylinders: number = 8;
+}
+
+class Car {
+  constructor(
+    @Inject(Engine) public engine: Engine
+  ) {}
+}
+
+let injector = Injector.create([
+  bind(Engine).toClass(V8),
+  bind(Car).toClass(Car)
+]);
+expect(injector.get(Car).engine.cylinders).to.equal(8);
+```

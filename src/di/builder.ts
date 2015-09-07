@@ -13,7 +13,7 @@ export function bind(type: any) {
     },
     toFactory: function (
       toFactory: Function,
-      dependencies: any[]
+      dependencies: any[] = []
     ): Binding<any> {
       return new Binding<any>(type, {toFactory, dependencies});
     },

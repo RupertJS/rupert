@@ -1,11 +1,22 @@
 import {
-  Constructor
+  Constructor,
+  isPresent
 } from './lang';
 
 import {
   Dependency
 } from './dependency';
 
+/**
+ * A Binding is a convenient API to declare for the injector what values can be
+ * provided for which types. Bindings can be from a single type to a single
+ * value (`toValue`), from a single type to a constructor to be instantiated
+ * (`toClass`), or from a single type to a function to be executed
+ * (`toFactory`).
+ *
+ * The `resolve` method canonifies the binding into a consistent form for use by
+ * the injector.
+ */
 export class Binding<T> {
   private toValue: any;
   private toClass: Constructor<T>;
@@ -49,17 +60,15 @@ export class Binding<T> {
   }
 }
 
+/**
+ * A ResolvedBinding
+ */
 export class ResolvedBinding {
   constructor(
     public key: any,
     public factory: Function,
     public dependencies: Dependency[]
   ) { }
-}
-
-const UNDEFINED: any = void 0;
-function isPresent(a: any): boolean {
-  return a !== null && a !== UNDEFINED;
 }
 
 /* tslint:disable */
