@@ -5,7 +5,8 @@ import { expect } from 'chai';
 
 import {
   Injector,
-  Binding
+  Binding,
+  $injectionKey
 } from './di';
 
 describe('Rupert DI', function() {
@@ -32,6 +33,18 @@ describe('Rupert DI', function() {
         ]);
         expect(injectorClass.get(Vehicle)).to.not.equal(injectorClass.get(Car));
         expect(injectorClass.get(Vehicle) instanceof Car).to.equal(true);
+      });
+
+      it('instantiates classes with dependencies', function() {
+        class Engine {
+          constructor(public wheels: Number){}
+        }
+        Engine[$injectionKey] = [Number];
+        var injector = Injector.create([
+          new Binding(Number, { toValue: 4 }),
+          new Binding(Engine, { toClass: Engine })
+        ]);
+        expect((<Engine>injector.get(Engine)).wheels).to.equal(4);
       });
 
       // it('instantiates aliases as singletons', function() {

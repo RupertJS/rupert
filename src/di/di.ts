@@ -6,3 +6,7 @@ export {
 export {
   Injector
 } from './injector';
+
+export {
+  $injectionKey
+} from './dependency';
