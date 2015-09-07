@@ -1,9 +1,10 @@
 {
     "version": "next",
     "compilerOptions": {
-        "noImplicitAny": true,
         "removeComments": true,
         "preserveConstEnums": true,
+        "noImplicitAny": true,
+        "suppressImplicitAnyIndexErrors": true,
         "outDir": "../dist/",
         "module": "commonjs",
         "sourceMap": true,
