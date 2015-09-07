@@ -13,10 +13,10 @@ Injector to go from an Injectable key to a run-time value. Broadly, there
   ```
   class Vehicle {}
   class Car extends Vehicle {}
-  var injectorClass = Injector.resolveAndCreate([
+  var injectorClass = Injector.create([
     new Binding(Vehicle, { toClass: Car })
   ]);
-  var injectorAlias = Injector.resolveAndCreate([
+  var injectorAlias = Injector.create([
     new Binding(Vehicle, { toAlias: Car })
   ]);
   expect(injectorClass.get(Vehicle)).not.toBe(injectorClass.get(Car));
@@ -27,21 +27,21 @@ Injector to go from an Injectable key to a run-time value. Broadly, there
 
 * `toValue` - Bind to a simple, single value.
   ```
-  var injector = Injector.resolveAndCreate([
+  var injector = Injector.create([
     new Binding(String, { toValue: 'Hello' })
   ]);
-  expect(injector.get(String)).toEqual('Hello');
+  expect(injector.get(String)).to.equal('Hello');
   ```
 
 * `toFactory` - Bind to the result of a factory function.
   ```
-  var injector = Injector.resolveAndCreate([
+  var injector = Injector.create([
     new Binding(Number, { toFactory: () => { return 1+2; }}),
     new Binding(String, { toFactory: (value) => { return "Value: " + value; },
                           dependencies: [Number] })
   ]);
-  expect(injector.get(Number)).toEqual(3);
-  expect(injector.get(String)).toEqual('Value: 3');
+  expect(injector.get(Number)).to.equal(3);
+  expect(injector.get(String)).to.equal('Value: 3');
   ```
 
 ### Bindings Builder

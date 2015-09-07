@@ -11,19 +11,23 @@ export class Binding<T> {
   private toClass: Constructor<T>;
   // private toAlias: Type;
   private toFactory: Function;
+  private depenendies: any[];
 
   constructor(private _type: any, {
     toValue,
     toClass,
-    toFactory
+    toFactory,
+    dependencies = []
   }: {
     toValue?: any,
     toClass?: Constructor<T>,
-    toFactory?: Function
+    toFactory?: Function,
+    dependencies?: any[]
   } = {}) {
     this.toValue = toValue;
     this.toClass = toClass;
     this.toFactory = toFactory;
+    this.depenendies = dependencies;
   }
 
   resolve(): ResolvedBinding {
@@ -36,7 +40,7 @@ export class Binding<T> {
       deps = Dependency.getAllFor(this.toClass);
     } else if (this.toFactory) {
       factory = this.toFactory;
-      deps = [];
+      deps = this.depenendies.map((_)=> new Dependency(_));
     } else {
       factory = () => this.toValue;
       deps = [];

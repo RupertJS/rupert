@@ -28,7 +28,15 @@ describe('Rupert DI', function() {
       it('resolves correctly', function() {
         let binding = new Binding(Number, { toFactory: () => 42 });
         expect(binding.resolve().factory()).to.equal(42);
-      })
-    })
+      });
+    });
+
+    describe('dependencies', function(){
+      let binding = new Binding(String, {
+        toFactory: (value: Number) => { return 'Value: ' + value; },
+        dependencies: [Number]
+      });
+      expect(binding.resolve().factory(3)).to.equal('Value: 3');
+    });
   });
 });

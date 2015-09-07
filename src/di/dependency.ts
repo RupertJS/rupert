@@ -18,7 +18,7 @@ export class Dependency {
   }
 
   static ensureDependency(d: any): Dependency {
-    return new Dependency(d);
+    return d instanceof Dependency ? d : new Dependency(d);
   }
 
   constructor(
