@@ -48,19 +48,19 @@ export class Config {
 
   map(key: string, fn: (_: string) => string): string[] {
     const mapped = toConfigArray(this.find(key, [])).map(fn);
-    return toConfigArray(this.set(key, mapped));
+    return toConfigArray(<string[]>this.set(key, mapped));
   }
 
   append(key: string, arr: string|string[]): string[] {
     let configArr = toConfigArray(arr);
     let list = toConfigArray(this.find(key, [])).concat(configArr);
-    return toConfigArray(this.set(key, list));
+    return toConfigArray(<string[]>this.set(key, list));
   }
 
   prepend(key: string, arr: string|string[]): string[] {
     let configArr = toConfigArray(arr);
     let list = configArr.concat(toConfigArray(this.find(key, [])));
-    return toConfigArray(this.set(key, list));
+    return toConfigArray(<string[]>this.set(key, list));
   }
 }
 
@@ -69,8 +69,8 @@ export class Config {
  * It the value is already an array, return it. Otherwise, return a new
  * array with one element, the value passed.
  */
-function toConfigArray(arr: ConfigVal): string[] {
-  return Array.isArray(arr) ? arr : ['' + <string>arr];
+function toConfigArray(arr: string|string[]): string[] {
+  return Array.isArray(arr) ? <string[]>arr : [<string>arr];
 }
 
 /**
@@ -106,7 +106,7 @@ function FIND<V extends ConfigVal>(
   const hasKey = Object.hasOwnProperty.call(obj, key);
   if (path.length === 0) {
     // We're at the end of the path
-    if (force || !hasKey) {
+    if (obj !== process.env && (force || !hasKey)) {
       // Update the property if either forced or unset.
       obj[key] = val;
     }
@@ -125,8 +125,11 @@ function FIND<V extends ConfigVal>(
 }
 
 function GET_ENV<V extends ConfigVal>(key: string, val: V): any {
-  const obj = process.env;
   // TODO Either use proces.env OR use localStorage.
+  const obj = process.env;
+  if (!obj[key]) {
+    return val;
+  }
   // process.env behaves oddly.
   if (obj[key].toLowerCase() === 'false') {
     return false;

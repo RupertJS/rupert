@@ -84,6 +84,15 @@ describe('Configuration Manager', () => {
         expect(config.find('deep.path', 'value')).to.equal('environment');
         delete process.env.DEEP_PATH;
       });
+
+      it('does not share data between instances', function() {
+        let config1 = new Config({ log: { level: 'warn' } });
+        let config2 = new Config({});
+
+        let level1 = config1.find('log.level', 'LOG_LEVEL', 'http');
+        let level2 = config2.find('log.level', 'LOG_LEVEL', 'http');
+        expect(level1).to.not.equal(level2);
+      });
     });
 
     describe('provides list operations', () => {
