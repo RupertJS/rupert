@@ -78,8 +78,31 @@ describe('logger', function() {
   });
 
   it('logs', function() {
-    // Create a mock winston logger, call each method on ILogger, and assert
-    // the logger mock was called.
-    throw new Error(`Unimplemented test!`);
+    const levels = [ `silly`, `data`, `debug`, `verbose`, `http`, `log`,
+      `warn`, `error`, `silent` ];
+
+    const _logger = {
+      log: sinon.spy()
+    };
+
+    const winston = {
+      Logger: () => _logger,
+      transports: {
+        Console: sinon.spy(),
+        DailyRotateFile: sinon.spy()
+      }
+    };
+
+    const logger = new Logger(new Config(), winston);
+
+    for (let i = 0, q = levels.length; i < q; i++) {
+      let level = levels[i];
+      logger[level](level, {});
+      expect(_logger.log).to.have.been.calledWith(
+        level === 'log' ? 'info' : level,
+        level,
+        {}
+      );
+    }
   });
 });
