@@ -25,7 +25,7 @@ Winston.setLevels({
   debug: 500,
   verbose: 1000,
   http: 2000,
-  log: 2000,
+  info: 2000,
   warn: 4000,
   error: 5000,
   silent: Infinity
@@ -89,6 +89,13 @@ export class ILogger {
    */
   info(msg: string, meta?: any): ILogger {
     throw new Error('Unsupported Operation: Abstract class');
+  }
+
+  /**
+   * An alias for ILogger.info.
+   */
+  log(msg: string, meta?: any): ILogger {
+    return this.info(msg, meta);
   }
 
   /**
@@ -162,9 +169,10 @@ export class Logger extends ILogger {
     let transports: Winston.TransportInstance[] = [];
 
     const level = config.find('log.level', 'LOG_LEVEL', 'http');
-    const logConsole = config.find('log.console', 'LOG_CONSOLE', false);
-    const file: string|boolean = config.find('log.file', 'LOG_FILE', false);
+    const logConsole = config.find('log.console', 'LOG_CONSOLE', true);
+    const filename: string|boolean = config.find('log.file', 'LOG_FILE', false);
     const format = config.find<string>('log.format', 'LOG_FORMAT', 'tiny');
+    const datePattern = config.find('log.rotate', 'LOG_ROTATE', '.yyyy-MM-dd');
 
     if (logConsole) {
       transports.push(
@@ -176,12 +184,13 @@ export class Logger extends ILogger {
       );
     }
 
-    if (file !== false) {
+    if (filename !== false) {
       transports.push(
-        new winston.transports.File(<Winston.TransportOptions>{
+        new winston.transports.DailyRotateFile(<Winston.TransportOptions>{
           level,
           timestamp: true,
-          filename: file
+          datePattern,
+          filename
         })
       );
     }
@@ -216,7 +225,7 @@ export class Logger extends ILogger {
     return this;
   }
 
-  log(msg: string, meta?: any): ILogger {
+  info(msg: string, meta?: any): ILogger {
     this._logger.log('info', msg, meta);
     return this;
   }
