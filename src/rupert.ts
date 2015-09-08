@@ -3,10 +3,15 @@ export {
 } from './config/config';
 
 export {
-  Logger
+  ILogger
 } from './logger/logger';
 
-import {
+export {
   Binding,
-  Injector
+  Injector,
+  bind
 } from './di/di';
+
+export {
+  Rupert
+} from './app/app';
