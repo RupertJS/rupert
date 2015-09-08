@@ -49,8 +49,18 @@ Injector to go from an Injectable key to a run-time value. Broadly, there
 An imperative form of the Binding configuration.
 
 ```
+class Engine { public cylinders = 6; }
+class Vehicle {}
+class Car extends Vehicle {
+  constructor(
+    @Inject(Engine) public engine: Engine
+  ){ }
+}
+
 bind(Number).toFactory(()=>1+2);
 bind(Value).toFactory((n)=>{"Value: " + n}, [Number]);
+bind(Engine).toClass(Engine);
+bind(Vehicle).toClass(Car);
 ```
 
 ## Injector
