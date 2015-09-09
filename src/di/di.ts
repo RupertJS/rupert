@@ -17,7 +17,8 @@ export {
 
 export {
   Inject,
-  Optional
+  Optional,
+  Lazy
 } from './annotations';
 
 export {

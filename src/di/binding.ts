@@ -20,23 +20,26 @@ import {
 export class Binding<T> {
   private toValue: any;
   private toClass: Constructor<T>;
-  // private toAlias: Type;
+  private toAlias: Constructor<T>;
   private toFactory: Function;
   private depenendies: any[];
 
   constructor(private _type: any, {
     toValue,
     toClass,
+    toAlias,
     toFactory,
     dependencies = []
   }: {
     toValue?: any,
     toClass?: Constructor<T>,
+    toAlias?: Constructor<T>,
     toFactory?: Function,
     dependencies?: any[]
   } = {}) {
     this.toValue = toValue;
     this.toClass = toClass;
+    this.toAlias = toAlias;
     this.toFactory = toFactory;
     this.depenendies = dependencies;
   }

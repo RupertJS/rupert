@@ -7,6 +7,7 @@ import {
   Injector,
   Inject,
   Optional,
+  Lazy,
   Dependency,
   Binding,
   bind,
@@ -107,14 +108,14 @@ describe('Dependency Injection', function() {
         expect((<Engine>injector.get(Engine)).wheels).to.equal(4);
       });
 
-      // it('instantiates aliases as singletons', function() {
-      //   let injectorAlias = Injector.create([
-      //     new Binding(Car, { toClass: Car }),
-      //     new Binding(Vehicle, { toAlias: Car })
-      //   ]);
-      //   expect(injectorAlias.get(Vehicle)).to.equal(injectorAlias.get(Car));
-      //   expect(injectorAlias.get(Vehicle) instanceof Car).to.equal(true);
-      // });
+      it.skip('instantiates aliases as singletons', function() {
+        let injectorAlias = Injector.create([
+          new Binding(Car, { toClass: Car }),
+          new Binding(Vehicle, { toAlias: Car })
+        ]);
+        expect(injectorAlias.get(Vehicle)).to.equal(injectorAlias.get(Car));
+        expect(injectorAlias.get(Vehicle) instanceof Car).to.equal(true);
+      });
     });
 
     describe('factories', function(){
@@ -178,6 +179,46 @@ describe('Dependency Injection', function() {
         ) { }
       }
       expect(Vehicle[$injectionKey][0].optional).to.be.true;
+    });
+  });
+
+  describe.skip('Lazy', function(){
+    it('allows getting a lazy injection', function() {
+      let injector = Injector.create([
+        bind(Number).toValue(3)
+      ]);
+      expect(injector.getLazy(Number)()).to.equal(3);
+    });
+
+    it('allows getting a lazy dependency', function() {
+      let injector = Injector.create([
+        bind(String).toFactory(
+          (value: () => Number) => 'Value: ' + value(),
+          [new Dependency(Number, false, true)]
+        ),
+        bind(Number).toValue(3)
+      ]);
+      expect(injector.get(String)).to.equal('Value: 3');
+    });
+
+    it('has a @Lazy annotation', function() {
+      const cylinders = 6;
+      class Engine {
+        constructor(
+          @Lazy() @Inject(Number) private _cylinders: () => Number
+        ) {}
+
+        get cylinders(): Number {
+          return this._cylinders();
+        }
+      }
+
+      let injector = Injector.create([
+        bind(Engine).toClass(Engine),
+        bind(Number).toValue(cylinders)
+      ]);
+      let engine = injector.get(Engine);
+      expect(engine.cylinders).to.equal(cylinders);
     });
   });
 });

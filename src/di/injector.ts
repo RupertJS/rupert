@@ -54,6 +54,10 @@ export class Injector {
     });
     return _apply(binding.factory, dependencies);
   }
+
+  getLazy(type: any): () => any {
+    return () => null;
+  }
 }
 
 /* tslint:disable */

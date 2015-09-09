@@ -34,6 +34,12 @@ export function Optional(): ParameterDecorator {
   };
 }
 
+export function Lazy(): ParameterDecorator {
+  return function(target: Object, key: String|any, paramIndex: number) {
+    return target;
+  };
+}
+
 function stringify(thing: any): string {
   let toStr: string[] = Object.toString.call(thing).split('\n');
   if (toStr.length === 1) {

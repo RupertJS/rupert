@@ -27,6 +27,7 @@ export class Dependency {
 
   constructor(
     public token: any,
-    public optional: boolean = false
+    public optional: boolean = false,
+    public lazy: boolean = false
   ) {}
 }
