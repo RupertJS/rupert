@@ -6,6 +6,8 @@ import { expect } from 'chai';
 import {
   Injector,
   Inject,
+  Optional,
+  Dependency,
   Binding,
   bind,
   $injectionKey
@@ -138,6 +140,18 @@ describe('Dependency Injection', function() {
       });
     });
 
+    describe('optional', function() {
+      it('allows optional dependencies', function() {
+        let injector = Injector.create([
+          bind(String).toFactory(
+            (value: Number = 3) => 'Value: ' + value,
+            [new Dependency(Number, true)]
+          )
+        ]);
+        expect(injector.get(String)).to.equal('Value: 3');
+      });
+    });
+
     it('throws an exception retrieving unbound values', function() {
       let injector = Injector.create([]);
       expect((() => injector.get(Number)))
@@ -154,6 +168,16 @@ describe('Dependency Injection', function() {
         ) { }
       }
       expect(Vehicle[$injectionKey]).to.deep.equal([Engine]);
+    });
+
+    it('allows optional dependencies', function() {
+      class Engine {}
+      class Vehicle {
+        constructor(
+          @Optional() @Inject(Engine) private engine: Engine
+        ) { }
+      }
+      expect(Vehicle[$injectionKey][0].optional).to.be.true;
     });
   });
 });

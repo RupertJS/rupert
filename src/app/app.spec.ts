@@ -7,7 +7,7 @@ import {
   Rupert
 } from '../rupert';
 
-describe.skip('Rupert App', function() {
+describe('Rupert App', function() {
   it('creates and injects a new Rupert app', function() {
     const app = Rupert.createApp({foo: 'bar'});
     expect(app.config.find('foo')).to.equal('bar');

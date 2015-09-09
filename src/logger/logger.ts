@@ -12,7 +12,7 @@ export {
 } from 'winston';
 
 import { Config } from '../config/config';
-import { Inject } from '../di/di';
+import { Inject, Optional } from '../di/di';
 
 // General Winston setup for colors and levels.
 (<any>Winston).config.npm.colors.http = 'magenta';
@@ -161,8 +161,8 @@ export class Logger extends ILogger {
 
   constructor(
     @Inject(Config) config: Config,
-    @Inject(Winston) winston: any = Winston,
-    @Inject(Morgan) morgan: any = Morgan
+    @Optional() @Inject(Winston) winston: any = Winston,
+    @Optional() @Inject(Morgan) morgan: any = Morgan
   ) {
     super();
 

@@ -51,7 +51,7 @@ export class Binding<T> {
       deps = Dependency.getAllFor(this.toClass);
     } else if (this.toFactory) {
       factory = this.toFactory;
-      deps = this.depenendies.map((_) => new Dependency(_));
+      deps = Dependency.ensureAll(this.depenendies);
     } else {
       factory = () => this.toValue;
       deps = [];

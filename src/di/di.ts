@@ -16,5 +16,10 @@ export {
 } from './builder';
 
 export {
-  Inject
+  Inject,
+  Optional
 } from './annotations';
+
+export {
+  Dependency
+} from './dependency';

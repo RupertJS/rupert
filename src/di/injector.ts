@@ -34,9 +34,13 @@ export class Injector {
    * Retrieve a value from the injector, invoking its factory, as well
    * as passing in any dependent instances.
    */
-  get(type: any): any {
+  get(type: any, optional = false): any {
     if (!this._bindingLookup.has(type)) {
-      throw new Error(`Injector does not have type '${type}'`);
+      if (optional === true) {
+        return undefined;
+      } else {
+        throw new Error(`Injector does not have type '${type}'`);
+      }
     }
     const binding = this._bindingLookup.get(type);
     // Use this as a quick way to detect one-level-deep circular dependencies.
@@ -46,7 +50,7 @@ export class Injector {
         throw new Error(`Circular dependency for ${_.token}.`);
       }
       circular.set(_.token, _);
-      return this.get(_.token);
+      return this.get(_.token, _.optional);
     });
     return _apply(binding.factory, dependencies);
   }

@@ -17,11 +17,16 @@ export class Dependency {
     return depsList.map(Dependency.ensureDependency);
   }
 
+  static ensureAll(d: any[]): Dependency[] {
+    return d.map(Dependency.ensureDependency);
+  }
+
   static ensureDependency(d: any): Dependency {
     return d instanceof Dependency ? d : new Dependency(d);
   }
 
   constructor(
-    public token: any
+    public token: any,
+    public optional: boolean = false
   ) {}
 }
