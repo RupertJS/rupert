@@ -138,10 +138,6 @@ export class ILogger {
   }
 };
 
-const stream = function(message: string): void {
-  (<any>Winston).http(message);
-};
-
 // This gets replaced with a real handler in `configureLogging`.
 let _morgan: express.RequestHandler = function(
   req: express.Request,
@@ -174,7 +170,7 @@ export class Logger extends ILogger {
     const format = config.find<string>('log.format', 'LOG_FORMAT', 'tiny');
     const datePattern = config.find('log.rotate', 'LOG_ROTATE', '.yyyy-MM-dd');
 
-    if (logConsole) {
+    if (logConsole === true) {
       transports.push(
         new winston.transports.Console(<Winston.TransportOptions>{
           level,
@@ -197,7 +193,13 @@ export class Logger extends ILogger {
 
     this._logger = new (winston.Logger)({transports});
 
-    this._morgan = morgan(format, {stream});
+    this._morgan = morgan(format, {
+      stream: {
+        write: (message: string) => {
+          this.http(message);
+        }
+      }
+    });
   }
 
   silly(msg: string, meta?: any): ILogger {
