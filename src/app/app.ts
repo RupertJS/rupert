@@ -33,6 +33,7 @@ export class Rupert {
 
     const maxUpload = this.config.find('uploads.size', 'UPLOAD_SIZE', '100kb');
     this.logger.debug(`Max upload size: ${maxUpload}`);
+
     this._app = express()
       .use(require('cookie-parser')())
       .use(require('body-parser').json({ limit: maxUpload }))
@@ -54,6 +55,18 @@ export class Rupert {
       });
     }
   }
+
+  // _servers() {
+
+  // }
+
+  // _secureServer() {
+
+  // }
+
+  // _unsecureServer() {
+
+  // }
 
   get logger(): ILogger { return this._logger; }
   get config(): Config { return this._config; }
