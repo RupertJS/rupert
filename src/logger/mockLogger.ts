@@ -1,7 +1,7 @@
 /// <reference path="../../typings/sinon/sinon.d.ts" />
 
 import {
-  spy
+  spy, stub
 } from 'sinon';
 
 import {
@@ -10,7 +10,7 @@ import {
 
 export function getMockLogger(): ILogger {
   return {
-    middleware: spy().returnValue((q: any, s: any, n: Function): void => n()),
+    middleware: stub().returns((q: any, s: any, n: Function): void => n()),
     silly: spy(),
     data: spy(),
     debug: spy(),
