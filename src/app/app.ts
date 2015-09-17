@@ -5,6 +5,11 @@ import * as express from 'express';
 import * as http from 'http';
 import * as https from 'https';
 import { EventEmitter } from 'events';
+import * as Path from 'path';
+
+import {
+  makeCert
+} from './cert';
 
 import {
   Inject,
@@ -86,16 +91,16 @@ export class Rupert extends EventEmitter {
   public start(): Promise<Rupert> {
     let readies: any[] = [];
 
-    // if (this.servers.https) {
-    //   readies.push(
-    //     this.startServer(
-    //       this.servers.https,
-    //       this.config.find<number>('tls.port'),
-    //       `${this.name} tls`,
-    //       this.config.find<string>('HTTPS_URL')
-    //     )
-    //   );
-    // }
+    if (this.servers.https) {
+      readies.push(
+        this._startServer(
+          this.servers.https,
+          this.config.find<number>('tls.port'),
+          `${this.name} tls`,
+          this.config.find<string>('HTTPS_URL')
+        )
+      );
+    }
 
     readies.push(this._startServer(
       this.servers.http,
@@ -158,26 +163,53 @@ export class Rupert extends EventEmitter {
   private _configureServers() {
     const tls = this.config.find('tls', 'TLS', false);
     if (tls !== false) {
-      this._secureServer();
+      this._secureServer(this.app);
     } else {
-      this._unsecureServer();
+      this._unsecureServer(this.app);
     }
+    this.url = this.config.find<string>('URL');
     process.env.URL = this.url;
   }
 
-  private _secureServer() {
+  private _secureServer(app: express.Application) {
     const port = this.config.find('tls.port', 'HTTPS_PORT', 8443);
-    console.log(port);
+    const root = this.config.find('root');
+
+    const keyPath = Path.join(root, 'env', 'server.key');
+    const certPath = Path.join(root, 'env', 'server.crt');
+
+    const keyFile = this.config.find('tls.key', 'SSL_KEY', keyPath);
+    const certFile = this.config.find('tls.cert', 'SSL_CERT', certPath);
+
+    const writeCert = this.config.find('tls.writeCert', 'WRITE_CERT', false);
+    const validDays = this.config.find('tls.days', 'CERT_DAYS', 1);
+
+    const tlsOptions = makeCert(
+      keyFile, certFile,
+      writeCert, validDays, this.logger
+    );
+
+    const hostname = this.config.find('hostname');
+    const httpsUrl = `https://${hostname}:${port}/`;
+    this.config.set('HTTPS_URL', httpsUrl);
+
+    const httpApp = express().use((q, s, n) => {
+      s.redirect(this.config.find<string>(httpsUrl));
+    });
+
+    this._unsecureServer(httpApp);
+    this.servers.https = https.createServer(tlsOptions, app);
+    this.config.set('URL', httpsUrl);
   }
 
-  private _unsecureServer() {
+  private _unsecureServer(app: express.Application) {
     const port = this.config.find('port', 'HTTP_PORT', 8080);
     const hostname = this.config.find('hostname');
-    this.url = `http://${hostname}:${port}/`;
-    this.config.set('URL', this.url);
-    this.config.set('HTTP_URL', this.url);
+    const url = `http://${hostname}:${port}/`;
+    this.config.set('URL', url);
+    this.config.set('HTTP_URL', url);
     this.servers = {
-      http: http.createServer(<any>this.app)
+      http: http.createServer(<any>app)
     };
   }
 

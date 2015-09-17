@@ -30,6 +30,7 @@
   "devDependencies": {
     "chai": "^3.2.0",
     "mocha": "^2.2.5",
+    "mock-fs": "^3.2.0",
     "sinon-chai": "^2.8.0",
     "supertest": "^1.1.0",
     "tslint": "^2.5.0-beta",
