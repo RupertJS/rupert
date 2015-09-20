@@ -42,7 +42,7 @@ export class ILogger {
    * be present in production applications. For instance, could be used by a
    * decorator to trace in and out of every function invocation.
    */
-  silly(msg: string, meta?: any): ILogger {
+  silly(msg: string, meta: any = null): ILogger {
     throw new Error('Unsupported Operation: Abstract class');
   }
 
@@ -51,7 +51,7 @@ export class ILogger {
    * `warn` to show stack traces on exceptions, or with `http` to log request
    * data (headers, body, etc).
    */
-  data(msg: string, meta?: any): ILogger {
+  data(msg: string, meta: any = null): ILogger {
     throw new Error('Unsupported Operation: Abstract class');
   }
 
@@ -60,7 +60,7 @@ export class ILogger {
    * program that has been crashing often. This could include instantiation of
    * services,
    */
-  debug(msg: string, meta?: any): ILogger {
+  debug(msg: string, meta: any = null): ILogger {
     throw new Error('Unsupported Operation: Abstract class');
   }
 
@@ -68,7 +68,7 @@ export class ILogger {
    * Non critical but useful messages to follow program behavior. For instance,
    * logging which files will be compiled by a plugin.
    */
-  verbose(msg: string, meta?: any): ILogger {
+  verbose(msg: string, meta: any = null): ILogger {
     throw new Error('Unsupported Operation: Abstract class');
   }
 
@@ -76,7 +76,7 @@ export class ILogger {
    * Reserved for logging HTTP-level application requests. Logged and formatted
    * using morgan.
    */
-  http(msg: string, meta?: any): ILogger {
+  http(msg: string, meta: any = null): ILogger {
     throw new Error('Unsupported Operation: Abstract class');
   }
 
@@ -87,14 +87,14 @@ export class ILogger {
    * unloading plugins, compiler warnings in secondary plugins, opening and
    * closing database connections, or logging incoming application requests.
    */
-  info(msg: string, meta?: any): ILogger {
+  info(msg: string, meta: any = null): ILogger {
     throw new Error('Unsupported Operation: Abstract class');
   }
 
   /**
    * An alias for ILogger.info.
    */
-  log(msg: string, meta?: any): ILogger {
+  log(msg: string, meta: any = null): ILogger {
     return this.info(msg, meta);
   }
 
@@ -103,7 +103,7 @@ export class ILogger {
    * errors in secondary plugins, compiler warnings in core plugins, nearing
    * connection saturation, or latencies approaching SLO thresholds.
    */
-  warn(msg: string, meta?: any): ILogger {
+  warn(msg: string, meta: any = null): ILogger {
     throw new Error('Unsupported Operation: Abstract class');
   }
 
@@ -114,7 +114,7 @@ export class ILogger {
    * pool beyond its constraints, or losing a lock on a shared resource in the
    * middle of an update.
    */
-  error(msg: string, meta?: any): ILogger {
+  error(msg: string, meta: any = null): ILogger {
     throw new Error('Unsupported Operation: Abstract class');
   }
 
@@ -122,7 +122,7 @@ export class ILogger {
    * Log a message at `silent`, the highest priority. Messages logged to
    * `silent` will (paradoxically) *always* be written.
    */
-  silent(msg: string, meta?: any): ILogger {
+  silent(msg: string, meta: any = null): ILogger {
     throw new Error('Unsupported Operation: Abstract class');
   }
 
@@ -133,7 +133,7 @@ export class ILogger {
     throw new Error('Unsupported Operation');
   }
 
-  profile(id: string, msg?: string, meta?: any): ILogger {
+  profile(id: string, msg?: string, meta: any = null): ILogger {
     throw new Error('Unsupported Operation: Abstract class');
   }
 };
@@ -202,47 +202,47 @@ export class Logger extends ILogger {
     });
   }
 
-  silly(msg: string, meta?: any): ILogger {
+  silly(msg: string, meta: any = null): ILogger {
     this._logger.log('silly', msg, meta);
     return this;
   }
 
-  data(msg: string, meta?: any): ILogger {
+  data(msg: string, meta: any = null): ILogger {
     this._logger.log('data', msg, meta);
     return this;
   }
 
-  debug(msg: string, meta?: any): ILogger {
+  debug(msg: string, meta: any = null): ILogger {
     this._logger.log('debug', msg, meta);
     return this;
   }
 
-  verbose(msg: string, meta?: any): ILogger {
+  verbose(msg: string, meta: any = null): ILogger {
     this._logger.log('verbose', msg, meta);
     return this;
   }
 
-  http(msg: string, meta?: any): ILogger {
+  http(msg: string, meta: any = null): ILogger {
     this._logger.log('http', msg, meta);
     return this;
   }
 
-  info(msg: string, meta?: any): ILogger {
+  info(msg: string, meta: any = null): ILogger {
     this._logger.log('info', msg, meta);
     return this;
   }
 
-  warn(msg: string, meta?: any): ILogger {
+  warn(msg: string, meta: any = null): ILogger {
     this._logger.log('warn', msg, meta);
     return this;
   }
 
-  error(msg: string, meta?: any): ILogger {
+  error(msg: string, meta: any = null): ILogger {
     this._logger.log('error', msg, meta);
     return this;
   }
 
-  silent(msg: string, meta?: any): ILogger {
+  silent(msg: string, meta: any = null): ILogger {
     this._logger.log('silent', msg, meta);
     return this;
   }
@@ -254,7 +254,7 @@ export class Logger extends ILogger {
     this._logger.query(options, callback);
   }
 
-  profile(id: string, msg?: string, meta?: any): ILogger {
+  profile(id: string, msg?: string, meta: any = null): ILogger {
     this._logger.profile(id, msg, meta);
     return this;
   }
