@@ -8,6 +8,7 @@ export {
 
 export {
   Binding,
+  Inject,
   Injector,
   bind
 } from './di/di';
@@ -15,3 +16,9 @@ export {
 export {
   Rupert
 } from './app/app';
+
+export {
+  IPlugin,
+  IPluginHandler,
+  Methods
+} from './plugin/plugin';

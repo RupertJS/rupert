@@ -14,7 +14,8 @@ import {
 import {
   Inject,
   Injector,
-  bind
+  bind,
+  Constructor
 } from '../di/di';
 
 import {
@@ -26,6 +27,13 @@ import {
   ILogger,
   Logger
 } from '../logger/logger';
+
+import {
+  IPlugin,
+  IPluginHandler,
+  Methods,
+  PluginList
+} from '../plugin/plugin';
 
 type RupertReady = {
   server: http.Server|https.Server,
@@ -40,16 +48,18 @@ export class Rupert extends EventEmitter {
   private _listeners: EventEmitter[] = [];
 
   public root: string = typeof global.root === 'string' ?
-      <string><any>global.root :
-      process.cwd() ;
+    <string><any>global.root :
+    process.cwd();
   public url: string;
   public name: string;
   public servers: {http: http.Server, https?: https.Server};
 
   constructor(
-    // @Inject(Injector) private _injector: Injector,
     @Inject(Config) private _config: Config,
-    @Inject(ILogger) private _logger: ILogger
+    @Inject(ILogger) private _logger: ILogger,
+    @Inject(Injector) private _injector?: Injector,
+    // TODO Make this work with an array of IPlugin ctors and factories
+    @Inject(PluginList) private _plugins: any[] = []
   ) {
     super();
 
@@ -86,6 +96,7 @@ export class Rupert extends EventEmitter {
     }
 
     this._configureServers();
+    this._configurePlugins();
   }
 
   public start(): Promise<Rupert> {
@@ -157,6 +168,7 @@ export class Rupert extends EventEmitter {
 
   private _normalize() {
     this.root = this.config.find('root', this.root);
+    this._logger.debug('Root directory is ' + this.root);
     this.config.find('hostname', 'HOST', require('os').hostname());
   }
 
@@ -213,16 +225,48 @@ export class Rupert extends EventEmitter {
     };
   }
 
+  private _configurePlugins() {
+    this._logger.info(`Instantiating ${this._plugins.length} plugins.`);
+    if (this._plugins.length <= 0) {
+      return; // nothing to configure!
+    }
+    let pluginInjector: Injector = this._injector.createChild([
+      bind(Rupert).toValue(this)
+    ]);
+    const app = this._app;
+    this._plugins = this._plugins.map(
+      (pluginCtor: Constructor<IPlugin>) => {
+        let plugin = pluginInjector.create<IPlugin>(pluginCtor);
+        this._logger.verbose(`Attaching ${plugin.handlers.length} handlers.`);
+        plugin.handlers.forEach((handler: IPluginHandler): void => {
+          let methods = handler.methods.map((_) => Methods[_]).join(',');
+          this._logger.debug(
+            `[${methods}] ${handler.route}`
+          );
+          handler.methods.forEach((method: Methods) => {
+            let httpmethod = Methods[method].toLowerCase();
+            app[httpmethod](handler.route, handler.handler);
+          });
+        });
+        return plugin;
+      }
+    );
+  }
+
   get logger(): ILogger { return this._logger; }
   get config(): Config { return this._config; }
   get environment(): String { return this._environment; }
   get app(): express.Application { return this._app; }
 
-  static createApp(config: ConfigValue): Rupert {
+  static createApp(
+    config: ConfigValue,
+    plugins: Constructor<IPlugin>[] = []
+  ): Rupert {
     const injector = Injector.create([
-      // bind(Injector).toFactory(() => injector),
+      bind(Injector).toFactory(() => injector),
       bind(Config).toFactory(() => new Config(config, process.argv)),
       bind(ILogger).toClass(Logger),
+      bind(PluginList).toValue(plugins),
       bind(Rupert).toClass(Rupert)
     ]);
 

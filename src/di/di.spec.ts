@@ -49,9 +49,6 @@ describe('Dependency Injection', function() {
     });
   });
 
-  // describe('Dependency', function() {
-  // });
-
   describe('Binding Builder', function() {
     it('builds toValue', function() {
       let binding = bind(Number).toValue(3);
@@ -157,6 +154,48 @@ describe('Dependency Injection', function() {
       let injector = Injector.create([]);
       expect((() => injector.get(Number)))
         .to.throw(/Injector does not have type /);
+    });
+
+    describe('children', function() {
+      it('creates child injectors', function() {
+        let parentInjector = Injector.create([]);
+        let childInjector = parentInjector.createChild([
+          bind(Number).toValue(3)
+        ]);
+        expect(childInjector).to.be.instanceof(Injector);
+        expect(childInjector.get(Number)).to.equal(3);
+      });
+
+      it('finds values up injection chain', function() {
+        let parentInjector = Injector.create([
+          bind(Number).toValue(3)
+        ]);
+        let childInjector = parentInjector.createChild([]);
+        expect(childInjector.get(Number)).to.equal(3);
+      });
+
+      it('prefers values bound at lower level', function() {
+        let parentInjector = Injector.create([
+          bind(Number).toValue(3)
+        ]);
+        let childInjector = parentInjector.createChild([
+          bind(Number).toValue(42)
+        ]);
+        expect(childInjector.get(Number)).to.equal(42);
+      });
+    });
+
+    describe('creation', function() {
+      it('can instantiate a new type arbitrarily', function() {
+        let injector = Injector.create([
+          bind(Number).toValue(42)
+        ]);
+        class Foo {
+          constructor(@Inject(Number) public number: Number) {}
+        }
+        let foo = injector.create<Foo>(Foo);
+        expect(foo.number).to.equal(42);
+      });
     });
   });
 

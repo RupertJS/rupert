@@ -13,7 +13,14 @@ import {
 
 import {
   Rupert,
-  Config
+  Config,
+  IPlugin,
+  IPluginHandler,
+  Methods,
+  ILogger,
+  Inject,
+  Injector,
+  bind
 } from '../rupert';
 
 import {
@@ -61,7 +68,8 @@ describe('Rupert App', function() {
       /** tslint:disable */
       mockfs({
         'env/': {
-          'server.key': '-----BEGIN RSA PRIVATE KEY-----\n' +
+          'server.key':
+'-----BEGIN RSA PRIVATE KEY-----\n' +
 'MIIEowIBAAKCAQEAoZxMSVqJJ9rXscfOVEN5bhWqx/z89TkPsoWjSQzBGxWS64e7\n' +
 'KyytRJ5beKReYAwTZ60wDfTkHJ0lgGxapvIs2wxl1B3ShnUT9FYR61FDGv5+rc2c\n' +
 'C67suqSA7pR+KfRM3q9mvc0hOZk0AXXX5HKhP7nxOsH9zGRbQw/yHC3PDGuJhDNG\n' +
@@ -88,7 +96,8 @@ describe('Rupert App', function() {
 'CY0IjWkdiRysNJhjbRQEn/MJcugVeIKw6oVNM0ScNftp3z1ZLCRlK1rqtKK/tCLN\n' +
 'DxeV31sZ3Jbjt4ie8PfPRl3IN9IaQxM62yUgbQHE+IT+i+jrrV/3\n' +
 '-----END RSA PRIVATE KEY-----\n',
-          'server.crt': '-----BEGIN CERTIFICATE-----\n' +
+          'server.crt':
+'-----BEGIN CERTIFICATE-----\n' +
 'MIIE3DCCA8SgAwIBAgIJAO0Vqmwuh6VAMA0GCSqGSIb3DQEBBQUAMIGkMQswCQYD\n' +
 'VQQGEwJVUzEVMBMGA1UECBMMUGVubnN5bHZhbmlhMRMwEQYDVQQHEwpQaXR0c2J1\n' +
 'cmdoMRcwFQYDVQQKEw5UaGlyZCBDYXQsIExMQzERMA8GA1UECxMIZHNvdXRoZXIx\n' +
@@ -142,4 +151,52 @@ describe('Rupert App', function() {
       }).catch(done);
     });
   });
+
+  describe('plugins', function() {
+    it('loads plugins in an app context', function() {
+      let config: Config = new Config({hostname: 'rupert-test'});
+      let logger: ILogger = getMockLogger();
+      let injector = Injector.create([
+        bind(Config).toValue(config),
+        bind(ILogger).toValue(logger),
+        bind(Injector).toFactory(() => injector)
+      ]);
+
+      let testRupert: Rupert = null;
+      class TestPlugin implements IPlugin {
+        public handlers: IPluginHandler[] = [];
+        constructor(
+          @Inject(Rupert) rupert: Rupert
+        ) {
+          testRupert = rupert;
+        }
+      }
+
+      const rupert = new Rupert(config, logger, injector, [TestPlugin]);
+
+      expect(testRupert).to.equal(rupert);
+    });
+
+    it('utilizes plugin handlers', function(done) {
+      class TestPlugin implements IPlugin {
+        public handlers: IPluginHandler[] = [{
+          methods: [Methods.GET],
+          route: '/plugin',
+          handler: (q: Q, s: S) => {
+            s.send('OK!');
+          }
+        }];
+      }
+
+      const rupert = Rupert.createApp({log: {level: 'silly'}}, [TestPlugin]);
+
+      requestApp(rupert.app)
+        .get('/plugin')
+        .expect(200)
+        .expect(/OK/)
+        .end(done)
+        ;
+    });
+  });
 });
+

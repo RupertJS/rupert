@@ -9,6 +9,14 @@ import {
   ResolvedBinding
 } from './binding';
 
+import {
+  bind
+} from './builder';
+
+import {
+  Constructor
+} from './lang';
+
 /**
  * An Injector is a mapping from type to implementation of type, including
  * factory methods to get an instance of types when needed.
@@ -18,8 +26,8 @@ export class Injector {
    * Create a new injector, given an array of bindings. The most easy to use
    * way to get a new Injector.
    */
-  static create(bindings: Array<Binding<any>>) {
-    return new Injector(bindings.map((_) => _.resolve()));
+  static create(bindings: Array<Binding<any>>, parent: Injector = null) {
+    return new Injector(bindings.map((_) => _.resolve()), parent);
   }
 
   private _bindingLookup: Map<any, ResolvedBinding> =
@@ -29,9 +37,18 @@ export class Injector {
    * Create a new Injector given an array of already resolved bindings.
    */
   constructor(
-    resolvedBindings: ResolvedBinding[]
+    resolvedBindings: ResolvedBinding[],
+    private parent: Injector
   ) {
     resolvedBindings.map((_) => this._bindingLookup.set(_.key, _));
+  }
+
+  /**
+   * Create a new injector that uses a new array of target bindings, or values
+   * from this injector if not present in the child.
+   */
+  createChild(bindings: Array<Binding<any>>): Injector {
+    return Injector.create(bindings, this);
   }
 
   /**
@@ -40,7 +57,9 @@ export class Injector {
    */
   get(type: any, optional = false): any {
     if (!this._bindingLookup.has(type)) {
-      if (optional === true) {
+      if (this.parent) {
+        return this.parent.get(type, optional);
+      } else if (optional === true) {
         return undefined;
       } else {
         throw new Error(`Injector does not have type '${type}'`);
@@ -61,6 +80,12 @@ export class Injector {
 
   getLazy(type: any): () => any {
     return () => null;
+  }
+
+  create<T>(type: Constructor<T>): T {
+    let Key: any = new Object();
+    let injector = this.createChild([bind(Key).toClass(type)]);
+    return <T>injector.get(Key);
   }
 }
 
