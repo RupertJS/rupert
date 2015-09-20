@@ -188,7 +188,7 @@ describe('Rupert App', function() {
         }];
       }
 
-      const rupert = Rupert.createApp({log: {level: 'silly'}}, [TestPlugin]);
+      const rupert = Rupert.createApp({log: {level: 'silent'}}, [TestPlugin]);
 
       requestApp(rupert.app)
         .get('/plugin')
