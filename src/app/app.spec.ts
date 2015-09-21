@@ -16,6 +16,8 @@ import {
   Config,
   IPlugin,
   IPluginHandler,
+  RupertPlugin,
+  Route,
   Methods,
   ILogger,
   Inject,
@@ -196,6 +198,28 @@ describe('Rupert App', function() {
         .expect(/OK/)
         .end(done)
         ;
+    });
+
+    describe('routing', function() {
+      it('allows basic routing behaviors', function(done) {
+        class TestPlugin extends RupertPlugin {
+          public status: string = 'OK!';
+
+          @Route.GET('/plugin')
+          ok(q: Q, s: S): void {
+            s.send(this.status);
+          }
+        }
+
+        const rupert = Rupert.createApp({log: {level: 'silent'}}, [TestPlugin]);
+
+        requestApp(rupert.app)
+          .get('/plugin')
+          .expect(200)
+          .expect(/OK/)
+          .end(done)
+          ;
+      });
     });
   });
 });

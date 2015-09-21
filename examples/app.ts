@@ -1,37 +1,38 @@
 import {
   Inject,
   Rupert,
-  IPlugin,
+  RupertPlugin,
   Config,
-  Logger,
+  ILogger,
 
   Route,
   Request, Response, Next
 } from '../src/rupert';
 
 @Route.Prefix('/myapp')
-class MyAppHandler implements IPlugin {
+class MyAppHandler extends RupertPlugin {
   constructor(
-    @Inject(Logger) private _logger: Logger,
+    @Inject(ILogger) private _logger: ILogger,
     @Inject(Config) private _config: Config,
-    @Inject(App) private _app: Express.Application,
-    @Inject(Doorman) doorman: Rupert.Doorman
+    // @Inject(App) private _app: Express.Application,
+    // @Inject(Doorman) doorman: Rupert.Doorman
   ) {
+    super()
     this._logger.info('Created a MyAppHandler');
     this._config.find<number>('foo.bar', 'FOO_BAR', 37);
   }
 
-  @Route.Before(Rupert.Doorman.isLoggedIn)
-  @Route.Handler.POST('/route')
-  @Rupert.Handler('/route', {methods: [Route.POST]})
-  route(q: Request, r: Response, n: Next) {}
+  // @Route.Before(Rupert.Doorman.isLoggedIn)
+  // @Route.POST('/route')
+  @Route('/route', {methods: [Route.POST]})
+  action(q: Request, r: Response, n: Next) {}
   // // Becomes
   // get [Rupert.Handlers]() {
   //   return [
   //     {
   //       route: '/myapp/route',
   //       methods: ['POST'],
-  //       handler: this.route.bind(this)
+  //       handler: this.action.bind(this)
   //     }
   //   ]
   // }

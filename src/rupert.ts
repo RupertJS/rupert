@@ -1,3 +1,5 @@
+/// <reference path="../typings/express/express.d.ts" />
+
 export {
   Config
 } from './config/config';
@@ -20,5 +22,12 @@ export {
 export {
   IPlugin,
   IPluginHandler,
+  RupertPlugin,
+  Route,
   Methods
 } from './plugin/plugin';
+
+import * as express from 'express';
+export type Request = express.Request;
+export type Response = express.Response;
+export type Next = (err?: any) => void;
