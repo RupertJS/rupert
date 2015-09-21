@@ -17,14 +17,14 @@ import {
 describe('Dependency Injection', function() {
   describe('Binding', function() {
     describe('toValue', function() {
-      it('resolves correctly', function(){
+      it('resolves correctly', function() {
         let binding = new Binding(Number, {toValue: 42});
         expect(binding.resolve().factory()).to.equal(42);
       });
     });
 
     describe('toClass', function() {
-      it('resolves correctly', function(){
+      it('resolves correctly', function() {
         class Vehicle {}
         let binding = new Binding(Vehicle, { toClass: Vehicle });
         expect(binding.resolve().factory()).to.be.instanceof(Vehicle);
@@ -38,7 +38,7 @@ describe('Dependency Injection', function() {
       });
     });
 
-    describe('toFactory dependencies', function(){
+    describe('toFactory dependencies', function() {
       it('resolves correctly', function() {
         let binding = new Binding(String, {
           toFactory: (value: Number) => { return 'Value: ' + value; },
@@ -84,7 +84,7 @@ describe('Dependency Injection', function() {
     describe('classes and aliases', function() {
       class Vehicle {}
       class Car extends Vehicle {}
-      it('instantiates classes', function(){
+      it('instantiates classes', function() {
         let injectorClass = Injector.create([
           new Binding(Car, { toClass: Car }),
           new Binding(Vehicle, { toClass: Car })
@@ -115,7 +115,7 @@ describe('Dependency Injection', function() {
       });
     });
 
-    describe('factories', function(){
+    describe('factories', function() {
       it('executes a factory', function() {
         let injector = Injector.create([
           new Binding(Number, {
@@ -221,7 +221,7 @@ describe('Dependency Injection', function() {
     });
   });
 
-  describe.skip('Lazy', function(){
+  describe.skip('Lazy', function() {
     it('allows getting a lazy injection', function() {
       let injector = Injector.create([
         bind(Number).toValue(3)
