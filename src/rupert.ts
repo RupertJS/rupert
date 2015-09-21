@@ -27,6 +27,14 @@ export {
   Methods
 } from './plugin/plugin';
 
+import {
+  Healthz
+} from './plugins/plugins';
+
+export let Plugins = {
+  Healthz
+};
+
 import * as express from 'express';
 export type Request = express.Request;
 export type Response = express.Response;
