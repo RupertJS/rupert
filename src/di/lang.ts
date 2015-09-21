@@ -3,7 +3,7 @@ export var Type = Function;
 /**
  * Convenience to describe a constructor function.
  */
-export type Constructor<T> = { new<T>(...args: any[]): T };
+export interface Constructor<T> { new(...args: any[]): T; }
 
 export const UNDEFINED: any = void 0;
 
