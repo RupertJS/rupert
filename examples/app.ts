@@ -5,50 +5,34 @@ import {
   Config,
   ILogger,
 
-  Route,
+  Route, Methods,
   Request, Response, Next
 } from '../src/rupert';
 
-@Route.Prefix('/myapp')
+@Route.prefix('/myapp')
 class MyAppHandler extends RupertPlugin {
   constructor(
     @Inject(ILogger) private _logger: ILogger,
     @Inject(Config) private _config: Config,
-    // @Inject(App) private _app: Express.Application,
-    // @Inject(Doorman) doorman: Rupert.Doorman
+    @Inject(Rupert) private _rupert: Rupert,
+    // @Inject(Doorman) doorman: Rupert.Doorman // Coming soon!
   ) {
     super()
     this._logger.info('Created a MyAppHandler');
     this._config.find<number>('foo.bar', 'FOO_BAR', 37);
+    this._rupert.app.
   }
 
-  // @Route.Before(Rupert.Doorman.isLoggedIn)
-  // @Route.POST('/route')
-  @Route('/route', {methods: [Route.POST]})
+  // @Route.Before(Rupert.Doorman.isLoggedIn) // TODO
+  @Route('/route', {methods: [Methods.POST]})
+  // or: @Route.POST('/route')
   action(q: Request, r: Response, n: Next) {}
-  // // Becomes
-  // get [Rupert.Handlers]() {
-  //   return [
-  //     {
-  //       route: '/myapp/route',
-  //       methods: ['POST'],
-  //       handler: this.action.bind(this)
-  //     }
-  //   ]
-  // }
 }
-
-// let generatorFn = function *(max: number): IterableIterator<number> {
-//   let i = 0;
-//   while (i < max) {
-//     yield i;
-//   }
-// }
 
 const defaults = <any>require('./server.json');
 
-export const app = Rupert.createApp(defaults, [MyAppHandler]);
+export const server = Rupert.createApp(defaults, [MyAppHandler]);
 
 if (require.main === module) {
-  app.start();
+  server.start();
 }

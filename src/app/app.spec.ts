@@ -165,7 +165,7 @@ describe('Rupert App', function() {
       ]);
 
       let testRupert: Rupert = null;
-      class TestPlugin implements IPlugin {
+      class InjectPlugin implements IPlugin {
         public handlers: IPluginHandler[] = [];
         constructor(
           @Inject(Rupert) rupert: Rupert
@@ -174,7 +174,7 @@ describe('Rupert App', function() {
         }
       }
 
-      const rupert = new Rupert(config, logger, injector, [TestPlugin]);
+      const rupert = new Rupert(config, logger, injector, [InjectPlugin]);
 
       expect(testRupert).to.equal(rupert);
     });
@@ -202,19 +202,27 @@ describe('Rupert App', function() {
 
     describe('routing', function() {
       it('allows basic routing behaviors', function(done) {
-        class TestPlugin extends RupertPlugin {
-          public status: string = 'OK!';
-
-          @Route.GET('/plugin')
-          ok(q: Q, s: S): void {
-            s.send(this.status);
-          }
-        }
-
-        const rupert = Rupert.createApp({log: {level: 'silent'}}, [TestPlugin]);
+        const rupert = Rupert.createApp(
+          {log: {level: 'silent'}},
+          [TestPlugin]
+        );
 
         requestApp(rupert.app)
           .get('/plugin')
+          .expect(200)
+          .expect(/OK/)
+          .end(done)
+          ;
+      });
+
+      it('allows setting a prefix for a plugin', function(done) {
+        const rupert = Rupert.createApp(
+          {log: {level: 'silent'}},
+          [PrefixTestPlugin]
+        );
+
+        requestApp(rupert.app)
+          .get('/api/plugin')
           .expect(200)
           .expect(/OK/)
           .end(done)
@@ -224,3 +232,21 @@ describe('Rupert App', function() {
   });
 });
 
+class TestPlugin extends RupertPlugin {
+  public status: string = 'OK!';
+
+  @Route.GET('/plugin')
+  ok(q: Q, s: S): void {
+    s.send(this.status);
+  }
+}
+
+@Route.prefix('/api')
+class PrefixTestPlugin extends RupertPlugin {
+  public status: string = 'OK!';
+
+  @Route.GET('/plugin')
+  ok(q: Q, s: S): void {
+    s.send(this.status);
+  }
+}

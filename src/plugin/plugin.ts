@@ -13,7 +13,8 @@ export enum Methods {
   PUT,
   DELETE,
   PATCH,
-  HEAD
+  HEAD,
+  OPTION
 }
 
 export interface IPluginHandler {
@@ -32,6 +33,7 @@ type RupertRoutingTemp = IPluginHandler;
 
 interface IRoute {
   (route: string, properties: {methods: Methods[]}): MethodDecorator;
+  prefix: (prefix: string) => ClassDecorator;
   POST: (route: string) => MethodDecorator;
   GET: (route: string) => MethodDecorator;
   PUT: (route: string) => MethodDecorator;
@@ -57,6 +59,13 @@ export let Route = <IRoute>function(
   };
 };
 
+Route.prefix = function(prefix: string) {
+  return function<TFunction extends Function>(clazz: TFunction): TFunction {
+    (<any>clazz).$$prefix = prefix;
+    return clazz;
+  };
+};
+
 Route.POST = function(route: string) {
   return Route(route, {methods: [Methods.POST]});
 };
@@ -74,9 +83,12 @@ export class RupertPlugin implements IPlugin {
   public handlers: IPluginHandler[];
   constructor() {
     let self = this;
+    let prefix: string = (<any>this.constructor).$$prefix || '';
     let protoHandlers: IPluginHandler[] = (<any>this).$$protoHandlers || [];
     this.handlers = protoHandlers.map((_: IPluginHandler) => {
       let method = _.handler;
+      // Add any ctor prefix
+      _.route = prefix + _.route;
       // Rebind the handler to use the correct `this` context.
       _.handler = function(q: Request, s: Response, n: (err?: any) => void) {
         method.call(self, q, s, n);
