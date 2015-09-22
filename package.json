@@ -3,6 +3,7 @@
   "version": "0.4.0",
   "description": "Preconfigured Express stassets server.",
   "main": "./dist/rupert.js",
+  "typings": "./dist/rupert.d.ts",
   "repository": "git@github.com:DavidSouther/rupert.git",
   "directories": {},
   "scripts": {

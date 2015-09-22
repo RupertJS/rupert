@@ -8,6 +8,7 @@ export {
 } from './injector';
 
 export {
+  Dependency,
   $injectionKey
 } from './dependency';
 
@@ -20,10 +21,6 @@ export {
   Optional,
   Lazy
 } from './annotations';
-
-export {
-  Dependency
-} from './dependency';
 
 export {
   Constructor

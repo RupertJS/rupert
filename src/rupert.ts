@@ -12,7 +12,8 @@ export {
   Binding,
   Inject,
   Injector,
-  bind
+  bind,
+  $injectionKey
 } from './di/di';
 
 export {
