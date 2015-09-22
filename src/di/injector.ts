@@ -1,9 +1,21 @@
 /// <reference path='../../typings/es6-collections/es6-collections.d.ts' />
 
 import {
+  DumbMap
+} from '../util/dumbmap';
+
+import {
   Binding,
   ResolvedBinding
 } from './binding';
+
+import {
+  bind
+} from './builder';
+
+import {
+  Constructor
+} from './lang';
 
 /**
  * An Injector is a mapping from type to implementation of type, including
@@ -14,8 +26,8 @@ export class Injector {
    * Create a new injector, given an array of bindings. The most easy to use
    * way to get a new Injector.
    */
-  static create(bindings: Array<Binding<any>>) {
-    return new Injector(bindings.map((_) => _.resolve()));
+  static create(bindings: Array<Binding<any>>, parent: Injector = null) {
+    return new Injector(bindings.map((_) => _.resolve()), parent);
   }
 
   private _bindingLookup: Map<any, ResolvedBinding> =
@@ -25,9 +37,18 @@ export class Injector {
    * Create a new Injector given an array of already resolved bindings.
    */
   constructor(
-    resolvedBindings: ResolvedBinding[]
+    resolvedBindings: ResolvedBinding[],
+    private parent: Injector
   ) {
     resolvedBindings.map((_) => this._bindingLookup.set(_.key, _));
+  }
+
+  /**
+   * Create a new injector that uses a new array of target bindings, or values
+   * from this injector if not present in the child.
+   */
+  createChild(bindings: Array<Binding<any>>): Injector {
+    return Injector.create(bindings, this);
   }
 
   /**
@@ -36,7 +57,9 @@ export class Injector {
    */
   get(type: any, optional = false): any {
     if (!this._bindingLookup.has(type)) {
-      if (optional === true) {
+      if (this.parent) {
+        return this.parent.get(type, optional);
+      } else if (optional === true) {
         return undefined;
       } else {
         throw new Error(`Injector does not have type '${type}'`);
@@ -57,6 +80,12 @@ export class Injector {
 
   getLazy(type: any): () => any {
     return () => null;
+  }
+
+  create<T>(type: Constructor<T>): T {
+    let Key: any = new Object();
+    let injector = this.createChild([bind(Key).toClass(type)]);
+    return <T>injector.get(Key);
   }
 }
 
@@ -90,82 +119,3 @@ function _apply(fn: Function, args: any[]): any {
   }
 }
 /* tslint:enable */
-
-/**
- * This is a really dumb O(n) implementation of a map, because I was
- * having issues with TS and the native ES6 map.
- *
- * TODO(cleanup): remove this for just a normal ES6 Map.
- */
-class DumbMap<V> implements Map<any, V> {
-  private _dumbArray: Array<DumbKey<V>> = new Array<DumbKey<V>>();
-
-  clear() {
-    this._dumbArray.length = 0;
-  }
-
-  delete(key: any): boolean {
-    const i = this._findIndex(key);
-    if ( i === -1 ) {
-      return false;
-    }
-    this._dumbArray.splice(i, 0);
-    return true;
-  }
-
-  forEach() {
-    throw new Error('Unsupported operation.');
-  }
-
-  get(key: any): V {
-    const i = this._findIndex(key);
-    if ( i === -1 ) {
-      throw new Error(`Key '${key}' not found.`);
-    }
-    return this._dumbArray[i].value;
-  }
-
-  has(key: any): boolean {
-    return this._findIndex(key) > -1;
-  }
-
-  set(key: any, value: V): Map<any, V> {
-    const dk = new DumbKey(key, value);
-    const i = this._findIndex(key);
-    if (i > -1) {
-      this._dumbArray[i] = dk;
-    } else {
-      this._dumbArray.push(dk);
-    }
-    return this;
-  }
-
-  entries(): Iterator<[any, V]> {
-    throw new Error('Unsupported Operation.');
-  }
-
-  keys(): Iterator<any> {
-    throw new Error('Unsupported Operation.');
-  }
-
-  values(): Iterator<V> {
-    throw new Error('Unsupported Operation.');
-  }
-
-  get size(): number {
-    return this._dumbArray.length;
-  }
-
-  private _findIndex(key: any): number {
-    for (let i = 0, q = this._dumbArray.length; i < q; i++) {
-      if (this._dumbArray[i].key === key) {
-        return i;
-      }
-    }
-    return -1;
-  }
-}
-
-class DumbKey<V> {
-  constructor(public key: any, public value: V) {}
-}

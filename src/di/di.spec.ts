@@ -17,14 +17,14 @@ import {
 describe('Dependency Injection', function() {
   describe('Binding', function() {
     describe('toValue', function() {
-      it('resolves correctly', function(){
+      it('resolves correctly', function() {
         let binding = new Binding(Number, {toValue: 42});
         expect(binding.resolve().factory()).to.equal(42);
       });
     });
 
     describe('toClass', function() {
-      it('resolves correctly', function(){
+      it('resolves correctly', function() {
         class Vehicle {}
         let binding = new Binding(Vehicle, { toClass: Vehicle });
         expect(binding.resolve().factory()).to.be.instanceof(Vehicle);
@@ -38,7 +38,7 @@ describe('Dependency Injection', function() {
       });
     });
 
-    describe('toFactory dependencies', function(){
+    describe('toFactory dependencies', function() {
       it('resolves correctly', function() {
         let binding = new Binding(String, {
           toFactory: (value: Number) => { return 'Value: ' + value; },
@@ -48,9 +48,6 @@ describe('Dependency Injection', function() {
       });
     });
   });
-
-  // describe('Dependency', function() {
-  // });
 
   describe('Binding Builder', function() {
     it('builds toValue', function() {
@@ -87,7 +84,7 @@ describe('Dependency Injection', function() {
     describe('classes and aliases', function() {
       class Vehicle {}
       class Car extends Vehicle {}
-      it('instantiates classes', function(){
+      it('instantiates classes', function() {
         let injectorClass = Injector.create([
           new Binding(Car, { toClass: Car }),
           new Binding(Vehicle, { toClass: Car })
@@ -118,7 +115,7 @@ describe('Dependency Injection', function() {
       });
     });
 
-    describe('factories', function(){
+    describe('factories', function() {
       it('executes a factory', function() {
         let injector = Injector.create([
           new Binding(Number, {
@@ -158,6 +155,48 @@ describe('Dependency Injection', function() {
       expect((() => injector.get(Number)))
         .to.throw(/Injector does not have type /);
     });
+
+    describe('children', function() {
+      it('creates child injectors', function() {
+        let parentInjector = Injector.create([]);
+        let childInjector = parentInjector.createChild([
+          bind(Number).toValue(3)
+        ]);
+        expect(childInjector).to.be.instanceof(Injector);
+        expect(childInjector.get(Number)).to.equal(3);
+      });
+
+      it('finds values up injection chain', function() {
+        let parentInjector = Injector.create([
+          bind(Number).toValue(3)
+        ]);
+        let childInjector = parentInjector.createChild([]);
+        expect(childInjector.get(Number)).to.equal(3);
+      });
+
+      it('prefers values bound at lower level', function() {
+        let parentInjector = Injector.create([
+          bind(Number).toValue(3)
+        ]);
+        let childInjector = parentInjector.createChild([
+          bind(Number).toValue(42)
+        ]);
+        expect(childInjector.get(Number)).to.equal(42);
+      });
+    });
+
+    describe('creation', function() {
+      it('can instantiate a new type arbitrarily', function() {
+        let injector = Injector.create([
+          bind(Number).toValue(42)
+        ]);
+        class Foo {
+          constructor(@Inject(Number) public number: Number) {}
+        }
+        let foo = injector.create<Foo>(Foo);
+        expect(foo.number).to.equal(42);
+      });
+    });
   });
 
   describe('Annotations', function() {
@@ -182,7 +221,7 @@ describe('Dependency Injection', function() {
     });
   });
 
-  describe.skip('Lazy', function(){
+  describe.skip('Lazy', function() {
     it('allows getting a lazy injection', function() {
       let injector = Injector.create([
         bind(Number).toValue(3)

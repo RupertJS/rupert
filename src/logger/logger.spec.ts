@@ -1,16 +1,6 @@
 /// <reference path="../../typings/mocha/mocha.d.ts" />
-/// <reference path="../../typings/chai/chai.d.ts" />
-/// <reference path="../../typings/sinon/sinon.d.ts" />
-/// <reference path="../../typings/sinon-chai/sinon-chai.d.ts" />
 
-/* tslint:disable */
-let sinonChai = require('sinon-chai');
-/* tslint:enable */
-
-import * as chai from 'chai';
-import * as sinon from 'sinon';
-let expect = chai.expect;
-chai.use(sinonChai);
+import { expect, spy } from '../util/specs';
 
 import {
   ILogger,
@@ -22,14 +12,14 @@ import { Config } from '../config/config';
 describe('logger', function() {
   it('instantiates', function(){
     let winston = {
-      Logger: sinon.spy(),
+      Logger: spy(),
       transports: {
-        Console: sinon.spy(),
-        DailyRotateFile: sinon.spy()
+        Console: spy(),
+        DailyRotateFile: spy()
       }
     };
 
-    let morgan = sinon.spy();
+    let morgan = spy();
 
     let logger: ILogger = new Logger(new Config({}), winston, morgan);
 
@@ -48,14 +38,14 @@ describe('logger', function() {
 
     let config = new Config({ log: { level, file, format, rotate } });
     let winston = {
-      Logger: sinon.spy(),
+      Logger: spy(),
       transports: {
-        Console: sinon.spy(),
-        DailyRotateFile: sinon.spy()
+        Console: spy(),
+        DailyRotateFile: spy()
       }
     };
 
-    let morgan = sinon.spy();
+    let morgan = spy();
 
     let logger: ILogger = new Logger(config, winston, <any>morgan);
 
@@ -82,14 +72,14 @@ describe('logger', function() {
       `warn`, `error`, `silent` ];
 
     const _logger = {
-      log: sinon.spy()
+      log: spy()
     };
 
     const winston = {
       Logger: () => _logger,
       transports: {
-        Console: sinon.spy(),
-        DailyRotateFile: sinon.spy()
+        Console: spy(),
+        DailyRotateFile: spy()
       }
     };
 

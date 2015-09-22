@@ -24,3 +24,7 @@ export {
 export {
   Dependency
 } from './dependency';
+
+export {
+  Constructor
+} from './lang';

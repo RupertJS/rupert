@@ -13,7 +13,6 @@
     "eofline": true,
     "forin": true,
     "indent": [true, "spaces"],
-    "interface-name": true,
     "jsdoc-format": true,
     "label-position": true,
     "label-undefined": true,
