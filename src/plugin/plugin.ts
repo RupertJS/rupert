@@ -29,9 +29,7 @@ export interface IPlugin {
 
 export const RupertRouting = '__RupertRouting__';
 
-type RupertRoutingTemp = IPluginHandler;
-
-interface IRoute {
+export interface IRoute {
   (route: string, properties: {methods: Methods[]}): MethodDecorator;
   prefix: (prefix: string) => ClassDecorator;
   POST: (route: string) => MethodDecorator;

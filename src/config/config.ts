@@ -1,7 +1,6 @@
 /// <reference path="../../typings/node/node.d.ts" />
-
-type ConfigPrim = boolean|string|number;
-type ConfigVal = ConfigPrim|Array<string>;
+export type ConfigPrim = boolean|string|number;
+export type ConfigVal = ConfigPrim|Array<string>;
 export type ConfigValue = {[k: string]: ConfigVal|ConfigValue};
 
 export class Config {

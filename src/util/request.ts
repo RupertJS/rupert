@@ -32,7 +32,7 @@ export function request(app: Rupert): Promise<IRupertTest> {
   ;
 }
 
-type CallbackHandler = { (err: any, res: supertest.Response): void; } |
+export type CallbackHandler = { (err: any, res: supertest.Response): void; } |
   { (res: supertest.Response): void; };
 
 export interface IRupertTest extends superagent.SuperAgent<ITest>{};

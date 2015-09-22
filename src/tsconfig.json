@@ -1,6 +1,7 @@
 {
     "version": "next",
     "compilerOptions": {
+        "declaration": true,
         "experimentalDecorators": true,
         "removeComments": true,
         "preserveConstEnums": true,
