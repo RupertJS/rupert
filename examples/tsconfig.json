@@ -3,10 +3,13 @@
         "noImplicitAny": true,
         "removeComments": true,
         "preserveConstEnums": true,
-        "outDir": "../dist/",
+        "outDir": "./",
         "module": "commonjs",
         "sourceMap": true,
-        "target": "ES6",
+        "target": "ES5",
         "experimentalDecorators": true
-    }
+    },
+    "files": [
+      "app.ts"
+    ]
 }

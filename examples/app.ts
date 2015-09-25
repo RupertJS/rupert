@@ -1,3 +1,5 @@
+/// <reference path="./typings/node/node.d.ts" />
+
 import {
   Inject,
   Rupert,
@@ -7,10 +9,15 @@ import {
 
   Route, Methods,
   Request, Response, Next
-} from '../src/rupert';
+} from 'rupert';
+
+// import {
+//   Rupert
+// } from 'rupert';
 
 @Route.prefix('/myapp')
-class MyAppHandler extends RupertPlugin {
+class MyAppHandler extends RupertPlugin
+{
   constructor(
     @Inject(ILogger) private _logger: ILogger,
     @Inject(Config) private _config: Config,
@@ -20,7 +27,7 @@ class MyAppHandler extends RupertPlugin {
     super()
     this._logger.info('Created a MyAppHandler');
     this._config.find<number>('foo.bar', 'FOO_BAR', 37);
-    this._rupert.app.
+    // this._rupert.app.
   }
 
   // @Route.Before(Rupert.Doorman.isLoggedIn) // TODO
@@ -29,10 +36,10 @@ class MyAppHandler extends RupertPlugin {
   action(q: Request, r: Response, n: Next) {}
 }
 
-const defaults = <any>require('./server.json');
+const defaults: any = {};
 
 export const server = Rupert.createApp(defaults, [MyAppHandler]);
 
 if (require.main === module) {
-  server.start();
+
 }

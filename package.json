@@ -4,7 +4,10 @@
   "description": "Preconfigured Express stassets server.",
   "main": "./dist/rupert.js",
   "typings": "./dist/rupert.d.ts",
-  "repository": "git@github.com:DavidSouther/rupert.git",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:DavidSouther/rupert.git"
+  },
   "directories": {},
   "scripts": {
     "watch": "watch 'npm run test' src/ # run this for real-time build and test.",
