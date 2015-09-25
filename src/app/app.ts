@@ -226,7 +226,7 @@ export class Rupert extends EventEmitter {
   }
 
   private _configurePlugins() {
-    this._logger.info(`Instantiating ${this._plugins.length} plugins.`);
+    this._logger.verbose(`Instantiating ${this._plugins.length} plugins.`);
     if (this._plugins.length <= 0) {
       return; // nothing to configure!
     }

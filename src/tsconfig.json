@@ -13,7 +13,15 @@
         "target": "ES5"
     },
     "filesGlob": [
-      "./rupert.ts",
-      "./**/*.spec.ts"
+        "./rupert.ts",
+        "./**/*.spec.ts"
+    ],
+    "files": [
+        "./rupert.ts",
+        "./app/app.spec.ts",
+        "./config/config.spec.ts",
+        "./di/di.spec.ts",
+        "./logger/logger.spec.ts",
+        "./plugins/healthz.spec.ts"
     ]
 }

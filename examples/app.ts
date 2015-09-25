@@ -8,12 +8,10 @@ import {
   ILogger,
 
   Route, Methods,
-  Request, Response, Next
-} from 'rupert';
+  Request, Response, Next,
 
-// import {
-//   Rupert
-// } from 'rupert';
+  Plugins
+} from 'rupert';
 
 @Route.prefix('/myapp')
 class MyAppHandler extends RupertPlugin
@@ -31,15 +29,17 @@ class MyAppHandler extends RupertPlugin
   }
 
   // @Route.Before(Rupert.Doorman.isLoggedIn) // TODO
-  @Route('/route', {methods: [Methods.POST]})
   // or: @Route.POST('/route')
+  @Route('/route', {methods: [Methods.POST]})
   action(q: Request, r: Response, n: Next) {}
 }
 
-const defaults: any = {};
-
-export const server = Rupert.createApp(defaults, [MyAppHandler]);
+const defaults: any = {log: {level: 'info'}};
+export const server = Rupert.createApp(defaults, [
+  MyAppHandler,
+  Plugins.Healthz
+]);
 
 if (require.main === module) {
-
+  server.start();
 }

@@ -1,7 +1,8 @@
 /// <reference path="../typings/express/express.d.ts" />
 
 export {
-  Config
+  Config,
+  ConfigValue
 } from './config/config';
 
 export {
