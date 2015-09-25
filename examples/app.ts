@@ -21,7 +21,7 @@ class MyAppHandler extends RupertPlugin
   constructor(
     @Inject(ILogger) private _logger: ILogger,
     @Inject(Config) private _config: Config,
-    @Inject(Rupert) private _rupert: Rupert,
+    @Inject(Rupert) private _rupert: Rupert
     // @Inject(Doorman) doorman: Rupert.Doorman // Coming soon!
   ) {
     super()
