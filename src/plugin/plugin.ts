@@ -1,5 +1,3 @@
-/// <reference path="../../typings/express/express.d.ts" />
-
 import {
   Constructor
 } from '../di/lang';

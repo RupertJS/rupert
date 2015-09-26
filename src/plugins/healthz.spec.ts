@@ -1,5 +1,3 @@
-/// <reference path='../../typings/mocha/mocha.d.ts' />
-
 import { requestApp } from '../util/request';
 
 import {

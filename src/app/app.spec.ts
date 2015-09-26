@@ -1,7 +1,3 @@
-/// <reference path='../../typings/mocha/mocha.d.ts' />
-/// <reference path='../../typings/es6-promise/es6-promise.d.ts' />
-/// <reference path='../../typings/mock-fs/mock-fs.d.ts' />
-
 import { expect } from '../util/specs';
 import { request, requestApp, IRupertTest } from '../util/request';
 

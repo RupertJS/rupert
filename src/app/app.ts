@@ -1,6 +1,3 @@
-/// <reference path="../../typings/express/express.d.ts" />
-/// <reference path="../../typings/es6-promise/es6-promise.d.ts" />
-
 import * as express from 'express';
 import * as http from 'http';
 import * as https from 'https';

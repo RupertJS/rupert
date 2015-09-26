@@ -1,7 +1,3 @@
-/// <reference path='../../typings/node/node.d.ts' />
-/// <reference path='../../typings/supertest/supertest.d.ts' />
-/// <reference path='../../typings/superagent/superagent.d.ts' />
-
 import * as superagent from 'superagent';
 import * as supertest from 'supertest';
 import { DumbMap } from './dumbmap';
