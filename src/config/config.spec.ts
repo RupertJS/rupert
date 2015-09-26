@@ -1,4 +1,4 @@
-import { expect } from 'chai';
+import { expect } from '../util/specs';
 
 import {
   Config
