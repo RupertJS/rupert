@@ -30,11 +30,13 @@ export {
 } from './plugin/plugin';
 
 import {
-  Healthz
+  Healthz,
+  Static
 } from './plugins/plugins';
 
 export let Plugins = {
-  Healthz
+  Healthz,
+  Static
 };
 
 import * as express from 'express';

@@ -48,6 +48,7 @@
         "./plugins/plugins.ts",
         "./plugins/stassets.spec.ts",
         "./plugins/static.spec.ts",
+        "./plugins/static.ts",
         "./util/dumbmap.ts",
         "./util/request.ts",
         "./util/specs.ts",

@@ -1,4 +1,7 @@
-/// <reference path="./typings/node/node.d.ts" />
+import {
+  join,
+  normalize
+} from 'path';
 
 import {
   Inject,
@@ -34,10 +37,18 @@ class MyAppHandler extends RupertPlugin
   action(q: Request, r: Response, n: Next) {}
 }
 
-const defaults: any = {log: {level: 'info'}};
+const defaults: any = {
+  log: {level: 'info'},
+  static: {
+    routes: {
+      '/': normalize(join(__dirname, '../src/plugins/fixtures/static'))
+    }
+  }
+};
 export const server = Rupert.createApp(defaults, [
   MyAppHandler,
-  Plugins.Healthz
+  Plugins.Healthz,
+  Plugins.Static
 ]);
 
 if (require.main === module) {
