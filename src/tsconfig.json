@@ -46,8 +46,6 @@
         "./plugins/healthz.spec.ts",
         "./plugins/healthz.ts",
         "./plugins/plugins.ts",
-        "./plugins/stassets.spec.ts",
-        "./plugins/stassets.ts",
         "./plugins/static.spec.ts",
         "./plugins/static.ts",
         "./util/dumbmap.ts",
