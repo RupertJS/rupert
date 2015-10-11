@@ -1,7 +1,7 @@
 {
-  "name": "rupert",
+  "name": "ts-rupert",
   "version": "0.4.0",
-  "description": "Preconfigured Express stassets server.",
+  "description": "Strongly Typed Express Server.",
   "main": "./dist/rupert.js",
   "typings": "./dist/rupert.d.ts",
   "repository": {
