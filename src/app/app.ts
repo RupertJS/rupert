@@ -29,7 +29,9 @@ import {
   IPlugin,
   IPluginHandler,
   Methods,
-  PluginList
+  PluginList,
+  Pluginable,
+  NormalizePluginlist
 } from '../plugin/plugin';
 
 type RupertReady = {
@@ -43,6 +45,7 @@ export class Rupert extends EventEmitter {
   private _app: express.Application;
   private _environment: String;
   private _listeners: EventEmitter[] = [];
+  private _plugins: IPlugin[];
 
   public root: string = typeof global.root === 'string' ?
     <string><any>global.root :
@@ -56,7 +59,7 @@ export class Rupert extends EventEmitter {
     @Inject(ILogger) private _logger: ILogger,
     @Inject(Injector) private _injector?: Injector,
     // TODO Make this work with an array of IPlugin ctors and factories
-    @Inject(PluginList) private _plugins: any[] = []
+    @Inject(PluginList) plugins: Pluginable[] = []
   ) {
     super();
 
@@ -93,7 +96,7 @@ export class Rupert extends EventEmitter {
     }
 
     this._configureServers();
-    this._configurePlugins();
+    this._configurePlugins(plugins);
   }
 
   public start(): Promise<Rupert> {
@@ -126,7 +129,7 @@ export class Rupert extends EventEmitter {
     name: string,
     url: string
   ): Promise<Rupert> {
-    return new Promise((resolve: Function, reject: Function) => {
+    return new Promise<void>((resolve: Function, reject: Function) => {
       let listener: EventEmitter = null;
       try {
         listener = <EventEmitter>(<any>server).listen(port);
@@ -143,7 +146,9 @@ export class Rupert extends EventEmitter {
       listener.on('error', (err: any) => {
         reject(err);
       });
-    });
+    })
+    .then(() => Promise.all(this._plugins.map((_: IPlugin) => _.ready())))
+    .then(() => this);
   }
 
   public stop(): Promise<Rupert> {
@@ -222,18 +227,18 @@ export class Rupert extends EventEmitter {
     };
   }
 
-  private _configurePlugins() {
-    this._logger.verbose(`Instantiating ${this._plugins.length} plugins.`);
-    if (this._plugins.length <= 0) {
+  private _configurePlugins(plugins: Pluginable[]) {
+    this._logger.verbose(`Instantiating ${plugins.length} plugins.`);
+    if (plugins.length <= 0) {
+      this._plugins = [];
       return; // nothing to configure!
     }
     let pluginInjector: Injector = this._injector.createChild([
       bind(Rupert).toValue(this)
     ]);
     const app = this._app;
-    this._plugins = this._plugins.map(
-      (pluginCtor: Constructor<IPlugin>) => {
-        let plugin = pluginInjector.create<IPlugin>(pluginCtor);
+    this._plugins = NormalizePluginlist(plugins, pluginInjector).map(
+      (plugin: IPlugin) => {
         this._logger.verbose(`Attaching ${plugin.handlers.length} handlers.`);
         plugin.handlers.forEach((handler: IPluginHandler): void => {
           let methods = handler.methods.map((_) => Methods[_]).join(',');

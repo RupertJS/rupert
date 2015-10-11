@@ -11,6 +11,7 @@ import * as express from 'express';
 
 export class Static implements IPlugin {
   public handlers: IPluginHandler[] = [];
+  ready(): Promise<void> { return Promise.resolve<void>(); }
 
   constructor(
     @Inject(Rupert) app: Rupert,

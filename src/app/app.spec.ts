@@ -163,6 +163,7 @@ describe('Rupert App', function() {
       let testRupert: Rupert = null;
       class InjectPlugin implements IPlugin {
         public handlers: IPluginHandler[] = [];
+        ready(): Promise<void> { return Promise.resolve<void>(); }
         constructor(
           @Inject(Rupert) rupert: Rupert
         ) {
@@ -175,8 +176,35 @@ describe('Rupert App', function() {
       expect(testRupert).to.equal(rupert);
     });
 
+    it('waits for plugins to load', function(done) {
+      let config: Config = new Config({hostname: 'rupert-test'});
+      let logger: ILogger = getMockLogger();
+      let injector = Injector.create([
+        bind(Config).toValue(config),
+        bind(ILogger).toValue(logger),
+        bind(Injector).toFactory(() => injector)
+      ]);
+
+      let started = false;
+      class StarterPlugin implements IPlugin {
+        handlers: IPluginHandler[] = [];
+        ready(): Thenable<void> {
+          started = true;
+          return Promise.resolve<void>();
+        }
+      }
+
+      const rupert = new Rupert(config, logger, injector, [StarterPlugin]);
+      expect(started).to.be.false;
+      rupert.start().then(() => {
+        expect(started).to.be.true;
+        done();
+      });
+    });
+
     it('utilizes plugin handlers', function(done) {
       class TestPlugin implements IPlugin {
+        ready(): Promise<void> { return Promise.resolve<void>(); }
         public handlers: IPluginHandler[] = [{
           methods: [Methods.GET],
           route: '/plugin',

@@ -2,6 +2,10 @@ import {
   Constructor
 } from '../di/lang';
 
+import {
+  Injector
+} from '../di/di';
+
 import { RequestHandler, Request, Response } from 'express';
 
 export enum Methods {
@@ -23,6 +27,7 @@ export interface IPluginHandler {
 
 export interface IPlugin {
   handlers: IPluginHandler[];
+  ready(): Thenable<void>;
 }
 
 export const RupertRouting = '__RupertRouting__';
@@ -92,7 +97,26 @@ export class RupertPlugin implements IPlugin {
       return _;
     });
   }
+
+  ready(): Thenable<void> {
+    return Promise.resolve<void>();
+  }
 }
 
+export type Pluginable = (Constructor<IPlugin>|IPlugin);
+
 // export type PluginList = IPlugin[];
-export var PluginList: Constructor<IPlugin>[] = [];
+export var PluginList: Pluginable[] = [];
+
+export function NormalizePluginlist(
+  list: Pluginable[],
+  injector: Injector
+): IPlugin[] {
+  return list.map((ctor: Pluginable): IPlugin => {
+    if ((<IPlugin>ctor).handlers) {
+      return <IPlugin>ctor;
+    } else {
+      return injector.create<IPlugin>(<Constructor<IPlugin>>ctor);
+    }
+  });
+}
