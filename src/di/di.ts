@@ -1,7 +1,7 @@
 export {
   Binding,
   ResolvedBinding
-} from './Binding';
+} from './binding';
 
 export {
   Injector
