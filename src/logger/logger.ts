@@ -1,8 +1,3 @@
-/// <reference path="../../typings/express/express.d.ts" />
-/// <reference path="../../typings/winston/winston.d.ts" />
-/// <reference path="../../typings/morgan/morgan.d.ts" />
-/// <reference path="../../typings/debug/debug.d.ts" />
-
 import * as express from 'express';
 import * as Winston from 'winston';
 import * as Morgan from 'morgan';

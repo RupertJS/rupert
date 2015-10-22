@@ -1,5 +1,3 @@
-/// <reference path="../../typings/mocha/mocha.d.ts" />
-
 import { expect, spy } from '../util/specs';
 
 import {
