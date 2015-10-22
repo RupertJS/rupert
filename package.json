@@ -1,6 +1,6 @@
 {
   "name": "ts-rupert",
-  "version": "0.4.1-beta2",
+  "version": "0.4.1-beta3",
   "description": "Strongly Typed Express Server.",
   "main": "./dist/rupert.js",
   "typings": "./dist/rupert.d.ts",
