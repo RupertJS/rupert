@@ -1,19 +1,10 @@
-import {
-  DumbMap
-} from '../util/dumbmap';
+import {DumbMap} from '../util/dumbmap';
 
-import {
-  Binding,
-  ResolvedBinding
-} from './binding';
+import {Binding, ResolvedBinding} from './binding';
 
-import {
-  bind
-} from './builder';
+import {bind} from './builder';
 
-import {
-  Constructor
-} from './lang';
+import {Constructor} from './lang';
 
 /**
  * An Injector is a mapping from type to implementation of type, including
@@ -24,20 +15,17 @@ export class Injector {
    * Create a new injector, given an array of bindings. The most easy to use
    * way to get a new Injector.
    */
-  static create(bindings: Array<Binding<any>>, parent: Injector = null) {
+  static create(bindings: Array<Binding<any>>, parent?: Injector) {
     return new Injector(bindings.map((_) => _.resolve()), parent);
   }
 
   private _bindingLookup: Map<any, ResolvedBinding> =
-    new DumbMap<ResolvedBinding>();
+      new DumbMap<ResolvedBinding>();
 
   /**
    * Create a new Injector given an array of already resolved bindings.
    */
-  constructor(
-    resolvedBindings: ResolvedBinding[],
-    private parent: Injector
-  ) {
+  constructor(resolvedBindings: ResolvedBinding[], private parent?: Injector) {
     resolvedBindings.map((_) => this._bindingLookup.set(_.key, _));
   }
 
@@ -76,9 +64,7 @@ export class Injector {
     return _apply(binding.factory, dependencies);
   }
 
-  getLazy(type: any): () => any {
-    return () => null;
-  }
+  getLazy(type: any): () => any { return () => null; }
 
   create<T>(type: Constructor<T>): T {
     let Key: any = new Object();
@@ -107,11 +93,14 @@ function _apply(fn: Function, args: any[]): any {
     case 7:
       return fn(args[0], args[1], args[2], args[3], args[4], args[5], args[6]);
     case 8:
-      return fn(args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7]);
+      return fn(args[0], args[1], args[2], args[3], args[4], args[5], args[6],
+                args[7]);
     case 9:
-      return fn(args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7], args[8]);
+      return fn(args[0], args[1], args[2], args[3], args[4], args[5], args[6],
+                args[7], args[8]);
     case 10:
-      return fn(args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7], args[8], args[9]);
+      return fn(args[0], args[1], args[2], args[3], args[4], args[5], args[6],
+                args[7], args[8], args[9]);
     default:
       return fn.apply(null, args);
   }

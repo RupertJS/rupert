@@ -7,8 +7,8 @@ import {
 } from '../rupert';
 
 export class Healthz extends RupertPlugin {
-  @Route.GET('/healthz')
-  ok(q: Q, s: S, n: N): void {
+  @Route
+      .GET('/healthz') ok(q: Q, s: S, n: N): void {
     s.send('OK!');
   }
 }

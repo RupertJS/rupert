@@ -5,5 +5,5 @@ let sinonChai = require('sinon-chai');
 import * as chai from 'chai';
 chai.use(sinonChai);
 
-export { expect } from 'chai';
-export { spy, mock, stub } from 'sinon';
+export {expect} from 'chai';
+export {spy, mock, stub} from 'sinon';

@@ -6,6 +6,7 @@
         "removeComments": true,
         "preserveConstEnums": true,
         "noImplicitAny": true,
+        "strictNullChecks": true,
         "suppressImplicitAnyIndexErrors": true,
         "outDir": "../dist/",
         "module": "commonjs",

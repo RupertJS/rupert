@@ -1,8 +1,8 @@
 import * as superagent from 'superagent';
 import * as supertest from 'supertest';
-import { DumbMap } from './dumbmap';
+import {DumbMap} from './dumbmap';
 
-import { Rupert } from '../rupert';
+import {Rupert} from '../rupert';
 
 const apps = new DumbMap<Rupert>();
 
@@ -14,24 +14,23 @@ export function request(app: Rupert): Promise<IRupertTest> {
   const rupert = <Rupert>app;
   if (apps.has(rupert.url)) {
     throw new Error(
-      `Rupert at ${rupert.url} is still running, did you remember to stop it?`
-    );
+        `Rupert at ${rupert.url} is still running, did you remember to stop it?`);
   }
 
-  return rupert.start().then(() => new Promise(
-    (resolve: Function, reject: Function) => {
-      apps.set(rupert.url, rupert);
-      const test = <IRupertTest><any>supertest(rupert.url);
-      resolve(test);
-    }
-  ))
-  ;
+  return rupert.start().then(
+      () => new Promise((resolve: Function, reject: Function) => {
+        apps.set(rupert.url, rupert);
+        const test = <IRupertTest><any>supertest(rupert.url);
+        resolve(test);
+      }));
 }
 
-export type CallbackHandler = { (err: any, res: supertest.Response): void; } |
-  { (res: supertest.Response): void; };
+export type CallbackHandler = { (err: any, res: supertest.Response): void; }
+| {
+  (res: supertest.Response): void;
+};
 
-export interface IRupertTest extends superagent.SuperAgent<ITest>{};
+export interface IRupertTest extends superagent.SuperAgent<ITest> {};
 
 export interface ITest extends supertest.Test {
   expect(status: number, callback?: CallbackHandler): ITest;
@@ -45,9 +44,8 @@ export interface ITest extends supertest.Test {
   finish(cb?: (app?: Rupert) => void): void;
 }
 
-(<any>supertest).Test.prototype.finish = function(
-  cb: (err?: any) => void
-): void {
+(<any>supertest)
+    .Test.prototype.finish = function(cb: (err?: any) => void): void {
   if (!apps.has(this.app)) {
     throw new Error(`Rupert at ${this.app} seems to already be stopped...`);
   }

@@ -1,11 +1,6 @@
-import {
-  Constructor,
-  isPresent
-} from './lang';
+import {Constructor, isPresent} from './lang';
 
-import {
-  Dependency
-} from './dependency';
+import {Dependency} from './dependency';
 
 /**
  * A Binding is a convenient API to declare for the injector what values can be
@@ -18,31 +13,10 @@ import {
  * the injector.
  */
 export class Binding<T> {
-  private toValue: any;
-  private toClass: Constructor<T>;
-  private toAlias: Constructor<T>;
-  private toFactory: Function;
-  private depenendies: any[];
-
-  constructor(private _type: any, {
-    toValue,
-    toClass,
-    toAlias,
-    toFactory,
-    dependencies = []
-  }: {
-    toValue?: any,
-    toClass?: Constructor<T>,
-    toAlias?: Constructor<T>,
-    toFactory?: Function,
-    dependencies?: any[]
-  } = {}) {
-    this.toValue = toValue;
-    this.toClass = toClass;
-    this.toAlias = toAlias;
-    this.toFactory = toFactory;
-    this.depenendies = dependencies;
-  }
+  constructor(private _type: any, private toValue?: any,
+              private toClass?: Constructor<T>,
+              private toAlias?: Constructor<T>, private toFactory?: Function,
+              private depenendies: any[] = []) {}
 
   resolve(): ResolvedBinding {
     const type = this._type;
@@ -67,11 +41,8 @@ export class Binding<T> {
  * A ResolvedBinding
  */
 export class ResolvedBinding {
-  constructor(
-    public key: any,
-    public factory: Function,
-    public dependencies: Dependency[]
-  ) { }
+  constructor(public key: any, public factory: Function,
+              public dependencies: Dependency[]) {}
 }
 
 /* tslint:disable */
@@ -91,16 +62,22 @@ function _getFactory<T>(t: Constructor<T>): Function {
     case 4:
       return (a1: any, a2: any, a3: any, a4: any) => new t(a1, a2, a3, a4);
     case 5:
-      return (a1: any, a2: any, a3: any, a4: any, a5: any) => new t(a1, a2, a3, a4, a5);
+      return (a1: any, a2: any, a3: any, a4: any, a5: any) =>
+                 new t(a1, a2, a3, a4, a5);
     case 6:
-      return (a1: any, a2: any, a3: any, a4: any, a5: any, a6: any) => new t(a1, a2, a3, a4, a5, a6);
+      return (a1: any, a2: any, a3: any, a4: any, a5: any, a6: any) =>
+                 new t(a1, a2, a3, a4, a5, a6);
     case 7:
-      return (a1: any, a2: any, a3: any, a4: any, a5: any, a6: any, a7: any) => new t(a1, a2, a3, a4, a5, a6, a7);
+      return (a1: any, a2: any, a3: any, a4: any, a5: any, a6: any, a7: any) =>
+                 new t(a1, a2, a3, a4, a5, a6, a7);
     case 8:
-      return (a1: any, a2: any, a3: any, a4: any, a5: any, a6: any, a7: any, a8: any) => new t(a1, a2, a3, a4, a5, a6, a7, a8);
+      return (a1: any, a2: any, a3: any, a4: any, a5: any, a6: any, a7: any,
+              a8: any) => new t(a1, a2, a3, a4, a5, a6, a7, a8);
     case 9:
-      return (a1: any, a2: any, a3: any, a4: any, a5: any, a6: any, a7: any, a8: any, a9: any) => new t(a1, a2, a3, a4, a5, a6, a7, a8, a9);
+      return (a1: any, a2: any, a3: any, a4: any, a5: any, a6: any, a7: any,
+              a8: any, a9: any) => new t(a1, a2, a3, a4, a5, a6, a7, a8, a9);
   };
-  throw new Error(`Cannot create a factory for '${t}' because its constructor has more than 9 arguments`);
+  throw new Error(
+      `Cannot create a factory for '${t}' because its constructor has more than 9 arguments`);
 }
 /* tslint:enable */

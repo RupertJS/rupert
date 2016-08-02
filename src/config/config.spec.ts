@@ -1,39 +1,28 @@
-import { expect } from '../util/specs';
+import {expect} from '../util/specs';
 
-import {
-  Config
-} from '../rupert';
+import {Config} from '../rupert';
 
-import {
-  ConfigValue
-} from './config';
+import {ConfigValue} from './config';
 
 import * as Path from 'path';
 
 describe('Configuration Manager', () => {
   it('should expose a constructor', () => {
     expect(Config).to.exist;
-    expect(Config).to.be.instanceof(Function);
+    expect(Config).to.be.instanceof (Function);
   });
 
   it('accepts a starting config block', () => {
-    const conf: ConfigValue = {
-      shallow: 'value',
-      deep: {
-        path: 'value'
-      }
-    };
+    const conf: ConfigValue = {shallow: 'value', deep: {path: 'value'}};
     const config = new Config(conf);
     expect(config.find('shallow')).to.equal('value');
     expect(config.find('deep.path')).to.equal('value');
   });
 
   describe('setting and retreiving values', () => {
-    let config: Config = null;
+    let config: Config = new Config();
 
-    beforeEach(function(){
-      config = new Config();
-    });
+    beforeEach(function() { config = new Config(); });
 
     it('sets and finds key by shallow path', () => {
       config.set('shallow', 'value');
@@ -67,7 +56,7 @@ describe('Configuration Manager', () => {
       it('finds key with environment override', () => {
         process.env.DEEP_PATH = 'environment';
         expect(config.find('deep.path', 'DEEP_PATH', 'value'))
-          .to.equal('environment');
+            .to.equal('environment');
         expect(config.find('deep.path', 'other value')).to.equal('environment');
         delete process.env.DEEP_PATH;
       });
@@ -76,13 +65,13 @@ describe('Configuration Manager', () => {
         process.env.DEEP_PATH = 'environment';
         config.set('deep.path', 'value');
         expect(config.find('deep.path', 'DEEP_PATH', 'value'))
-          .to.equal('environment');
+            .to.equal('environment');
         expect(config.find('deep.path', 'value')).to.equal('environment');
         delete process.env.DEEP_PATH;
       });
 
       it('does not share data between instances', function() {
-        let config1 = new Config({ log: { level: 'warn' } });
+        let config1 = new Config({log: {level: 'warn'}});
         let config2 = new Config({});
 
         let level1 = config1.find('log.level', 'LOG_LEVEL', 'http');
@@ -107,18 +96,16 @@ describe('Configuration Manager', () => {
         config.set('deep.path', ['foo', 'bar']);
         config.append('deep.path', 'baz');
         config.append('deep.path', ['bing', 'bang']);
-        expect(config.find('deep.path')).to.deep.equal([
-          'foo', 'bar', 'baz', 'bing', 'bang'
-        ]);
+        expect(config.find('deep.path'))
+            .to.deep.equal(['foo', 'bar', 'baz', 'bing', 'bang']);
       });
 
       it('prepends values to key', () => {
         config.set('deep.path', ['foo', 'bar']);
         config.prepend('deep.path', 'baz');
         config.prepend('deep.path', ['bing', 'bang']);
-        expect(config.find('deep.path')).to.deep.equal([
-          'bing', 'bang', 'baz', 'foo', 'bar'
-        ]);
+        expect(config.find('deep.path'))
+            .to.deep.equal(['bing', 'bang', 'baz', 'foo', 'bar']);
       });
 
       it('appends to a new empty array', () => {
@@ -133,12 +120,15 @@ describe('Configuration Manager', () => {
     });
   });
 
-  describe('command line support', function(){
-    it('consumes command line flags', function(){
+  describe('command line support', function() {
+    it('consumes command line flags', function() {
       let argv = [
-        'node', 'example/app.js',
-        '--shallow', 'val1',
-        '--deep.path', 'val2'
+        'node',
+        'example/app.js',
+        '--shallow',
+        'val1',
+        '--deep.path',
+        'val2'
       ];
       const config = new Config({}, argv);
       expect(config.find('shallow')).to.equal('val1');
@@ -148,21 +138,16 @@ describe('Configuration Manager', () => {
     it('uses in order globals, command line, base', function() {
       let _env = process.env.SHALLOW;
       let argv = [
-        'node', 'example/app.js',
-        '--shallow', 'val1',
-        '--deep.path', 'val2',
+        'node',
+        'example/app.js',
+        '--shallow',
+        'val1',
+        '--deep.path',
+        'val2',
       ];
       process.env.SHALLOW = 'env1';
-      const config = new Config(
-        {
-          shallow: 'b1',
-          deep: {
-            path: 'b2'
-          },
-          other: 'b3'
-        },
-        argv
-      );
+      const config =
+          new Config({shallow: 'b1', deep: {path: 'b2'}, other: 'b3'}, argv);
       expect(config.find('shallow', 'SHALLOW', 'f1')).to.equal('env1');
       expect(config.find('deep.path', 'DEEP_PATH', 'f2')).to.equal('val2');
       expect(config.find('other', 'OTHER', 'f3')).to.equal('b3');

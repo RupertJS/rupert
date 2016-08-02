@@ -1,21 +1,12 @@
 import {
-  readFileSync // , writeFileSync
+  readFileSync  // , writeFileSync
 } from 'fs';
 
-import {
-  ILogger
-} from '../logger/logger';
+import {ILogger} from '../logger/logger';
 
-export function makeCert(
-  keyFile: string,
-  certFile: string,
-  writeCert: boolean,
-  validDays: number,
-  logger: ILogger
-): {
-  key: string,
-  cert: string
-} {
+export function makeCert(keyFile: string, certFile: string, writeCert: boolean,
+                         validDays: number,
+                         logger: ILogger): {key: string, cert: string} {
   let key: string, cert: string;
 
   try {
@@ -36,5 +27,5 @@ export function makeCert(
     // }
   }
 
-  return { key, cert };
+  return {key, cert};
 }

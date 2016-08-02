@@ -1,12 +1,8 @@
-import {
-  Constructor
-} from '../di/lang';
+import {Constructor} from '../di/lang';
 
-import {
-  Injector
-} from '../di/di';
+import {Injector} from '../di/di';
 
-import { RequestHandler, Request, Response } from 'express';
+import {RequestHandler, Request, Response} from 'express';
 
 export enum Methods {
   ALL,
@@ -43,21 +39,22 @@ export interface IRoute {
 
 export let Route = <IRoute>function(
   route: string,
-  properties: {methods: Methods[]}
+  properties: {
+  methods: Methods[]
+}
 ): MethodDecorator {
-  return function(
-    target: any,
-    propertyKey: string | symbol,
-    descriptor: TypedPropertyDescriptor<RequestHandler>
-  ): TypedPropertyDescriptor<RequestHandler> {
-    (target.$$protoHandlers = target.$$protoHandlers || []).push({
-      route,
-      methods: properties.methods,
-      handler: descriptor.value
-    });
+  return function(target: any, propertyKey: string | symbol,
+                  descriptor: TypedPropertyDescriptor<RequestHandler>):
+      TypedPropertyDescriptor<RequestHandler> {
+        (target.$$protoHandlers = target.$$protoHandlers || [])
+            .push({
+              route,
+              methods: properties.methods,
+              handler: descriptor.value
+            });
 
-    return descriptor;
-  };
+        return descriptor;
+      };
 };
 
 Route.prefix = function(prefix: string) {
@@ -70,13 +67,13 @@ Route.prefix = function(prefix: string) {
 Route.POST = function(route: string) {
   return Route(route, {methods: [Methods.POST]});
 };
-Route.GET = function (route: string) {
+Route.GET = function(route: string) {
   return Route(route, {methods: [Methods.GET]});
 };
-Route.PUT = function (route: string) {
+Route.PUT = function(route: string) {
   return Route(route, {methods: [Methods.PUT]});
 };
-Route.HEAD = function (route: string) {
+Route.HEAD = function(route: string) {
   return Route(route, {methods: [Methods.HEAD]});
 };
 
@@ -98,20 +95,16 @@ export class RupertPlugin implements IPlugin {
     });
   }
 
-  ready(): Thenable<void> {
-    return Promise.resolve<void>();
-  }
+  ready(): Thenable<void> { return Promise.resolve<void>(); }
 }
 
-export type Pluginable = (Constructor<IPlugin>|IPlugin);
+export type Pluginable = (Constructor<IPlugin>| IPlugin);
 
 // export type PluginList = IPlugin[];
 export var PluginList: Pluginable[] = [];
 
-export function NormalizePluginlist(
-  list: Pluginable[],
-  injector: Injector
-): IPlugin[] {
+export function NormalizePluginlist(list: Pluginable[],
+                                    injector: Injector): IPlugin[] {
   return list.map((ctor: Pluginable): IPlugin => {
     if ((<IPlugin>ctor).handlers) {
       return <IPlugin>ctor;

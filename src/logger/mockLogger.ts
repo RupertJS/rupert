@@ -1,12 +1,8 @@
 /// <reference path="../../typings/sinon/sinon.d.ts" />
 
-import {
-  spy, stub
-} from 'sinon';
+import {spy, stub} from 'sinon';
 
-import {
-  ILogger
-} from './logger';
+import {ILogger} from './logger';
 
 export function getMockLogger(): ILogger {
   return {

@@ -1,6 +1,4 @@
-import {
-  Constructor
-} from './lang';
+import {Constructor} from './lang';
 
 export const $injectionKey = '__$INJECT__';
 
@@ -25,9 +23,6 @@ export class Dependency {
     return d instanceof Dependency ? d : new Dependency(d);
   }
 
-  constructor(
-    public token: any,
-    public optional: boolean = false,
-    public lazy: boolean = false
-  ) {}
+  constructor(public token: any, public optional: boolean = false,
+              public lazy: boolean = false) {}
 }

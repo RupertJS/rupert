@@ -1,10 +1,6 @@
-export {
-  Healthz
-} from './healthz';
+export {Healthz} from './healthz';
 
-export {
-  Static
-} from './static';
+export {Static} from './static';
 
 // export {
 //   Stassets

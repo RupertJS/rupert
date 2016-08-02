@@ -1,6 +1,6 @@
-export type ConfigPrim = boolean|string|number;
-export type ConfigVal = ConfigPrim|Array<string>;
-export type ConfigValue = {[k: string]: ConfigVal|ConfigValue};
+export type ConfigPrim = boolean | string | number;
+export type ConfigVal = ConfigPrim | Array<string>;
+export type ConfigValue = { [k: string]: ConfigVal | ConfigValue };
 
 export class Config {
   private _data: any = {};
@@ -12,8 +12,8 @@ export class Config {
     }
     while (argv.length > 0) {
       let key = argv.shift();
-      if (key.indexOf('--') === 0) {
-        let val = argv.shift();
+      if (key && key.indexOf('--') === 0) {
+        let val = argv.shift() || '';
         this.set(key.substr(2), val);
       }
     }
@@ -26,16 +26,15 @@ export class Config {
   /**
    * Look up a key, possibly using the environment or setting a value.
    */
-  find<V extends ConfigVal>(
-    key: string,
-    env?: string|V,
-    deflt?: V
-  ): V {
+  find<V extends ConfigVal>(key: string, env: V | string = '', def?: V): V {
+    let deflt: V;
     if (arguments.length === 2) {
-      deflt = <V>env;
-      env = null;
+      deflt = env as V;
+      env = '';
+    } else {
+      deflt = def as V;
     }
-    if (env) {
+    if (env !== '') {
       deflt = FIND<V>(this._data, key.split('.'), deflt);
       let envDeflt = FIND<V>(process.env, [<string>env], deflt);
       return SET<V>(this._data, key.split('.'), envDeflt);
@@ -49,13 +48,13 @@ export class Config {
     return toConfigArray(<string[]>this.set(key, mapped));
   }
 
-  append(key: string, arr: string|string[]): string[] {
+  append(key: string, arr: string | string[]): string[] {
     let configArr = toConfigArray(arr);
     let list = toConfigArray(this.find(key, [])).concat(configArr);
     return toConfigArray(<string[]>this.set(key, list));
   }
 
-  prepend(key: string, arr: string|string[]): string[] {
+  prepend(key: string, arr: string | string[]): string[] {
     let configArr = toConfigArray(arr);
     let list = configArr.concat(toConfigArray(this.find(key, [])));
     return toConfigArray(<string[]>this.set(key, list));
@@ -67,17 +66,14 @@ export class Config {
  * It the value is already an array, return it. Otherwise, return a new
  * array with one element, the value passed.
  */
-function toConfigArray(arr: string|string[]): string[] {
+function toConfigArray(arr: string | string[]): string[] {
   return Array.isArray(arr) ? <string[]>arr : [<string>arr];
 }
 
 /**
  * Convenience for `FIND(_, _, _, true)`
  */
-function SET<V extends ConfigVal>(
-  o: Object, p: string[],
-  v: V
-): V {
+function SET<V extends ConfigVal>(o: Object, p: string[], v: V): V {
   return FIND<V>(o, p, v, true);
 }
 
@@ -93,14 +89,10 @@ function SET<V extends ConfigVal>(
  *        if `force` is `true`.
  * @param force {boolean} if `true`, replace the value even if it is set.
  */
-function FIND<V extends ConfigVal>(
-  obj: any,
-  path: string[],
-  val?: V,
-  force: boolean = false
-): V  {
+function FIND<V extends ConfigVal>(obj: any, path: string[], val: V,
+                                   force: boolean = false): V {
   // Let's follow the next key
-  let key = path.shift();
+  let key = path.shift() as string;
   const hasKey = Object.hasOwnProperty.call(obj, key);
   if (path.length === 0) {
     // We're at the end of the path
@@ -109,10 +101,10 @@ function FIND<V extends ConfigVal>(
       obj[key] = val;
     }
     if (obj === process.env) {
-      return <V>GET_ENV<V>(key, val);
+      return GET_ENV<V>(key, val);
     } else {
       // Return what's there.
-      return <V>obj[key];
+      return obj[key] as V;
     }
   } else {
     // If not set, fill in this position with a new object.
@@ -122,7 +114,7 @@ function FIND<V extends ConfigVal>(
   }
 }
 
-function GET_ENV<V extends ConfigVal>(key: string, val: V): any {
+function GET_ENV<V extends ConfigVal>(key: string, val: V): V {
   // TODO Either use proces.env OR use localStorage.
   const obj = process.env;
   if (!obj[key]) {
@@ -130,16 +122,16 @@ function GET_ENV<V extends ConfigVal>(key: string, val: V): any {
   }
   // process.env behaves oddly.
   if (obj[key].toLowerCase() === 'false') {
-    return false;
+    return false as V;
   } else if (obj[key].toLowerCase() === 'true') {
-    return true;
+    return true as V;
   } else if (obj[key].toLowerCase() === '') {
-    return val ? val : null;
+    return val as V;
   } else if (val instanceof Number) {
     if (obj[key].indexOf('.') === -1) {
-      return parseInt(obj[key], 10);
+      return parseInt(obj[key], 10) as V;
     } else {
-      return parseFloat(obj[key]);
+      return parseFloat(obj[key]) as V;
     }
   } else {
     return obj[key];

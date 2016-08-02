@@ -1,11 +1,6 @@
-export {
-  Config,
-  ConfigValue
-} from './config/config';
+export {Config, ConfigValue} from './config/config';
 
-export {
-  ILogger
-} from './logger/logger';
+export {ILogger} from './logger/logger';
 
 export {
   Binding,
@@ -17,9 +12,7 @@ export {
   $injectionKey
 } from './di/di';
 
-export {
-  Rupert
-} from './app/app';
+export {Rupert} from './app/app';
 
 export {
   IPlugin,
@@ -29,15 +22,9 @@ export {
   Methods
 } from './plugin/plugin';
 
-import {
-  Healthz,
-  Static
-} from './plugins/plugins';
+import {Healthz, Static} from './plugins/plugins';
 
-export let Plugins = {
-  Healthz,
-  Static
-};
+export let Plugins = { Healthz, Static };
 
 import * as express from 'express';
 export type Request = express.Request;

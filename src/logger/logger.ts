@@ -2,12 +2,10 @@ import * as express from 'express';
 import * as Winston from 'winston';
 import * as Morgan from 'morgan';
 
-export {
-  QueryOptions
-} from 'winston';
+export {QueryOptions} from 'winston';
 
-import { Config } from '../config/config';
-import { Inject, Optional } from '../di/di';
+import {Config} from '../config/config';
+import {Inject, Optional} from '../di/di';
 
 // General Winston setup for colors and levels.
 (<any>Winston).config.npm.colors.http = 'magenta';
@@ -89,9 +87,7 @@ export class ILogger {
   /**
    * An alias for ILogger.info.
    */
-  log(msg: string, meta: any = null): ILogger {
-    return this.info(msg, meta);
-  }
+  log(msg: string, meta: any = null): ILogger { return this.info(msg, meta); }
 
   /**
    * Log messages indicating impending program failure. For instance, compiler
@@ -121,24 +117,20 @@ export class ILogger {
     throw new Error('Unsupported Operation: Abstract class');
   }
 
-  query(
-    options?: Winston.QueryOptions,
-    callback?: (err: Error, results: any) => void
-  ): any {
+  query(options?: Winston.QueryOptions,
+        callback?: (err: Error, results: any) => void): any {
     throw new Error('Unsupported Operation');
   }
 
   profile(id: string, msg?: string, meta: any = null): ILogger {
     throw new Error('Unsupported Operation: Abstract class');
   }
-};
+}
+;
 
 // This gets replaced with a real handler in `configureLogging`.
 let _morgan: express.RequestHandler = function(
-  req: express.Request,
-  res: express.Response,
-  next: Function
-): void {
+    req: express.Request, res: express.Response, next: Function): void {
   next();
 };
 
@@ -150,51 +142,38 @@ export class Logger extends ILogger {
   private _logger: Winston.LoggerInstance;
   private _morgan: express.RequestHandler;
 
-  constructor(
-    @Inject(Config) config: Config,
-    @Optional() @Inject(Winston) winston: any = Winston,
-    @Optional() @Inject(Morgan) morgan: any = Morgan
-  ) {
+  constructor(@Inject(Config) config: Config,
+              @Optional() @Inject(Winston) winston: any = Winston,
+              @Optional() @Inject(Morgan) morgan: any = Morgan) {
     super();
 
     let transports: Winston.TransportInstance[] = [];
 
     const level = config.find('log.level', 'LOG_LEVEL', 'http');
-    const logConsole = config.find('log.console', 'LOG_CONSOLE', true);
-    const filename: string|boolean = config.find('log.file', 'LOG_FILE', false);
-    const format = config.find<string>('log.format', 'LOG_FORMAT', 'tiny');
+    const logConsole = config.find<boolean>('log.console', 'LOG_CONSOLE', true);
+    const filename: string | boolean =
+        config.find<string | boolean>('log.file', 'LOG_FILE', false);
+    const format = config.find('log.format', 'LOG_FORMAT', 'tiny');
     const datePattern = config.find('log.rotate', 'LOG_ROTATE', '.yyyy-MM-dd');
 
     if (logConsole === true) {
-      transports.push(
-        new winston.transports.Console(<Winston.TransportOptions>{
-          level,
-          timestamp: true,
-          colorize: true
-        })
-      );
+      transports.push(new winston.transports.Console(
+          <Winston.TransportOptions>{level, timestamp: true, colorize: true}));
     }
 
     if (filename !== false) {
       transports.push(
-        new winston.transports.DailyRotateFile(<Winston.TransportOptions>{
-          level,
-          timestamp: true,
-          datePattern,
-          filename
-        })
-      );
+          new winston.transports.DailyRotateFile(<Winston.TransportOptions>{
+            level,
+            timestamp: true, datePattern, filename
+          }));
     }
 
     this._logger = new (winston.Logger)({transports});
 
-    this._morgan = morgan(format, {
-      stream: {
-        write: (message: string) => {
-          this.http(message);
-        }
-      }
-    });
+    this._morgan =
+        morgan(format,
+               {stream: {write: (message: string) => { this.http(message); }}});
   }
 
   silly(msg: string, meta: any = null): ILogger {
@@ -242,10 +221,8 @@ export class Logger extends ILogger {
     return this;
   }
 
-  query(
-    options: Winston.QueryOptions,
-    callback: (err: Error, results: any) => void
-  ): void {
+  query(options: Winston.QueryOptions,
+        callback: (err: Error, results: any) => void): void {
     this._logger.query(options, callback);
   }
 
@@ -254,7 +231,5 @@ export class Logger extends ILogger {
     return this;
   }
 
-  get middleware(): express.RequestHandler {
-    return this._morgan;
-  }
+  get middleware(): express.RequestHandler { return this._morgan; }
 }
