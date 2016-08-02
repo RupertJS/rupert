@@ -186,7 +186,9 @@ describe('Dependency Injection', function() {
     it('attaches injection information', function() {
       class Engine {}
       class Vehicle {
-        constructor(@Inject(Engine) private engine: Engine) {}
+        constructor(@Inject(Engine) private engine: Engine) {
+          expect(this.engine).to.be.instanceof (Engine);
+        }
       }
       expect(Vehicle[$injectionKey]).to.deep.equal([Engine]);
     });
@@ -194,7 +196,9 @@ describe('Dependency Injection', function() {
     it('allows optional dependencies', function() {
       class Engine {}
       class Vehicle {
-        constructor(@Optional() @Inject(Engine) private engine: Engine) {}
+        constructor(@Optional() @Inject(Engine) private engine: Engine) {
+          expect(this.engine).to.be.instanceof (Engine);
+        }
       }
       expect(Vehicle[$injectionKey][0].optional).to.be.true;
     });

@@ -17,9 +17,6 @@
     "pretest": "npm run build",
     "build": "npm run build:tsc # compile everything",
     "build:tsc": "tsc -p src/",
-    "prebuild": "npm run lint",
-    "lint": "npm run lint:tsc # enforce local style guide",
-    "lint:tsc": "tslint src/**/*.ts",
     "clean": "rm -rf dist/"
   },
   "dependencies": {
@@ -37,7 +34,6 @@
     "mock-fs": "tschaub/mock-fs",
     "sinon-chai": "^2.8.0",
     "supertest": "^1.1.0",
-    "tslint": "^2.5.0-beta",
     "typescript": "2.0.0",
     "watch": "^0.16.0"
   },

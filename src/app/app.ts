@@ -21,13 +21,6 @@ import {
   NormalizePluginlist
 } from '../plugin/plugin';
 
-type RupertReady = {
-  server: http.Server | https.Server,
-  port: number,
-  name: string,
-  url: string
-};
-
 export class Rupert extends EventEmitter {
   private _app: express.Application;
   private _environment: String;

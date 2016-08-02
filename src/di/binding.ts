@@ -13,10 +13,26 @@ import {Dependency} from './dependency';
  * the injector.
  */
 export class Binding<T> {
-  constructor(private _type: any, private toValue?: any,
-              private toClass?: Constructor<T>,
-              private toAlias?: Constructor<T>, private toFactory?: Function,
-              private depenendies: any[] = []) {}
+  private toValue: any;
+  private toClass?: Constructor<T>;
+  private toAlias?: Constructor<T>;
+  private toFactory?: Function;
+  private depenendies: any[];
+
+  constructor(private _type: any,
+              {toValue, toClass, toAlias, toFactory, dependencies = []}: {
+                toValue?: any,
+                toClass?: Constructor<T>,
+                toAlias?: Constructor<T>,
+                toFactory?: Function,
+                dependencies?: any[]
+              } = {}) {
+    this.toValue = toValue;
+    this.toClass = toClass;
+    this.toAlias = toAlias;
+    this.toFactory = toFactory;
+    this.depenendies = dependencies;
+  }
 
   resolve(): ResolvedBinding {
     const type = this._type;
