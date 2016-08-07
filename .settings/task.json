@@ -1,0 +1,18 @@
+{
+    "version": "next",
+
+    // The command is tsc.
+    "command": "./node_modules/.bin/tsc",
+
+    // Show the output window only if unrecognized errors occur.
+    "showOutput": "silent",
+
+    // Under windows use tsc.exe. This ensures we don't need a shell.
+    "windows": {
+        "command": ".\\node_modules\\.bin\\tsc.exe"
+    },
+
+    // use the standard tsc problem matcher to find compile problems
+    // in the output.
+    "problemMatcher": "$tsc"
+}

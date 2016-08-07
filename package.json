@@ -1,0 +1,42 @@
+{
+  "name": "rupert",
+  "version": "1.0.1",
+  "description": "Strongly Typed Express Server.",
+  "main": "./dist/rupert.js",
+  "typings": "./dist/rupert.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:DavidSouther/rupert.git"
+  },
+  "directories": {},
+  "scripts": {
+    "watch": "watch 'npm run test' src/ # run this for real-time build and test.",
+    "prepublish": "npm run test",
+    "test": "npm run test:unit # execute all test suites",
+    "test:unit": "mocha dist/**/*.spec.js",
+    "pretest": "npm run build",
+    "build": "npm run build:tsc # compile everything",
+    "build:tsc": "tsc -p src/",
+    "clean": "rm -rf dist/"
+  },
+  "dependencies": {
+    "body-parser": "^1.13.3",
+    "cookie-parser": "^1.3.5",
+    "debug": "^2.2.0",
+    "errorhandler": "^1.4.2",
+    "express": "^4.13.3",
+    "morgan": "^1.6.1",
+    "winston": "^1.0.1"
+  },
+  "devDependencies": {
+    "chai": "^3.2.0",
+    "mocha": "^2.2.5",
+    "mock-fs": "tschaub/mock-fs",
+    "sinon-chai": "^2.8.0",
+    "supertest": "^1.1.0",
+    "typescript": "2.0.0",
+    "watch": "^0.16.0"
+  },
+  "author": "David Souther <davidsouther@gmail.com>",
+  "license": "ISC"
+}

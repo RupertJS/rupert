@@ -1,0 +1,15 @@
+{
+    "compilerOptions": {
+        "noImplicitAny": true,
+        "removeComments": true,
+        "preserveConstEnums": true,
+        "outDir": "./",
+        "module": "commonjs",
+        "sourceMap": true,
+        "target": "ES5",
+        "experimentalDecorators": true
+    },
+    "files": [
+      "app.ts"
+    ]
+}
