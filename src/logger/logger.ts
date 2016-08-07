@@ -12,7 +12,7 @@ import {Inject, Optional} from '../di/di';
 (<any>Winston).config.npm.colors.data = 'grey';
 (<any>Winston).addColors((<any>Winston).config.npm.colors);
 
-Winston.setLevels({
+const LEVELS = {
   silly: -Infinity,
   data: 100,
   debug: 500,
@@ -22,7 +22,7 @@ Winston.setLevels({
   warn: 4000,
   error: 5000,
   silent: Infinity
-});
+};
 
 export class ILogger {
   get middleware(): express.RequestHandler {
@@ -169,55 +169,19 @@ export class Logger extends ILogger {
           }));
     }
 
-    this._logger = new (winston.Logger)({transports});
+    this._logger = new (winston.Logger)({levels: LEVELS, transports});
 
     this._morgan =
         morgan(format,
                {stream: {write: (message: string) => { this.http(message); }}});
+
+    Object.keys(LEVELS).forEach(
+        level => this[level] = 
+          (msg: string, meta: any) => this._log(level, msg, meta));
   }
 
-  silly(msg: string, meta: any = null): ILogger {
-    this._logger.log('silly', msg, meta);
-    return this;
-  }
-
-  data(msg: string, meta: any = null): ILogger {
-    this._logger.log('data', msg, meta);
-    return this;
-  }
-
-  debug(msg: string, meta: any = null): ILogger {
-    this._logger.log('debug', msg, meta);
-    return this;
-  }
-
-  verbose(msg: string, meta: any = null): ILogger {
-    this._logger.log('verbose', msg, meta);
-    return this;
-  }
-
-  http(msg: string, meta: any = null): ILogger {
-    this._logger.log('http', msg, meta);
-    return this;
-  }
-
-  info(msg: string, meta: any = null): ILogger {
-    this._logger.log('info', msg, meta);
-    return this;
-  }
-
-  warn(msg: string, meta: any = null): ILogger {
-    this._logger.log('warn', msg, meta);
-    return this;
-  }
-
-  error(msg: string, meta: any = null): ILogger {
-    this._logger.log('error', msg, meta);
-    return this;
-  }
-
-  silent(msg: string, meta: any = null): ILogger {
-    this._logger.log('silent', msg, meta);
+  private _log(level: string, msg: string, meta: any = null): ILogger {
+    this._logger.log(level, msg, meta);
     return this;
   }
 

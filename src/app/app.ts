@@ -27,11 +27,11 @@ export class Rupert extends EventEmitter {
   private _listeners: EventEmitter[] = [];
   private _plugins: IPlugin[];
 
-  public root: string =
-      typeof global.root === 'string'?<string><any>global.root: process.cwd();
-  public url: string;
-  public name: string;
-  public servers: {http: http.Server, https?: https.Server};
+  root: string = (typeof global['root'] === 'string')?
+                 ((global as any)['root'] as string): process.cwd();
+  url: string;
+  name: string;
+  servers: {http: http.Server, https?: https.Server};
 
   constructor(
       @Inject(Config) private _config: Config,
